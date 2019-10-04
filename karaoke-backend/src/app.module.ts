@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
 import { CatsModule } from './cats/cats.module';
-
 @Module({
   imports: [
     CatsModule,
@@ -11,4 +10,4 @@ import { CatsModule } from './cats/cats.module';
     }),
   ],
 })
-export class ApplicationModule {}
+export class ApplicationModule { }
