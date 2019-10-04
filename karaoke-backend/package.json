@@ -4,7 +4,8 @@
   "description": "Nest TypeScript starter repository",
   "license": "MIT",
   "scripts": {
-    "start": "ts-node src/main",
+    "start": "nodemon",
+    "start:normal": "ts-node src/main",
     "prestart:prod": "tsc",
     "start:prod": "node dist/main.js"
   },
@@ -20,13 +21,15 @@
     "reflect-metadata": "0.1.13",
     "rxjs": "6.5.3",
     "subscriptions-transport-ws": "0.9.16",
-    "typescript": "3.6.3",
+    "typescript": "^3.6.3",
     "ws": "7.1.2"
   },
   "devDependencies": {
     "@types/dotenv": "^6.1.1",
     "@types/node": "7.10.7",
+    "nodemon": "^1.19.3",
     "ts-node": "8.4.1",
+    "tsconfig-paths": "^3.9.0",
     "tslint": "5.20.0"
   }
 }
