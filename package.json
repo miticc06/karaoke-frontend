@@ -18,8 +18,14 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "pretty-quick --staged"
+      "pre-commit": "lint-staged"
     }
+  },
+  "lint-staged": {
+    "*.{js,json}": [
+      "eslint ./src --fix --quiet",
+      "git add ."
+    ]
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -40,6 +46,6 @@
     "eslint": "^6.5.1",
     "eslint-plugin-react": "^7.16.0",
     "husky": "^3.0.9",
-    "pretty-quick": "^2.0.0"
+    "lint-staged": "^9.4.2"
   }
 }
