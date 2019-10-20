@@ -18,12 +18,12 @@ const addPlugins = () => config => {
 	config.plugins.push(
 		new ProgressBarPlugin({
 			format:
-				chalk.hex('#6c5ce7')('build ') +
-				chalk.hex('#0984e3')('﹝:bar﹞ ') +
+				chalk.hex('#6c5ce7')('build ')
+				+ chalk.hex('#0984e3')('﹝:bar﹞ ')
 				// chalk.red('▯ :bar ▯ ') +
-				chalk.hex('#00b894')('(:percent) ') +
+				+ chalk.hex('#00b894')('(:percent) ')
 				// chalk.green(':percent ') +
-				chalk.hex('#ffeaa7')(':msg'),
+				+ chalk.hex('#ffeaa7')(':msg'),
 			// chalk.blue('( :elapsed s )')
 			complete: '▰',
 			incomplete: '▱',
