@@ -1,0 +1,15 @@
+{
+  "presets": [
+    "@babel/env",
+    "@babel/react",
+    "next/babel"
+],
+  "plugins": [
+    "transform-decorators-legacy", 
+    "transform-class-properties",
+    "@babel/plugin-proposal-decorators",
+    { 
+      "legacy": true
+    }
+  ]
+}
