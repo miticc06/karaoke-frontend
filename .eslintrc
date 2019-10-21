@@ -92,7 +92,8 @@
       "react/no-danger": "off",
       "react/state-in-constructor": 0,
       "react/jsx-props-no-spreading": 0,
-      "react/no-deprecated": 1
+      "react/no-deprecated": 1,
+      "react/prefer-stateless-function": 0
     }
   }
   
