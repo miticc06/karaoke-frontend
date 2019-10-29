@@ -1,15 +1,17 @@
 import { action, observable } from 'mobx'
 
 class AuthStore {
-  @observable isAuth = !!window.localStorage.getItem('token')
+  @observable isLogin = !!window.localStorage.getItem('token')
+
+  @observable num = 123545
 
   @action
-  authenticate = token => {
+  setToken = token => {
     window.localStorage.setItem('token', token)
     this.isAuth = true
   }
 
-  logout = () => {
+  clearToken = () => {
     window.localStorage.clear()
     this.isAuth = false
   }
