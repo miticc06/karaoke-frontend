@@ -76,18 +76,6 @@ const Routes = props => {
           path='/settings'
         />
         <RouteWithLayout
-          component={SignUpView}
-          exact
-          layout={MinimalLayout}
-          path='/sign-up'
-        />
-        <RouteWithLayout
-          component={SignInView}
-          exact
-          layout={MinimalLayout}
-          path='/sign-in'
-        />
-        <RouteWithLayout
           component={NotFoundView}
           exact
           layout={MinimalLayout}
