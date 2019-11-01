@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react'
 import PropTypes from 'prop-types'
 import clsx from 'clsx'
@@ -59,8 +60,8 @@ const UsersToolbar = props => {
   )
 }
 
-UsersToolbar.propTypes = {
-  className: PropTypes.string
-}
+// UsersToolbar.propTypes = {
+//   className: PropTypes.string
+// }
 
 export default UsersToolbar

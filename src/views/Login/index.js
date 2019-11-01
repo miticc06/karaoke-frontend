@@ -2,28 +2,32 @@
 /* eslint-disable react/forbid-prop-types */
 /* eslint-disable no-shadow */
 import React, { useState, useEffect } from 'react'
-import { Link as RouterLink, withRouter } from 'react-router-dom'
-import PropTypes from 'prop-types'
+import { withRouter } from 'react-router-dom'
 import validate from 'validate.js'
 import { makeStyles } from '@material-ui/styles'
 import {
   Grid,
   Button,
-  IconButton,
   TextField,
-  Link,
   Typography
 } from '@material-ui/core'
-import ArrowBackIcon from '@material-ui/icons/ArrowBack'
 
 import { Facebook as FacebookIcon, Google as GoogleIcon } from 'icons'
+import { client } from 'config/client'
+import { parseError } from 'helpers'
+import { Notify } from 'helpers/notify'
+import { MUTATE_LOGIN } from './query'
 
 const schema = {
-  email: {
+  username: {
     presence: { allowEmpty: false, message: 'is required' },
-    email: true,
     length: {
       maximum: 64
+    },
+    format: {
+      pattern: '[a-z0-9]+',
+      flags: 'i',
+      message: 'can only contain a-z and 0-9'
     }
   },
   password: {
@@ -142,10 +146,6 @@ const Login = props => {
     }))
   }, [formState.values])
 
-  const handleBack = () => {
-    history.goBack()
-  }
-
   const handleChange = event => {
     event.persist()
 
@@ -165,8 +165,21 @@ const Login = props => {
     }))
   }
 
-  const handleSignIn = event => {
+  const handleSignIn = async event => {
     event.preventDefault()
+    await client.mutate({
+      mutation: MUTATE_LOGIN,
+      variables: {
+        ...formState.values
+      }
+    }).then(res => {
+      console.log(res)
+    }).catch(err => {
+      console.log(parseError(err))
+      const notify = new Notify('error', parseError(err))
+    })
+
+
     history.push('/')
   }
 
@@ -266,20 +279,20 @@ const Login = props => {
                   color='textSecondary'
                   variant='body1'
                 >
-                  or login with email address
+                  or login with account
                 </Typography>
                 <TextField
                   className={classes.textField}
-                  error={hasError('email')}
+                  error={hasError('username')}
                   fullWidth
                   helperText={
-                    hasError('email') ? formState.errors.email[0] : null
+                    hasError('username') ? formState.errors.username[0] : null
                   }
-                  label='Email address'
-                  name='email'
+                  label='username'
+                  name='username'
                   onChange={handleChange}
                   type='text'
-                  value={formState.values.email || ''}
+                  value={formState.values.username || ''}
                   variant='outlined'
                 />
                 <TextField
@@ -307,20 +320,6 @@ const Login = props => {
                 >
                   Sign in now
                 </Button>
-                <Typography
-                  color='textSecondary'
-                  variant='body1'
-                >
-                  Don't have an account?
-                  {' '}
-                  <Link
-                    component={RouterLink}
-                    to='/sign-up'
-                    variant='h6'
-                  >
-                    Sign up
-                  </Link>
-                </Typography>
               </form>
             </div>
           </div>
@@ -329,9 +328,5 @@ const Login = props => {
     </div>
   )
 }
-
-// Login.propTypes = {
-//   history: PropTypes.object
-// }
 
 export default withRouter(Login)

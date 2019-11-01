@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
 import { Provider } from 'mobx-react'
-
+import { ApolloProvider } from 'react-apollo'
 import { Router } from 'react-router-dom'
 import { createBrowserHistory } from 'history'
 import { Chart } from 'react-chartjs-2'
 import { ThemeProvider } from '@material-ui/styles'
 import validate from 'validate.js'
-// import Root from './pages/index'
+import { client } from 'config/client'
 import store from './config/store'
 
 import { chartjs } from './helpers'
@@ -30,11 +30,13 @@ validate.validators = {
 function App () {
   return (
     <Provider store={store}>
-      <ThemeProvider theme={theme}>
-        <Router history={browserHistory}>
-          <Routes />
-        </Router>
-      </ThemeProvider>    
+      <ApolloProvider client={client}>
+        <ThemeProvider theme={theme}>
+          <Router history={browserHistory}>
+            <Routes />
+          </Router>
+        </ThemeProvider>
+      </ApolloProvider>
     </Provider>
   )
 }

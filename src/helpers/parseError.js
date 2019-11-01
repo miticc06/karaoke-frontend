@@ -1,0 +1,1 @@
+export default err => err.graphQLErrors.map(error => error.message).join(',')

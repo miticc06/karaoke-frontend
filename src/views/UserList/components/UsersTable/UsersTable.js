@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useState } from 'react'
 import clsx from 'clsx'
 import PropTypes from 'prop-types'
@@ -183,9 +184,9 @@ const UsersTable = props => {
   )
 }
 
-UsersTable.propTypes = {
-  className: PropTypes.string,
-  users: PropTypes.array.isRequired
-}
+// UsersTable.propTypes = {
+//   className: PropTypes.string,
+//   users: PropTypes.array.isRequired
+// }
 
 export default UsersTable
