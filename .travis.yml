@@ -3,4 +3,13 @@ node_js:
   - 11
  
 install:
-  - npm i
+  - yarn
+  
+stages:
+  - StartProject
+
+jobs:
+  include:
+    - stage: StartProject
+      script:
+        - yarn start
