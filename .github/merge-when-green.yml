@@ -1,3 +1,4 @@
 requiredChecks:
   - travis-ci
+
 requireApprovalFromRequestedReviewers: true
