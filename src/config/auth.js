@@ -1,21 +1,23 @@
-import { action, observable } from 'mobx'
+import { action, observable, decorate } from 'mobx'
 
 class AuthStore {
-  @observable isLogin = !!window.localStorage.getItem('token')
+  isLogin = !!window.localStorage.getItem('token')
 
-  @observable num = 123545
-
-  @action
   setToken = token => {
     window.localStorage.setItem('token', token)
     this.isLogin = true
   }
 
-  @action
   clearToken = () => {
     window.localStorage.clear()
     this.isLogin = false
   }
 }
+
+decorate(AuthStore, {
+  isLogin: observable,
+  setToken: action,
+  clearToken: action
+})
 
 export default AuthStore
