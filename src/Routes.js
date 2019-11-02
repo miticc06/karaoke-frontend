@@ -5,6 +5,7 @@ import { Switch, Redirect } from 'react-router-dom'
 import { client } from 'config/client'
 import gql from 'graphql-tag'
 import { Notify } from 'helpers/notify'
+import { parseError } from 'helpers'
 import { RouteWithLayout } from './components'
 import { Main as MainLayout, Minimal as MinimalLayout } from './layouts'
 
@@ -16,8 +17,7 @@ import {
   Icons as IconsView,
   Account as AccountView,
   Settings as SettingsView,
-  Login as LoginView,
-  NotFound as NotFoundView
+  Login as LoginView
 } from './views'
 
 const PRIVATE_KEY = 'privateKey@12345678'
@@ -84,19 +84,18 @@ const Routes = props => {
             permissions
           })
         })
-        .catch(() => {
-          authentication.clearToken()
-          setState({
-            user: null,
-            permissions: new Set()
-          })
+        .catch((err) => {
+          if (err && err.message && /^Network error:/.test(err.message)) {
+            return new Notify('error', parseError(err), null)
+          }
+
+          return new Notify('error', parseError(err))
         })
     } catch (err) {
-      authentication.clearToken()
-      setState({
-        user: null,
-        permissions: new Set()
-      })
+      if (err && err.name && err.name === 'JsonWebTokenError') {
+        return new Notify('error', 'Token không hợp lệ', null)
+      }
+      return new Notify('error', parseError(err))
     }
   }
 
