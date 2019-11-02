@@ -6,12 +6,11 @@ import PropTypes from 'prop-types'
 
 const RouteWithLayout = props => {
   const { layout: Layout, component: Component, ...rest } = props
-  console.log(props)
   return (
     <Route
       {...rest}
       render={matchProps => (
-        <Layout>
+        <Layout {...rest}>
           <Component {...rest} {...matchProps} />
         </Layout>
       )}

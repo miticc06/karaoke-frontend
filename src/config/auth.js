@@ -8,12 +8,13 @@ class AuthStore {
   @action
   setToken = token => {
     window.localStorage.setItem('token', token)
-    this.isAuth = true
+    this.isLogin = true
   }
 
+  @action
   clearToken = () => {
     window.localStorage.clear()
-    this.isAuth = false
+    this.isLogin = false
   }
 }
 

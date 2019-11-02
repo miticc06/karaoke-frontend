@@ -28,7 +28,9 @@ const link = split(
 )
 const client = new ApolloClient({
   link: authLink.concat(link),
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache({
+    addTypename: false
+  }),
   defaultOptions: {
     mutate: {
       fetchPolicy: 'no-cache'

@@ -24,6 +24,15 @@ export class Notify {
         })
         break
       }
+
+      case 'info': {
+        notification.info({
+          message: 'Info',
+          description: content
+        })
+        break
+      }
+
       // eslint-disable-next-line no-empty
       default: {
       }

@@ -1,8 +1,10 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { inject, observer } from 'mobx-react'
-
+import jwt from 'jsonwebtoken'
 import { Switch, Redirect } from 'react-router-dom'
-
+import { client } from 'config/client'
+import gql from 'graphql-tag'
+import { Notify } from 'helpers/notify'
 import { RouteWithLayout } from './components'
 import { Main as MainLayout, Minimal as MinimalLayout } from './layouts'
 
@@ -18,12 +20,89 @@ import {
   NotFound as NotFoundView
 } from './views'
 
+const PRIVATE_KEY = 'privateKey@12345678'
+
+const GET_USER = gql`
+  query ($id: ID!) {
+    user(id: $id) {
+      _id
+      username
+      email
+      name
+      createdAt
+      role {
+        _id
+        code
+        name
+        permissions {
+          _id
+          code
+          name
+        }
+      }
+    isActive
+    }
+  }
+`
 const Routes = props => {
-  const { 
+  const [state, setState] = useState({
+    user: null,
+    permissions: new Set()
+  })
+
+  const {
     store: {
       authentication
     }
-   } = props
+  } = props
+
+
+  const getUser = async () => {
+    try {
+      if (!localStorage.getItem('token')) {
+        return
+      }
+      let token = localStorage.getItem('token')
+        ? jwt.verify(localStorage.getItem('token'), PRIVATE_KEY)
+        : { userId: '' }
+      let { userId } = token
+      await client.query({
+        query: GET_USER,
+        variables: {
+          id: userId
+        }
+      })
+        .then(({ data }) => {
+          const permissions = new Set()
+          if (data && data.user && data.user.role) {
+            data.user.role.permissions.forEach(per => permissions.add(per.code))
+          } else {
+            const notify = new Notify('error', 'Có lỗi xảy ra!')
+          }
+          setState({
+            user: data.user,
+            permissions
+          })
+        })
+        .catch(() => {
+          authentication.clearToken()
+          setState({
+            user: null,
+            permissions: new Set()
+          })
+        })
+    } catch (err) {
+      authentication.clearToken()
+      setState({
+        user: null,
+        permissions: new Set()
+      })
+    }
+  }
+
+  useEffect(() => {
+    getUser()
+  }, [])
 
   if (authentication.isLogin) {
     return (
@@ -38,53 +117,54 @@ const Routes = props => {
           exact
           layout={MainLayout}
           path='/dashboard'
+          {...state}
         />
         <RouteWithLayout
           component={UserListView}
           exact
           layout={MainLayout}
           path='/users'
+          {...state}
         />
         <RouteWithLayout
           component={ProductListView}
           exact
           layout={MainLayout}
           path='/products'
+          {...state}
         />
         <RouteWithLayout
           component={TypographyView}
           exact
           layout={MainLayout}
           path='/typography'
+          {...state}
         />
         <RouteWithLayout
           component={IconsView}
           exact
           layout={MainLayout}
           path='/icons'
+          {...state}
         />
         <RouteWithLayout
           component={AccountView}
           exact
           layout={MainLayout}
           path='/account'
+          {...state}
         />
         <RouteWithLayout
           component={SettingsView}
           exact
           layout={MainLayout}
           path='/settings'
+          {...state}
         />
-        <RouteWithLayout
-          component={NotFoundView}
-          exact
-          layout={MinimalLayout}
-          path='/not-found'
-        />
-        <Redirect to='/not-found' />
+        <Redirect to='/dashboard' />
       </Switch>
-      )  
-    } else {
+    )
+  } else {
     return (
       <Switch>
         <Redirect
@@ -97,12 +177,13 @@ const Routes = props => {
           exact
           layout={MinimalLayout}
           path='/login'
+          authentication={authentication}
+          getUser={getUser}
         />
         <Redirect to='/login' />
       </Switch>
-      )
+    )
   }
 }
 
-// export default Routes
 export default inject('store')(observer(Routes))

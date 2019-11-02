@@ -21,7 +21,7 @@ const useStyles = makeStyles(theme => ({
 
 const Dashboard = (props) => {
   const classes = useStyles()
-  console.log('object props: ', props)
+
   return (
     <div className={classes.root}>
       <Grid

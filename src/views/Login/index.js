@@ -173,14 +173,10 @@ const Login = props => {
         ...formState.values
       }
     }).then(res => {
-      console.log(res)
-    }).catch(err => {
-      console.log(parseError(err))
-      const notify = new Notify('error', parseError(err))
-    })
-
-
-    history.push('/')
+      props.authentication.setToken(res.data.login.token)
+      props.getUser()
+      return new Notify('success', 'Đăng nhập thành công!')
+    }).catch(err => new Notify('error', parseError(err)))
   }
 
   const hasError = field => !!(formState.touched[field] && formState.errors[field])
@@ -254,7 +250,7 @@ const Login = props => {
                   <Grid item>
                     <Button
                       color='primary'
-                      onClick={handleSignIn}
+                      onClick={() => new Notify('info', 'Chức năng đang được phát triển!')}
                       size='large'
                       variant='contained'
                     >
@@ -264,7 +260,7 @@ const Login = props => {
                   </Grid>
                   <Grid item>
                     <Button
-                      onClick={handleSignIn}
+                      onClick={() => new Notify('info', 'Chức năng đang được phát triển!')}
                       size='large'
                       variant='contained'
                     >

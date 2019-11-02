@@ -43,7 +43,7 @@ const Main = props => {
   }
 
   const shouldOpenSidebar = isDesktop ? true : openSidebar
-
+  
   return (
     <div
       className={clsx({
@@ -56,6 +56,8 @@ const Main = props => {
         onClose={handleSidebarClose}
         open={shouldOpenSidebar}
         variant={isDesktop ? 'persistent' : 'temporary'}
+        user={props.user}
+        permissions={props.permissions}
       />
       <main className={classes.content}>
         {children}
