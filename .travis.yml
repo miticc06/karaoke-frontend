@@ -12,4 +12,4 @@ jobs:
   include:
     - stage: Build
       script:
-        - yarn build
+        - CI=false yarn build
