@@ -5,7 +5,7 @@ import uuid from 'uuid/v4'
 export class Notify {
   constructor (type, content) {
     this.key = uuid()
-    this.duration = 1.4
+    this.duration = 60// 1.4
     notification.config({
       placement: 'bottomLeft'
     })
