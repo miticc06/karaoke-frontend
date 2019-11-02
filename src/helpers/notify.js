@@ -3,9 +3,9 @@ import { notification } from 'antd'
 import uuid from 'uuid/v4'
 
 export class Notify {
-  constructor (type, content) {
+  constructor (type, content, duration = 3) {
     this.key = uuid()
-    this.duration = 1.4
+    this.duration = duration
     notification.config({
       placement: 'bottomLeft'
     })
@@ -13,14 +13,16 @@ export class Notify {
       case 'error': {
         notification.error({
           message: 'Error',
-          description: content
+          description: content,
+          duration
         })
         break
       }
       case 'success': {
         notification.success({
           message: 'Success',
-          description: content
+          description: content,
+          duration
         })
         break
       }
@@ -28,7 +30,8 @@ export class Notify {
       case 'info': {
         notification.info({
           message: 'Info',
-          description: content
+          description: content,
+          duration
         })
         break
       }
