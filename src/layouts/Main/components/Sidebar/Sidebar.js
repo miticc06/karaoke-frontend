@@ -39,7 +39,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const Sidebar = props => {
-  const { open, variant, onClose, className, ...rest } = props
+  const { open, variant, onClose, className } = props
 
   const classes = useStyles()
 
@@ -94,10 +94,7 @@ const Sidebar = props => {
       open={open}
       variant={variant}
     >
-      <div
-        {...rest}
-        className={clsx(classes.root, className)}
-      >
+      <div className={clsx(classes.root, className)}>
         <Profile
           user={props.user}
           permissions={props.permissions}

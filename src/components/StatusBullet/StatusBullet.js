@@ -44,13 +44,12 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const StatusBullet = props => {
-  const { className, size, color, ...rest } = props
+  const { className, size, color } = props
 
   const classes = useStyles()
 
   return (
     <span
-      {...rest}
       className={clsx(
         {
           [classes.root]: true,

@@ -24,14 +24,11 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const Profile = props => {
-  const { className, user, ...rest } = props
+  const { className, user } = props
   const classes = useStyles()
 
   return (
-    <div
-      {...rest}
-      className={clsx(classes.root, className)}
-    >
+    <div className={clsx(classes.root, className)}>
       <Avatar
         alt='Person'
         className={classes.avatar}
