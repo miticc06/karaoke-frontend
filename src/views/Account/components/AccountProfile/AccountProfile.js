@@ -14,6 +14,7 @@ import {
   Button,
   LinearProgress
 } from '@material-ui/core'
+import md5 from 'md5'
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -36,17 +37,8 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const AccountProfile = props => {
-  const { className, ...rest } = props
-
+  const { className, user, ...rest } = props
   const classes = useStyles()
-
-  const user = {
-    name: 'Shen Zhi',
-    city: 'Los Angeles',
-    country: 'USA',
-    timezone: 'GTM-7',
-    avatar: '/images/avatars/avatar_11.png'
-  }
 
   return (
     <Card
@@ -60,16 +52,14 @@ const AccountProfile = props => {
               gutterBottom
               variant='h2'
             >
-              John Doe
+              {user && user.name}
             </Typography>
             <Typography
               className={classes.locationText}
               color='textSecondary'
               variant='body1'
             >
-              {user.city}
-,
-              {user.country}
+              {user && user.role && user.role.name}
             </Typography>
             <Typography
               className={classes.dateText}
@@ -78,14 +68,13 @@ const AccountProfile = props => {
             >
               {moment().format('hh:mm A')}
               {' '}
-(
-              {user.timezone}
-)
+              (GTM-7)
             </Typography>
           </div>
           <Avatar
             className={classes.avatar}
-            src={user.avatar}
+            src={user && user.email ? `https://s.gravatar.com/avatar/${md5(user.email)}?s=256` : ''}
+
           />
         </div>
         <div className={classes.progress}>

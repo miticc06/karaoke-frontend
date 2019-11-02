@@ -10,9 +10,9 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const Account = () => {
+const Account = (props) => {
+  const { user } = props
   const classes = useStyles()
-
   return (
     <div className={classes.root}>
       <Grid
@@ -26,7 +26,7 @@ const Account = () => {
           xl={4}
           xs={12}
         >
-          <AccountProfile />
+          <AccountProfile user={user} />
         </Grid>
         <Grid
           item
@@ -35,7 +35,7 @@ const Account = () => {
           xl={8}
           xs={12}
         >
-          <AccountDetails />
+          <AccountDetails user={user} />
         </Grid>
       </Grid>
     </div>

@@ -19,12 +19,12 @@ const useStyles = makeStyles(() => ({
 }))
 
 const AccountDetails = props => {
-  const { className, ...rest } = props
+  const { className, user, ...rest } = props
 
   const classes = useStyles()
 
   const [values, setValues] = useState({
-    firstName: 'Shen',
+    firstName: user && user.name ? user.name : '',
     lastName: 'Zhi',
     email: 'shen.zhi@devias.io',
     phone: '',
