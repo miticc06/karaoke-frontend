@@ -6,10 +6,10 @@ install:
   - yarn
   
 stages:
-  - StartProject
+  - Build
 
 jobs:
   include:
-    - stage: StartProject
+    - stage: Build
       script:
-        - yarn start
+        - yarn build
