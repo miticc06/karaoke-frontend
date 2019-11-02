@@ -1,0 +1,15 @@
+language: node_js
+node_js:
+  - 11
+ 
+install:
+  - yarn
+  
+stages:
+  - Build
+
+jobs:
+  include:
+    - stage: Build
+      script:
+        - CI=false yarn build
