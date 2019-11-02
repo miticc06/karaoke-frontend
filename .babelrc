@@ -6,10 +6,6 @@
 ],
   "plugins": [
     "transform-decorators-legacy", 
-    "transform-class-properties",
-    "@babel/plugin-proposal-decorators",
-    { 
-      "legacy": true
-    }
+    "transform-class-properties"
   ]
 }
