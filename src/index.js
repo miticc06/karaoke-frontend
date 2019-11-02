@@ -1,10 +1,9 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-// import './index.css'
-import 'antd/dist/antd.css' // or 'antd/dist/antd.less'
 
 import App from './App'
 import * as serviceWorker from './serviceWorker' 
+import 'antd/dist/antd.css' // or 'antd/dist/antd.less'
 
 ReactDOM.render(<App />, document.getElementById('root'))
 // ReactDOM.render(<h1>Hello, world!</h1>, document.getElementById('root'))
