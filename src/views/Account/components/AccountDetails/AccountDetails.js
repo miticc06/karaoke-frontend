@@ -71,7 +71,7 @@ const useStyles = makeStyles(() => ({
 }))
 
 const AccountDetails = props => {
-  const { className, user, refetchcurrentuser, ...rest } = props
+  const { className, user, refetchcurrentuser } = props
   const classes = useStyles()
 
   const [formState, setFormState] = useState({
