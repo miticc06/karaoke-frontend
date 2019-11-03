@@ -1,6 +1,11 @@
 export default err => {
     if (err && err.message && /^Network error:/.test(err.message)) {
         return 'Lỗi kết nối!'
-    } 
-    return err.graphQLErrors.map(error => error.message).join(',')
+    }
+    if (err.graphQLErrors) {
+        return err.graphQLErrors.map(error => error.message).join(',')
+    }
+    if (err.message) {
+        return err.message
+    }
 }

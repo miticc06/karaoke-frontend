@@ -85,10 +85,10 @@ const Routes = props => {
           })
         })
         .catch((err) => {
+          console.dir(err)
           if (err && err.message && /^Network error:/.test(err.message)) {
             return new Notify('error', parseError(err), null)
           }
-
           return new Notify('error', parseError(err))
         })
     } catch (err) {
@@ -116,6 +116,7 @@ const Routes = props => {
           exact
           layout={MainLayout}
           path='/dashboard'
+          refetchcurrentuser={getUser}
           {...state}
         />
         <RouteWithLayout
@@ -123,6 +124,7 @@ const Routes = props => {
           exact
           layout={MainLayout}
           path='/users'
+          refetchcurrentuser={getUser}
           {...state}
         />
         <RouteWithLayout
@@ -130,6 +132,7 @@ const Routes = props => {
           exact
           layout={MainLayout}
           path='/products'
+          refetchcurrentuser={getUser}
           {...state}
         />
         <RouteWithLayout
@@ -137,6 +140,7 @@ const Routes = props => {
           exact
           layout={MainLayout}
           path='/typography'
+          refetchcurrentuser={getUser}
           {...state}
         />
         <RouteWithLayout
@@ -144,6 +148,7 @@ const Routes = props => {
           exact
           layout={MainLayout}
           path='/icons'
+          refetchcurrentuser={getUser}
           {...state}
         />
         <RouteWithLayout
@@ -151,6 +156,7 @@ const Routes = props => {
           exact
           layout={MainLayout}
           path='/account'
+          refetchcurrentuser={getUser}
           {...state}
         />
         <RouteWithLayout
@@ -158,6 +164,7 @@ const Routes = props => {
           exact
           layout={MainLayout}
           path='/settings'
+          refetchcurrentuser={getUser}
           {...state}
         />
         <Redirect to='/dashboard' />
