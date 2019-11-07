@@ -25,8 +25,18 @@
 File name: ``.env`` 
 
 ```js
-# PORT=<YOUR_PORT>
+PORT=<YOUR_PORT>
+REACT_APP_BACKEND='<URL_BACKEND>'
 ```
+
+
+Example
+
+```js
+REACT_APP_BACKEND='http://localhost:2000/graphql'
+PORT=4000
+```
+
 
 <h3 style="color: #1c4587">Start project:</h3>
 
