@@ -10,8 +10,17 @@ jobs:
   - stage: Build
     script:
     - CI=false yarn build
-after_success:
-- ping dev1.kienthuc24h.com
-before_install:
-- openssl aes-256-cbc -K $encrypted_624b4ed64e85_key -iv $encrypted_624b4ed64e85_iv
-  -in deploy_rsa.enc -out deploy_rsa -d
+# after_success:
+# - ping dev1.kienthuc24h.com
+
+addons:
+  ssh_known_hosts: dev1.kienthuc24h.com
+
+before_deploy:
+- openssl aes-256-cbc -K $encrypted_624b4ed64e85_key -iv $encrypted_624b4ed64e85_iv -in deploy_rsa.enc -out deploy_rsa -d
+- chmod 600 deploy_rsa
+- ssh-add deploy_rsa
+
+deploy: 
+- ssh deploy@dev1.kienthuc24h.com
+- ifconfig
