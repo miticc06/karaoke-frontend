@@ -26,3 +26,6 @@ deploy:
   script:
     - ssh deploy@dev1.kienthuc24h.com
     - ifconfig
+  on:
+    tags: true
+    all_branches: true
