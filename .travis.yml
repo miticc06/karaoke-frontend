@@ -14,6 +14,5 @@ jobs:
       script:
         - CI=false yarn build
 
-deploy:
-   edge: true
-   provider: anynines
+after_success:
+  - ping dev1.kienthuc24h.com
