@@ -22,5 +22,7 @@ before_deploy:
 - ssh-add deploy_rsa
 
 deploy: 
-- ssh deploy@dev1.kienthuc24h.com
-- ifconfig
+  provider: script
+  script:
+    - ssh deploy@dev1.kienthuc24h.com
+    - ifconfig
