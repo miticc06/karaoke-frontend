@@ -28,7 +28,7 @@ jobs:
   - stage: Deploy
     script:
       - ls
-      - ssh -p 22 deploy@dev1.kienthuc24h.com "/bin/mkdir -p /home/deploy/commit"
+      - ssh -o "StrictHostKeyChecking no" -p 22 deploy@dev1.kienthuc24h.com "/bin/mkdir -p /home/deploy/commit"
 
 
 before_install:
