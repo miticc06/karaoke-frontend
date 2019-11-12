@@ -314,7 +314,7 @@ const Login = props => {
                   type='submit'
                   variant='contained'
                 >
-                  Sign in now
+                  Sign in now.
                 </Button>
               </form>
             </div>
