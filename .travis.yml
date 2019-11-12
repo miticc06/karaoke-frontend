@@ -28,12 +28,8 @@ jobs:
   - stage: Deploy
     script:
       - ls
-      - ssh -p 22 deploy@dev1.kienthuc24h.com "ls"
-#       - rsync -a -e "ssh -p 22" build/ deploy@dev1.kienthuc24h.com:/home/deploy/commit/${COMMIT_TIME} --delete
+      - ssh -p 22 deploy@dev1.kienthuc24h.com "/bin/ls"
     
-
-
-
 # deploy: 
 #   provider: script
 #   script:
