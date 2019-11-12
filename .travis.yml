@@ -4,13 +4,14 @@ node_js:
 # install:
 # - yarn
 
-# stages:
-# - Build
-# jobs:
-#   include:
-#   - stage: Build
-#     script:
-#     - CI=false yarn build
+stages:
+- Build
+jobs:
+  include:
+  - stage: Build
+    script:
+      - ls
+    # - CI=false yarn build
 
 # after_success:
 # - ping dev1.kienthuc24h.com
