@@ -28,7 +28,8 @@ jobs:
   - stage: Deploy
     script:
       - ls
-      - ssh -p 22 deploy@dev1.kienthuc24h.com "/bin/ls"
+      - ssh -p 22 deploy@dev1.kienthuc24h.com "chmod 700 /home/deploy/karaoke-frontend/start.sh"
+      - ssh -p 22 deploy@dev1.kienthuc24h.com "/home/deploy/karaoke-frontend/start.sh"
     
 # deploy: 
 #   provider: script
