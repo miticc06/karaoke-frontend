@@ -22,13 +22,14 @@ jobs:
   include:
   - stage: Build
     script:
-      - ls
-#       - CI=false yarn build
+#       - ls
+      - CI=false yarn build
       
   - stage: Deploy
     script:
       - ls
       - ssh -o "StrictHostKeyChecking no" -p 22 deploy@dev1.kienthuc24h.com "/bin/mkdir -p /home/deploy/commit"
+      - rsync -a -e "ssh -p 22" build/ deploy@dev1.kienthuc24h.com:/home/deploy/commit/${COMMIT_TIME} --delete
 
 
 before_install:
