@@ -1,18 +1,17 @@
 language: node_js
 node_js:
-  - 11
- 
+- 11
 install:
-  - yarn
-  
+- yarn
 stages:
-  - Build
-  
+- Build
 jobs:
   include:
-    - stage: Build
-      script:
-        - CI=false yarn build
-
+  - stage: Build
+    script:
+    - CI=false yarn build
 after_success:
-  - ping dev1.kienthuc24h.com
+- ping dev1.kienthuc24h.com
+before_install:
+- openssl aes-256-cbc -K $encrypted_624b4ed64e85_key -iv $encrypted_624b4ed64e85_iv
+  -in deploy_rsa.enc -out deploy_rsa -d
