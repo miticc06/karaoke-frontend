@@ -3,8 +3,17 @@ sudo: required
 language: node_js
 node_js:
 - 11
+
+before_script:
+  - export COMMIT_TIME=$(date +%Y%m%dT%H%M)
+
+
+
+
 # install:
 # - yarn
+
+
 
 stages:
 - Build
@@ -31,7 +40,7 @@ before_install:
 deploy: 
   provider: script
   script:
-    - ssh deploy@dev1.kienthuc24h.com
-    - ifconfig
+    - ssh -p 22 deploy@dev1.kienthuc24h.com "/bin/mkdir -p /home/deploy/commit"
+    - rsync -a -e "ssh -p 22" build/ deploy@dev1.kienthuc24h.com:/home/deploy/commit/${COMMIT_TIME} --delete
   on:
     all_branches: true
