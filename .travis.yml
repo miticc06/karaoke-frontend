@@ -7,13 +7,14 @@ node_js:
 before_script:
   - export COMMIT_TIME=$(date +%Y%m%dT%H%M)
 
+before_install:
+- openssl aes-256-cbc -K $encrypted_624b4ed64e85_key -iv $encrypted_624b4ed64e85_iv -in deploy_rsa.enc -out deploy_rsa -d
+- eval "$(ssh-agent -s)"
+- chmod 600 deploy_rsa
+- ssh-add deploy_rsa
 
-
-
-# install:
-# - yarn
-
-
+install:
+- yarn
 
 stages:
 - Build
@@ -32,11 +33,7 @@ jobs:
       - rsync -a -e "ssh -p 22" build/ deploy@dev1.kienthuc24h.com:/home/deploy/commit/${COMMIT_TIME} --delete
 
 
-before_install:
-- openssl aes-256-cbc -K $encrypted_624b4ed64e85_key -iv $encrypted_624b4ed64e85_iv -in deploy_rsa.enc -out deploy_rsa -d
-- eval "$(ssh-agent -s)"
-- chmod 600 deploy_rsa
-- ssh-add deploy_rsa
+
 
 # deploy: 
 #   provider: script
