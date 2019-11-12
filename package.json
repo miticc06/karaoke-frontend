@@ -9,6 +9,8 @@
     "@material-ui/icons": "^4.5.1",
     "@material-ui/lab": "^4.0.0-alpha.30",
     "@material-ui/styles": "^4.5.0",
+    "ag-grid-community": "^21.2.2",
+    "ag-grid-react": "^21.2.2",
     "antd": "^3.24.3",
     "apollo-cache-inmemory": "^1.6.3",
     "apollo-client": "^2.6.4",
