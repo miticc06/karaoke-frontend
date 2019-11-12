@@ -7,9 +7,13 @@ install:
   
 stages:
   - Build
-
+  
 jobs:
   include:
     - stage: Build
       script:
         - CI=false yarn build
+
+deploy:
+   edge: true
+   provider: anynines
