@@ -11,7 +11,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const Account = (props) => {
-  const { user } = props
+  const { user, refetchcurrentuser } = props
   const classes = useStyles()
   return (
     <div className={classes.root}>
@@ -35,7 +35,7 @@ const Account = (props) => {
           xl={8}
           xs={12}
         >
-          <AccountDetails user={user} />
+          <AccountDetails user={user} refetchcurrentuser={refetchcurrentuser} />
         </Grid>
       </Grid>
     </div>
