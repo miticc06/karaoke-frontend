@@ -21,7 +21,7 @@ stages:
   if: branch = cicd
   
 - name: DeployKaraoke
-  if: branch = cicd
+  if: branch = master
   
 jobs:
   include:
