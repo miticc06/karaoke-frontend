@@ -31,7 +31,7 @@ jobs:
       - ssh -p 22 deploy@dev1.kienthuc24h.com "chmod 700 /home/deploy/karaoke-frontend/start.sh"
       - ssh -p 22 deploy@dev1.kienthuc24h.com "/home/deploy/karaoke-frontend/start.sh"
     on:
-      branch: master
+      branch: master, cicd
       
 # deploy: 
 #   provider: script
