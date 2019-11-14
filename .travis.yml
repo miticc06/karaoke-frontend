@@ -23,7 +23,7 @@ jobs:
   include:
   - stage: Build
     script:
-      - yarn build
+      - CI=false yarn build
       - ssh -p 22 deploy@dev1.kienthuc24h.com "/bin/mkdir -p /home/deploy/build/karaoke-frontend"
       - rsync -a -e "ssh -p 22" ./ deploy@dev1.kienthuc24h.com:/home/deploy/build/karaoke-frontend/ --delete --exclude="node_modules"
 
