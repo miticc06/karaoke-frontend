@@ -119,7 +119,7 @@ const useStyles = makeStyles(theme => ({
   textField: {
     marginTop: theme.spacing(2)
   },
-  \InButton: {
+  signInButton: {
     margin: theme.spacing(2, 0)
   }
 }))
