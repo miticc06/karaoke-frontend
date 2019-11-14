@@ -119,7 +119,7 @@ const useStyles = makeStyles(theme => ({
   textField: {
     marginTop: theme.spacing(2)
   },
-  signInButton: {
+  \InButton: {
     margin: theme.spacing(2, 0)
   }
 }))
@@ -314,7 +314,7 @@ const Login = props => {
                   type='submit'
                   variant='contained'
                 >
-                  Sign in now
+                  Sign in now.
                 </Button>
               </form>
             </div>
