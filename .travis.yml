@@ -18,10 +18,10 @@ stages:
 - name: Build
 
 - name: DeployKaraokeTest
-  if: branch = cicd
+  if: branch = cicd AND type=push
   
 - name: DeployKaraoke
-  if: branch = master
+  if: branch = master AND type=push
   
 jobs:
   include:
