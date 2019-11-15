@@ -3,7 +3,6 @@ import {
   Modal,
   Form,
   Input,
-  Notification,
   Select
 } from 'antd'
 import React, { useState, useEffect } from 'react'
@@ -64,16 +63,7 @@ const modalAddUser = Form.create()(props => {
           roles: res.data.roles
         }))
       })
-      .catch(err => {
-        Notification.bar({
-          title: 'Error',
-          content: parseError(err),
-          type: 'error',
-          placement: 'bottomRight',
-          theme: 'pharmacy',
-          duration: 10
-        })
-      })
+      .catch(err => new Notify('error', parseError(err), 10))
   }
 
   useEffect(() => {
