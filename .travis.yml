@@ -33,6 +33,7 @@ jobs:
 
   - stage: DeployKaraokeTest
     script:
+      - $TESTDATA 
       - ssh -p 22 deploy@dev1.kienthuc24h.com "cp -R --remove-destination /home/deploy/build/karaoke-frontend/build/* /var/www/karaoketest.kienthuc24h.com"
 
   - stage: DeployKaraoke
