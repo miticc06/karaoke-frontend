@@ -28,13 +28,13 @@ jobs:
   - stage: Build
     script:
       - CI=false yarn build
-      - ssh -q -p 22 deploy@dev1.kienthuc24h.com "/bin/mkdir -p /home/deploy/build/karaoke-frontend"
-      - rsync -a -e "ssh -p 22" ./ deploy@dev1.kienthuc24h.com:/home/deploy/build/karaoke-frontend/ --delete --exclude="node_modules"
+      - ssh -q -p 22 ${USER}@${HOST} "/bin/mkdir -p /home/${USER}/build/karaoke-frontend"
+      - rsync -a -e "ssh -p 22" ./ ${USER}@${HOST}:/home/${USER}/build/karaoke-frontend/ --delete --exclude="node_modules"
 
   - stage: DeployKaraokeTest
     script: 
-      - ssh -p 22 $USER@$HOST "cp -R --remove-destination /home/$USER/build/karaoke-frontend/build/* /var/www/karaoketest.kienthuc24h.com"
+      - ssh -q -p 22 ${USER}@${HOST} "cp -R --remove-destination /home/${USER}/build/karaoke-frontend/build/* /var/www/karaoketest.kienthuc24h.com"
 
   - stage: DeployKaraoke
     script:
-      - ssh -p 22 $USER@$HOST "cp -R --remove-destination /home/deploy/build/karaoke-frontend/build/* /var/www/karaoke.kienthuc24h.com"
+      - ssh -q -p 22 ${USER}@${HOST} "cp -R --remove-destination /home/${USER}/build/karaoke-frontend/build/* /var/www/karaoke.kienthuc24h.com"
