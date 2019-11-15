@@ -1,12 +1,23 @@
 const {
     addDecoratorsLegacy,
     override,
-    disableEsLint
+    disableEsLint,
+    fixBabelImports,
+    addLessLoader
 } = require('customize-cra')
 
 module.exports = {
     webpack: override(
         addDecoratorsLegacy(),
-        disableEsLint()
+        disableEsLint(),
+        fixBabelImports('import', {
+            libraryName: 'antd',
+            libraryDirectory: 'es',
+            style: true
+        }),
+        addLessLoader({
+            javascriptEnabled: true,
+            modifyVars: { '@primary-color': '#3f51b5' }
+        })
     )
 }

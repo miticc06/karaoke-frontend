@@ -16,7 +16,8 @@ import './assets/scss/index.scss'
 import validators from './common/validators'
 import Routes from './Routes'
 import 'ag-grid-community/dist/styles/ag-grid.css'
-import 'ag-grid-community/dist/styles/ag-theme-material.css' 
+import 'ag-grid-community/dist/styles/ag-theme-material.css'
+// import 'theme-antd.less' // variables to override above
 
 
 const browserHistory = createBrowserHistory()

@@ -8,4 +8,4 @@ export default err => {
     if (err.message) {
         return err.message
     }
-}
+}  
