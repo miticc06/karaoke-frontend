@@ -10,7 +10,7 @@ module.exports = {
     webpack: override(
         addDecoratorsLegacy(),
         disableEsLint(),
-        fixBabelImports('import', {
+        fixBabelImports('antd', {
             libraryName: 'antd',
             libraryDirectory: 'es',
             style: true
