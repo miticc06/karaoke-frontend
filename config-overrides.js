@@ -45,7 +45,7 @@ module.exports = override(
     ['@babel/plugin-proposal-class-properties', { loose: true }],
     '@babel/plugin-syntax-dynamic-import'
   ),
-  fixBabelImports('antd', {
+  fixBabelImports('import', {
     libraryName: 'antd',
     libraryDirectory: 'es',
     style: true
@@ -55,17 +55,7 @@ module.exports = override(
     modifyVars: { '@primary-color': '#3f51b5' }
   }),
   addWebpackAlias({
-    '@components': resolve(__dirname, './src/components'),
-    '@constants': resolve(__dirname, './src/constants'),
-    '@graphql': resolve(__dirname, './src/graphql'),
-    '@misc': resolve(__dirname, './src/misc'),
-    '@assets': resolve(__dirname, './src/assets'),
-    '@pages': resolve(__dirname, 'src/pages'),
-    '@stores': resolve(__dirname, 'src/stores'),
-    '@routers': resolve(__dirname, 'src/routers'),
-    '@utils': resolve(__dirname, 'src/utils'),
-    '@tools': resolve(__dirname, 'src/tools'),
-    '@interfaces': resolve(__dirname, './src/utils/interfaces')
+    '@assets': resolve(__dirname, './src/assets')
   }),
   addPlugins()
 )
