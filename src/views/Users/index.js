@@ -1,4 +1,4 @@
-import React, { Component, useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { AgGridReact } from 'ag-grid-react'
 import { client } from 'config/client'
 import { Notify } from 'helpers/notify'
