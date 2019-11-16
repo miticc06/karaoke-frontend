@@ -50,7 +50,7 @@
   },
   "scripts": {
     "start": "BROWSER=none react-app-rewired start",
-    "build": "react-scripts build",
+    "build": "webpack",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "eslint:fix": "eslint ./src --fix --quiet"
@@ -107,6 +107,9 @@
     "mobx": "^5.14.2",
     "mobx-react": "^6.1.4",
     "style-loader": "^1.0.0",
-    "typescript": "^3.6.4"
+    "typescript": "^3.6.4",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10",
+    "webpackbar": "^4.0.0"
   }
 }
