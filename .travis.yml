@@ -27,7 +27,7 @@ jobs:
   include:
     - stage: Build
       script:
-        - CI=false yarn build
+        - CI=false SKIP_PREFLIGHT_CHECK=true yarn build
         - ssh -q -p 22 ${USER}@${HOST} "/bin/mkdir -p /home/${USER}/build/karaoke-frontend"
         - rsync -a -e "ssh -p 22" ./ ${USER}@${HOST}:/home/${USER}/build/karaoke-frontend/ --delete --exclude="node_modules"
 
