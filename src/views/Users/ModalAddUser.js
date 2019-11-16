@@ -36,6 +36,7 @@ const modalAddUser = Form.create()(props => {
           })
           .then(async res => {
             if (res && res.data && res.data.createUser) {
+              // eslint-disable-next-line
               const notify = new Notify('success', 'Thêm user thành công!', 2)
               await refetch()
               hide()
@@ -43,6 +44,7 @@ const modalAddUser = Form.create()(props => {
             }
           })
           .catch(err => {
+            // eslint-disable-next-line
             const notify = new Notify('error', parseError(err), 3)
           })
       }

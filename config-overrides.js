@@ -35,7 +35,6 @@ const addPlugins = () => config => {
       }
     }
   })
-
   return config
 }
 
@@ -46,13 +45,11 @@ module.exports = override(
     ['@babel/plugin-proposal-class-properties', { loose: true }],
     '@babel/plugin-syntax-dynamic-import'
   ),
-  fixBabelImports('import', {
+  fixBabelImports('antd', {
     libraryName: 'antd',
     libraryDirectory: 'es',
     style: true
   }),
-
-
   addLessLoader({
     javascriptEnabled: true,
     modifyVars: { '@primary-color': '#3f51b5' }
