@@ -18,6 +18,7 @@ import Routes from './Routes'
 import 'ag-grid-community/dist/styles/ag-grid.css'
 import 'ag-grid-community/dist/styles/ag-theme-material.css'
 // import 'theme-antd.less' // variables to override above
+import 'antd/dist/antd.less'
 
 
 const browserHistory = createBrowserHistory()
