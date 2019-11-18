@@ -20,7 +20,7 @@ import 'ag-grid-community/dist/styles/ag-theme-material.css'
 // import 'theme-antd.less' // variables to override above
 import 'antd/dist/antd.less'
 import '@assets/less/index.less'
-
+import '@assets/less/my-custom-antdesign-theme.less'
 
 const browserHistory = createBrowserHistory()
 

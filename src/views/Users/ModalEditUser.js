@@ -4,10 +4,10 @@ import React, { useState, useEffect } from 'react'
 import { client } from 'config/client'
 import { parseError } from 'helpers'
 import { Notify } from 'helpers/notify'
-import { ADD_USER, GET_ROLES } from './query'
+import { GET_ROLES, UPDATE_USER } from './query'
 
 const modalAddUser = Form.create()(props => {
-  const { form, hide, visible, refetch } = props
+  const { form, hide, visible, refetch, user } = props
   const [state, setState] = useState({
     roles: []
   })
@@ -15,14 +15,14 @@ const modalAddUser = Form.create()(props => {
   const onSubmit = async () => {
     await form.validateFields(async (errors, formData) => {
       if (!errors) {
-        const { username, password, roleId, name, email } = formData
+        const { newPassword, roleId, name, email } = formData
         await client
           .mutate({
-            mutation: ADD_USER,
+            mutation: UPDATE_USER,
             variables: {
+              userId: user._id,
               input: {
-                username,
-                password,
+                newPassword,
                 roleId,
                 name,
                 email
@@ -30,9 +30,9 @@ const modalAddUser = Form.create()(props => {
             }
           })
           .then(async res => {
-            if (res && res.data && res.data.createUser) {
+            if (res && res.data && res.data.updateUserByAdmin) {
               // eslint-disable-next-line
-              const notify = new Notify('success', 'Thêm user thành công!', 2)
+              const notify = new Notify('success', 'Cập nhật user thành công!', 2)
               await refetch()
               hide()
               form.resetFields()
@@ -67,12 +67,10 @@ const modalAddUser = Form.create()(props => {
     getRoles()
   }, [])
 
-  console.log(state.roles)
-
   return (
     <Modal
-      title='Thêm user'
-      headerIcon='plus'
+      title='Cập nhật user'
+      headerIcon='edit'
       onCancel={hide}
       visible={visible}
       fieldsError={form.getFieldsError()}
@@ -82,34 +80,25 @@ const modalAddUser = Form.create()(props => {
       <Form>
         <Form.Item label='Username'>
           {form.getFieldDecorator('username', {
-            rules: [
-              { required: true, message: 'Hãy nhập Username' },
-              {
-                min: 3,
-                message: 'Username phải chứa ít nhất 3 ký tự'
-              },
-              {
-                pattern: /^[\w]{3,}$/gi,
-                message: 'Username chỉ được chứa chữ, số và dấu _'
-              }
-            ]
-          })(<Input />)}
+            initialValue: user && user.username ? user.username : ''
+          })(<Input disabled='true' />)}
         </Form.Item>
 
-        <Form.Item label='password'>
-          {form.getFieldDecorator('password', {
-            rules: [{ required: true, message: 'Hãy nhập Password' }]
+        <Form.Item label='New password'>
+          {form.getFieldDecorator('newPassword', {
           })(<Input type='password' />)}
         </Form.Item>
 
         <Form.Item label='name'>
           {form.getFieldDecorator('name', {
+            initialValue: user && user.name ? user.name : '',
             rules: [{ required: true, message: 'Hãy nhập họ tên' }]
           })(<Input type='name' />)}
         </Form.Item>
 
         <Form.Item label='email'>
           {form.getFieldDecorator('email', {
+            initialValue: user && user.email ? user.email : '',
             rules: [
               { required: true, message: 'Hãy nhập email' },
               {
@@ -124,6 +113,7 @@ const modalAddUser = Form.create()(props => {
 
         <Form.Item label='Role'>
           {form.getFieldDecorator('roleId', {
+            initialValue: user && user.role && user.role._id ? user.role._id : '',
             rules: [{ required: true, message: 'Hãy phân Role cho user' }]
           })(
             <Select placeholder='Please select role ...'>
