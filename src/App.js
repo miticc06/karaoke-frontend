@@ -12,9 +12,15 @@ import store from './config/store'
 import { chartjs } from './helpers'
 import theme from './theme'
 import 'react-perfect-scrollbar/dist/css/styles.css'
-import './assets/scss/index.scss'
+
 import validators from './common/validators'
 import Routes from './Routes'
+import 'ag-grid-community/dist/styles/ag-grid.css'
+import 'ag-grid-community/dist/styles/ag-theme-material.css'
+// import 'theme-antd.less' // variables to override above
+import 'antd/dist/antd.less'
+import '@assets/less/index.less'
+import '@assets/less/my-custom-antdesign-theme.less'
 
 const browserHistory = createBrowserHistory()
 

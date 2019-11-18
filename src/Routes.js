@@ -12,7 +12,10 @@ import { Main as MainLayout, Minimal as MinimalLayout } from './layouts'
 import {
   Dashboard as DashboardView,
   ProductList as ProductListView,
-  UserList as UserListView,
+  // UserList as UserListView,
+
+  Users as UsersView,
+
   Typography as TypographyView,
   Icons as IconsView,
   Account as AccountView,
@@ -77,6 +80,7 @@ const Routes = props => {
           if (data && data.user && data.user.role) {
             data.user.role.permissions.forEach(per => permissions.add(per.code))
           } else {
+            // eslint-disable-next-line
             const notify = new Notify('error', 'Có lỗi xảy ra!')
           }
           setState({
@@ -119,14 +123,24 @@ const Routes = props => {
           refetchcurrentuser={getUser}
           {...state}
         />
-        <RouteWithLayout
+        {/* <RouteWithLayout
           component={UserListView}
           exact
           layout={MainLayout}
           path='/users'
           refetchcurrentuser={getUser}
           {...state}
+        /> */}
+
+        <RouteWithLayout
+          component={UsersView}
+          exact
+          layout={MainLayout}
+          path='/users'
+          refetchcurrentuser={getUser}
+          {...state}
         />
+
         <RouteWithLayout
           component={ProductListView}
           exact
