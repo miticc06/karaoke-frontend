@@ -55,7 +55,10 @@ module.exports = override(
     modifyVars: { '@primary-color': '#3f51b5' }
   }),
   addWebpackAlias({
-    '@assets': resolve(__dirname, './src/assets')
+    '@assets': resolve(__dirname, './src/assets'),
+    '@helpers': resolve(__dirname, './src/helpers'),
+    '@views': resolve(__dirname, './src/views'),
+    '@config': resolve(__dirname, './src/config')
   }),
   addPlugins()
 )
