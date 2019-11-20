@@ -12,6 +12,7 @@ import ImageIcon from '@material-ui/icons/Image'
 import AccountBoxIcon from '@material-ui/icons/AccountBox'
 import SettingsIcon from '@material-ui/icons/Settings'
 import LockOpenIcon from '@material-ui/icons/LockOpen'
+import PersonIcon from '@material-ui/icons/Person';
 
 import { Profile, SidebarNav } from './components'
 
@@ -83,6 +84,11 @@ const Sidebar = props => {
       title: 'Settings',
       href: '/settings',
       icon: <SettingsIcon />
+    },
+    {
+      title: 'Customers',
+      href: '/customers',
+      icon: <PersonIcon />
     }
   ]
 
