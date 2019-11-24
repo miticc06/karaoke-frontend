@@ -19,7 +19,8 @@ import {
   Account as AccountView,
   Settings as SettingsView,
   Customers as CustomersView,
-  Login as LoginView
+  Login as LoginView,
+  PaymentSlips as PaymentSlipView
 } from './views'
 
 const PRIVATE_KEY = 'privateKey@12345678'
@@ -139,6 +140,15 @@ const Routes = props => {
           exact
           layout={MainLayout}
           path='/customers'
+          refetchcurrentuser={getUser}
+          {...state}
+        />
+
+        <RouteWithLayout
+          component={PaymentSlipView}
+          exact
+          layout={MainLayout}
+          path='/paymentslips'
           refetchcurrentuser={getUser}
           {...state}
         />
