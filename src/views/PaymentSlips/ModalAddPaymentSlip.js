@@ -12,7 +12,9 @@ const ModalAddPaymentSlip = Form.create()(props => {
   const onSubmit = async () => {
     await form.validateFields(async (errors, formData) => {
       if (!errors) {
-        const { description, price } = formData
+        const { description, sprice } = formData
+        // eslint-disable-next-line radix
+        const price = parseInt(sprice)
         await client
           .mutate({
             mutation: ADD_PAYMENTSLIP,
@@ -61,7 +63,7 @@ const ModalAddPaymentSlip = Form.create()(props => {
         </Form.Item>
 
         <Form.Item label='Price'>
-          {form.getFieldDecorator('price', {
+          {form.getFieldDecorator('sprice', {
             rules: [
               { required: true, message: 'Hãy nhập giá tiền.' },
               {
@@ -69,7 +71,7 @@ const ModalAddPaymentSlip = Form.create()(props => {
                 message: 'Price chỉ bao gồm số.'
               }
             ]
-          })(<Input type='text' />)}
+          })(<Input type='number' />)}
         </Form.Item>
       </Form>
     </Modal>

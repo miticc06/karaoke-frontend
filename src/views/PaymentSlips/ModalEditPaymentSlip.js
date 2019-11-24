@@ -13,7 +13,9 @@ const ModalEditPaymentSlip = Form.create()(props => {
   const onSubmit = async () => {
     await form.validateFields(async (errors, formData) => {
       if (!errors) {
-        const { description, price } = formData
+        const { description, sprice } = formData
+        // eslint-disable-next-line radix
+        const price = parseInt(sprice)
         await client
           .mutate({
             mutation: UPDATE_PAYMENTSLIP,
@@ -66,7 +68,7 @@ const ModalEditPaymentSlip = Form.create()(props => {
         </Form.Item>
 
         <Form.Item label='Price'>
-          {form.getFieldDecorator('price', {
+          {form.getFieldDecorator('sprice', {
             initialValue: paymentSlip && paymentSlip.price ? paymentSlip.price : '',
             rules: [
               { required: true, message: 'Hãy nhập giá tiền.' },

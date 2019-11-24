@@ -15,7 +15,7 @@ export const GET_PAYMENTSLIPS = gql`
 `
 
 export const GET_PAYMENTSLIP = gql`
-  query ($paymentSlipId: ID!) {
+  query ($paymentSlipId: String!) {
     paymentSlip(paymentSlipId: $paymentSlipId) {
       _id
       description
@@ -58,14 +58,6 @@ export const UPDATE_PAYMENTSLIP = gql`
 
 export const DELETE_PAYMENTSLIP = gql`
   mutation($paymentSlipId: String!) {
-    deletePaymentSlip(paymentSlipId: $paymentSlipId) {
-      _id
-      description
-      price
-      createdAt
-      createdBy {
-        name
-      }
-    }
+    deletePaymentSlip(paymentSlipId: $paymentSlipId)
   }
 `
