@@ -74,7 +74,7 @@ const modalAddCustomer = Form.create()(props => {
               { required: true, message: 'Hãy nhập số điện thoại' },
               {
                 // eslint-disable-next-line max-len
-                pattern: /^[0-9]{10,}$/gi,
+                pattern: /^((09|03|07|08|05)+([0-9]{8})\b)$/g,
                 message: 'Số điện thoại không hợp lệ'
               }
             ]
