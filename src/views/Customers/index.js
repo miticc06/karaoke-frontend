@@ -1,4 +1,12 @@
+/* eslint-disable brace-style */
+/* eslint-disable react/jsx-indent-props */
+/* eslint-disable react/jsx-first-prop-new-line */
+/* eslint-disable react/jsx-curly-newline */
+/* eslint-disable no-multiple-empty-lines */
 import React, { useState, useEffect } from 'react'
+import IconButton from '@material-ui/core/IconButton'
+import SearchIcon from '@material-ui/icons/Search'
+import TextField from '@material-ui/core/TextField'
 import { AgGridReact } from 'ag-grid-react'
 import { client } from 'config/client'
 import { Notify } from 'helpers/notify'
@@ -7,16 +15,21 @@ import { Grid } from '@material-ui/core'
 import { Icon, Button, Modal } from 'antd'
 import { GET_CUSTOMERS, GET_CUSTOMER, DELETE_CUSTOMER } from './query'
 import './style.less'
+
+
 import ModalAddCustomer from './ModalAddCustomer'
 import ModalEditCustomer from './ModalEditCustomer'
 
 const { confirm } = Modal
 
+
 const CustomerManagement = () => {
   const [customers, setCustomers] = useState([])
+  const [customersList, setCustomersList] = useState([])
   const [visibleAdd, setVisibleAdd] = useState(false)
   const [visibleEdit, setVisibleEdit] = useState(false)
   const [customerEdit, setCustomerEdit] = useState(null)
+
 
   const getCustomers = async () => {
     await client.query({
@@ -26,6 +39,7 @@ const CustomerManagement = () => {
         throw new Error('Có lỗi xảy ra!')
       }
       setCustomers(res.data.customers)
+      setCustomersList(res.data.customers)
     })
       .catch(err => new Notify('error', parseError(err)))
   }
@@ -33,6 +47,15 @@ const CustomerManagement = () => {
   useEffect(() => {
     getCustomers()
   }, [])
+
+  const setTextValue = (event) => {
+    let kw = event.target.value
+    kw = kw.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    console.log(kw)
+    if (kw !== '')
+    { setCustomers(customersList.filter(customer => customer.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(kw))) }
+    else setCustomers(customersList)
+  }
 
   const columnDefs = [
     {
@@ -75,32 +98,32 @@ const CustomerManagement = () => {
             }}
             type='edit'
           />
-          {/* <Icon
+          <Icon
             style={{ cursor: 'pointer', margin: '5px' }}
             onClick={async () => {
               confirm({
-                title: 'Do you Want to delete this user?',
+                title: 'Do you Want to delete this customer?',
                 okType: 'danger',
-                content: `- ${row.data.name}(${row.data.username})`,
+                content: ` Customer:  ${row.data.name} - ${row.data.phone}`,
                 onOk: async () => {
                   await client.mutate({
                     mutation: DELETE_CUSTOMER,
                     variables: {
-                      userId: row.data._id
+                      customerId: row.data._id
                     }
                   }).then(async res => {
-                    if (!res || !res.data || !res.data.deleteUser) {
+                    if (!res || !res.data || !res.data.deleteCustomer) {
                       throw Error('Có lỗi xẩy ra!')
                     }
                     await getCustomers()
-                    return new Notify('success', 'Xóa user thành công!')
+                    return new Notify('success', 'Xóa customer thành công!')
                   })
                     .catch(err => new Notify('error', parseError(err)))
                 }
               })
             }}
             type='delete'
-          /> */}
+          />
         </>
       )
     }
@@ -115,6 +138,22 @@ const CustomerManagement = () => {
       <h2 className='title-page'>
         Customers List
       </h2>
+
+      <form className='margin'>
+        <Grid container spacing={1} alignItems='flex-end'>
+          <Grid item>
+            <SearchIcon />
+          </Grid>
+          <Grid item>
+            <TextField 
+            id='input-with-icon-grid' 
+            label='Search Customer' 
+            onChange={setTextValue}
+            />
+          </Grid>
+        </Grid>
+      </form>
+      
 
       <Grid
         container
