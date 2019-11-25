@@ -1,3 +1,4 @@
+/* eslint-disable implicit-arrow-linebreak */
 /* eslint-disable brace-style */
 /* eslint-disable react/jsx-indent-props */
 /* eslint-disable react/jsx-first-prop-new-line */
@@ -53,7 +54,10 @@ const CustomerManagement = () => {
     kw = kw.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
     console.log(kw)
     if (kw !== '')
-    { setCustomers(customersList.filter(customer => customer.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(kw))) }
+    { setCustomers(customersList.filter(customer => 
+      customer.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(kw) 
+      || customer.phone.includes(kw) 
+      || customer.email.includes(kw))) }
     else setCustomers(customersList)
   }
 
