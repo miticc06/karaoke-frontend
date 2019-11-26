@@ -56,15 +56,8 @@ export const UPDATE_CUSTOMER = gql`
 `
 
 export const DELETE_CUSTOMER = gql`
-  mutation($id: String!) {
-    deleteCustomer(customerId: $id){
-      _id
-      name
-      email
-      phone
-      createdAt
-      points
-      dateOfBirth
-      }
+  mutation($customerId: String!) {
+    deleteCustomer(customerId: $customerId)
+   
   }
 `
