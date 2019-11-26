@@ -94,6 +94,11 @@ const Sidebar = props => {
       title: 'Payment Slips',
       href: '/paymentslips',
       icon: <PersonIcon />
+    },
+    {
+      title: 'Tickets',
+      href: '/tickets',
+      icon: <PersonIcon />
     }
   ]
 
