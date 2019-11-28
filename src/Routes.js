@@ -1,3 +1,4 @@
+/* eslint-disable linebreak-style */
 import React, { useEffect, useState } from 'react'
 import { inject, observer } from 'mobx-react'
 import jwt from 'jsonwebtoken'
@@ -20,7 +21,8 @@ import {
   Settings as SettingsView,
   Customers as CustomersView,
   Login as LoginView,
-  PaymentSlips as PaymentSlipView
+  PaymentSlips as PaymentSlipView,
+  Discount as DiscountView
 } from './views'
 
 const PRIVATE_KEY = 'privateKey@12345678'
@@ -140,6 +142,15 @@ const Routes = props => {
           exact
           layout={MainLayout}
           path='/customers'
+          refetchcurrentuser={getUser}
+          {...state}
+        />
+
+        <RouteWithLayout
+          component={DiscountView}
+          exact
+          layout={MainLayout}
+          path='/discounts'
           refetchcurrentuser={getUser}
           {...state}
         />

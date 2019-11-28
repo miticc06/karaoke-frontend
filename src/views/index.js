@@ -1,3 +1,4 @@
+/* eslint-disable linebreak-style */
 export { default as Login } from './Login'
 export { default as Account } from './Account'
 export { default as Dashboard } from './Dashboard'
@@ -11,3 +12,4 @@ export { default as UserList } from './UserList'
 export { default as Users } from './Users'
 export { default as Customers } from './Customers'
 export { default as PaymentSlips } from './PaymentSlips'
+export { default as Discount } from './Discounts'
