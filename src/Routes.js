@@ -22,6 +22,7 @@ import {
   Customers as CustomersView,
   Login as LoginView,
   PaymentSlips as PaymentSlipView,
+  Tickets as TicketView,
   Discount as DiscountView
 } from './views'
 
@@ -138,6 +139,14 @@ const Routes = props => {
         />
 
         <RouteWithLayout
+          component={DiscountView}
+          exact
+          layout={MainLayout}
+          path='/discounts'
+          refetchcurrentuser={getUser}
+          {...state}
+        />
+        <RouteWithLayout
           component={CustomersView}
           exact
           layout={MainLayout}
@@ -147,19 +156,19 @@ const Routes = props => {
         />
 
         <RouteWithLayout
-          component={DiscountView}
+          component={PaymentSlipView}
           exact
           layout={MainLayout}
-          path='/discounts'
+          path='/paymentslips'
           refetchcurrentuser={getUser}
           {...state}
         />
 
         <RouteWithLayout
-          component={PaymentSlipView}
+          component={TicketView}
           exact
           layout={MainLayout}
-          path='/paymentslips'
+          path='/tickets'
           refetchcurrentuser={getUser}
           {...state}
         />
