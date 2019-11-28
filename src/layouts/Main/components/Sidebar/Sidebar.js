@@ -12,7 +12,8 @@ import ImageIcon from '@material-ui/icons/Image'
 import AccountBoxIcon from '@material-ui/icons/AccountBox'
 import SettingsIcon from '@material-ui/icons/Settings'
 import LockOpenIcon from '@material-ui/icons/LockOpen'
-import PersonIcon from '@material-ui/icons/Person';
+import PersonIcon from '@material-ui/icons/Person'
+import ReceiptIcon from '@material-ui/icons/Receipt'
 
 import { Profile, SidebarNav } from './components'
 
@@ -94,6 +95,11 @@ const Sidebar = props => {
       title: 'Payment Slips',
       href: '/paymentslips',
       icon: <PersonIcon />
+    },
+    {
+      title: 'Discounts',
+      href: '/discounts',
+      icon: <ReceiptIcon />
     },
     {
       title: 'Tickets',
