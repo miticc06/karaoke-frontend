@@ -23,7 +23,9 @@ import {
   Login as LoginView,
   PaymentSlips as PaymentSlipView,
   Tickets as TicketView,
-  Discount as DiscountView
+  Discount as DiscountView,
+  Services as ServiceView,
+  Rooms as RoomView
 } from './views'
 
 const PRIVATE_KEY = 'privateKey@12345678'
@@ -151,6 +153,22 @@ const Routes = props => {
           exact
           layout={MainLayout}
           path='/customers'
+          refetchcurrentuser={getUser}
+          {...state}
+        />
+        <RouteWithLayout
+          component={ServiceView}
+          exact
+          layout={MainLayout}
+          path='/services'
+          refetchcurrentuser={getUser}
+          {...state}
+        />
+        <RouteWithLayout
+          component={RoomView}
+          exact
+          layout={MainLayout}
+          path='/rooms'
           refetchcurrentuser={getUser}
           {...state}
         />
