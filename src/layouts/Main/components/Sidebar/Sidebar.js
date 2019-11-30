@@ -14,6 +14,8 @@ import SettingsIcon from '@material-ui/icons/Settings'
 import LockOpenIcon from '@material-ui/icons/LockOpen'
 import PersonIcon from '@material-ui/icons/Person'
 import ReceiptIcon from '@material-ui/icons/Receipt'
+import RoomServiceIcon from '@material-ui/icons/RoomService'
+import RoomIcon from '@material-ui/icons/Room'
 
 import { Profile, SidebarNav } from './components'
 
@@ -105,6 +107,16 @@ const Sidebar = props => {
       title: 'Tickets',
       href: '/tickets',
       icon: <PersonIcon />
+    },
+    {
+      title: 'Services',
+      href: '/services',
+      icon: <RoomServiceIcon />
+    },
+    {
+      title: 'Rooms',
+      href: '/rooms',
+      icon: <RoomIcon />
     }
   ]
 
