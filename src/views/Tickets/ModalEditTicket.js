@@ -1,5 +1,5 @@
-import { Modal, Form, Input, Select } from 'antd'
-import React, { useState, useEffect } from 'react'
+import { Modal, Form, Input } from 'antd'
+import React, { useEffect } from 'react'
 import ReactSelect from 'react-select'
 import { client } from 'config/client'
 import { parseError } from 'helpers'
@@ -70,8 +70,8 @@ const ModalEditTicket = Form.create()(props => {
           {form.getFieldDecorator('selectedRoom', {
             rules: [{ required: true, message: 'Hãy nhập số phòng.' }],
             initialValue: ticket && ticket.room ? { label: ticket.room.name, value: ticket.room._id } : { label: '', value: '' }
-          })(<ReactSelect 
-            options={roomOptions} 
+          })(<ReactSelect
+            options={roomOptions}
           />)}
         </Form.Item>
 
@@ -79,8 +79,8 @@ const ModalEditTicket = Form.create()(props => {
           {form.getFieldDecorator('selectedStatus', {
             rules: [{ required: true, message: 'Hãy nhập trạng thái.' }],
             initialValue: ticket && ticket.status ? { label: ticket.status, value: ticket.status } : { label: '', value: '' }
-          })(<ReactSelect 
-            options={statusOptions} 
+          })(<ReactSelect
+            options={statusOptions}
           />)}
         </Form.Item>
       </Form>

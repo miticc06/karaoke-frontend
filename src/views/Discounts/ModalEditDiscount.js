@@ -1,20 +1,18 @@
-/* eslint-disable linebreak-style */
-/* eslint-disable no-useless-escape */
 import { Modal, Form, Input, Select } from 'antd'
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { client } from 'config/client'
 import { parseError } from 'helpers'
 import { Notify } from 'helpers/notify'
 import { UPDATE_DISCOUNT } from './query'
 
+const typeCoupon = [
+  { value: 'DEDUCT', label: 'Khấu trừ' },
+  { value: 'PERCENT', label: 'Phần trăm' }
+]
+
 const modalAddDiscount = Form.create()(props => {
   const { form, hide, visible, refetch, discount } = props
-  const [state, setState] = useState({
-    types: [
-      { value: 'DEDUCT', label: 'DEDUCT' },
-      { value: 'PERCENT', label: 'PERCENT' }
-    ]
-  })
+
 
   const onSubmit = async () => {
     await form.validateFields(async (errors, formData) => {
@@ -70,20 +68,20 @@ const modalAddDiscount = Form.create()(props => {
       <Form>
         <Form.Item label='Name:'>
           {form.getFieldDecorator('name', {
-             initialValue: discount ? discount.name : '',
+            initialValue: discount ? discount.name : '',
             rules: [{ required: true, message: 'Please Enter Discount Name' }]
           })(<Input type='name' />)}
         </Form.Item>
 
         <Form.Item label='Type:'>
           {form.getFieldDecorator('type', {
-             initialValue: discount ? discount.type : '',
+            initialValue: discount ? discount.type : '',
             rules: [{ required: true, message: 'Please choose a type' }]
           })(
             <Select placeholder='Press to choose ...'>
-              {state.types.map(type => (
-                <Select.Option key={type.value} value={type.label}>
-                  {`${type.value} `}
+              {typeCoupon.map(type => (
+                <Select.Option key={type.value} value={type.value}>
+                  {`${type.label} `}
                 </Select.Option>
               ))}
             </Select>
@@ -92,7 +90,7 @@ const modalAddDiscount = Form.create()(props => {
 
         <Form.Item label='Value: '>
           {form.getFieldDecorator('value', {
-             initialValue: discount ? discount.value : '',
+            initialValue: discount ? discount.value : '',
             rules: [{ required: true, message: 'Please enter value' }]
           })(<Input type='number' />)}
         </Form.Item>
@@ -111,7 +109,7 @@ const modalAddDiscount = Form.create()(props => {
 
         <Form.Item label='End Date: '>
           {form.getFieldDecorator('endDate', {
-             initialValue: discount ? discount.endDate : '',
+            initialValue: discount ? discount.endDate : '',
             rules: [
               {
                 required: true,

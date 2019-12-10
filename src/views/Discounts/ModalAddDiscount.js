@@ -1,23 +1,18 @@
-/* eslint-disable no-undef */
-/* eslint-disable linebreak-style */
-/* eslint-disable no-useless-escape */
 import { Modal, Form, Input, Select } from 'antd'
-import FormControlLabel from '@material-ui/core/FormControlLabel'
-import Checkbox from '@material-ui/core/Checkbox'
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { client } from 'config/client'
 import { parseError } from 'helpers'
 import { Notify } from 'helpers/notify'
 import { ADD_DISCOUNT } from './query'
 
-const modalAddUser = Form.create()(props => {
+const typeCoupon = [
+  { value: 'DEDUCT', label: 'Khấu trừ' },
+  { value: 'PERCENT', label: 'Phần trăm' }
+]
+
+const ModalAddDiscount = Form.create()(props => {
   const { form, hide, visible, refetch } = props
-  const [state, setState] = useState({
-    types: [
-      { value: 'DEDUCT', label: 'DEDUCT' },
-      { value: 'PERCENT', label: 'PERCENT' }
-    ]
-  })
+
 
   const onSubmit = async () => {
     await form.validateFields(async (errors, formData) => {
@@ -80,9 +75,9 @@ const modalAddUser = Form.create()(props => {
             rules: [{ required: true, message: 'Please choose a type' }]
           })(
             <Select placeholder='Press to choose ...'>
-              {state.types.map(type => (
-                <Select.Option key={type.value} value={type.label}>
-                  {`${type.value} `}
+              {typeCoupon.map(type => (
+                <Select.Option key={type.value} value={type.value}>
+                  {`${type.label} `}
                 </Select.Option>
               ))}
             </Select>
@@ -123,4 +118,4 @@ const modalAddUser = Form.create()(props => {
   )
 })
 
-export default modalAddUser
+export default ModalAddDiscount

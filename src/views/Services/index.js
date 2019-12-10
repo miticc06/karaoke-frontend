@@ -1,24 +1,14 @@
-/* eslint-disable linebreak-style */
-/* eslint-disable arrow-body-style */
-/* eslint-disable linebreak-style */
-/* eslint-disable implicit-arrow-linebreak */
-/* eslint-disable brace-style */
-/* eslint-disable react/jsx-indent-props */
-/* eslint-disable react/jsx-first-prop-new-line */
-/* eslint-disable react/jsx-curly-newline */
-/* eslint-disable no-multiple-empty-lines */
+
 import React, { useState, useEffect } from 'react'
-import moment from 'moment'
 import SearchIcon from '@material-ui/icons/Search'
 import TextField from '@material-ui/core/TextField'
-import Checkbox from '@material-ui/core/Checkbox'
 import { AgGridReact } from 'ag-grid-react'
 import { client } from 'config/client'
 import { Notify } from 'helpers/notify'
 import { parseError } from 'helpers'
 import { Grid } from '@material-ui/core'
 import { Icon, Button, Modal } from 'antd'
-import { GET_SERVICES, GET_SERVICE, DELETE_SERVICE, UPDATE_SERVICE } from './query'
+import { GET_SERVICES, GET_SERVICE, DELETE_SERVICE } from './query'
 import './style.less'
 
 import ModalAddService from './ModalAddService'
@@ -55,11 +45,9 @@ const ServiceManagement = () => {
   const setTextValue = event => {
     let kw = event.target.value
     kw = kw.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-    if (kw !== '')
-    { setServices(servicesList.filter(service =>
-      service.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(kw))) 
-    }
-    else setServices(servicesList)
+    if (kw !== '') {
+      setServices(servicesList.filter(service => service.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(kw)))
+    } else setServices(servicesList)
   }
 
   const columnDefs = [

@@ -1,11 +1,4 @@
-/* eslint-disable implicit-arrow-linebreak */
-/* eslint-disable brace-style */
-/* eslint-disable react/jsx-indent-props */
-/* eslint-disable react/jsx-first-prop-new-line */
-/* eslint-disable react/jsx-curly-newline */
-/* eslint-disable no-multiple-empty-lines */
 import React, { useState, useEffect } from 'react'
-import IconButton from '@material-ui/core/IconButton'
 import SearchIcon from '@material-ui/icons/Search'
 import TextField from '@material-ui/core/TextField'
 import { AgGridReact } from 'ag-grid-react'
@@ -53,12 +46,11 @@ const CustomerManagement = () => {
     let kw = event.target.value
     kw = kw.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
     console.log(kw)
-    if (kw !== '')
-    { setCustomers(customersList.filter(customer => 
-      customer.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(kw) 
-      || customer.phone.includes(kw) 
-      || customer.email.includes(kw))) }
-    else setCustomers(customersList)
+    if (kw !== '') {
+      setCustomers(customersList.filter(customer => customer.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(kw)
+        || customer.phone.includes(kw)
+        || customer.email.includes(kw)))
+    } else setCustomers(customersList)
   }
 
   const columnDefs = [
@@ -149,15 +141,15 @@ const CustomerManagement = () => {
             <SearchIcon />
           </Grid>
           <Grid item>
-            <TextField 
-            id='input-with-icon-grid' 
-            label='Search Customer' 
-            onChange={setTextValue}
+            <TextField
+              id='input-with-icon-grid'
+              label='Search Customer'
+              onChange={setTextValue}
             />
           </Grid>
         </Grid>
       </form>
-      
+
 
       <Grid
         container

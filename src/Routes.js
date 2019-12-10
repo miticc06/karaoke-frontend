@@ -1,4 +1,4 @@
-/* eslint-disable linebreak-style */
+
 import React, { useEffect, useState } from 'react'
 import { inject, observer } from 'mobx-react'
 import jwt from 'jsonwebtoken'
@@ -7,8 +7,9 @@ import { client } from 'config/client'
 import gql from 'graphql-tag'
 import { Notify } from 'helpers/notify'
 import { parseError } from 'helpers'
+import Payment from 'views/Payment'
 import { RouteWithLayout } from './components'
-import { Main as MainLayout, Minimal as MinimalLayout } from './layouts'
+import { Main as MainLayout, Minimal as MinimalLayout, PaymentLayout } from './layouts'
 
 import {
   Dashboard as DashboardView,
@@ -228,6 +229,14 @@ const Routes = props => {
           exact
           layout={MainLayout}
           path='/settings'
+          refetchcurrentuser={getUser}
+          {...state}
+        />
+        <RouteWithLayout
+          component={Payment}
+          exact
+          layout={PaymentLayout}
+          path='/payment'
           refetchcurrentuser={getUser}
           {...state}
         />

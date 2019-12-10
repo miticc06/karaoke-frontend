@@ -1,6 +1,6 @@
-/* eslint-disable no-useless-escape */
+
 import { Modal, Form, Input } from 'antd'
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { client } from 'config/client'
 import { parseError } from 'helpers'
 import { Notify } from 'helpers/notify'

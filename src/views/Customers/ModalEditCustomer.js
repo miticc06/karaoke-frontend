@@ -1,6 +1,5 @@
-/* eslint-disable no-useless-escape */
-import { Modal, Form, Input, Select } from 'antd'
-import React, { useState, useEffect } from 'react'
+import { Modal, Form, Input } from 'antd'
+import React, { useEffect } from 'react'
 import { client } from 'config/client'
 import { parseError } from 'helpers'
 import { Notify } from 'helpers/notify'
@@ -8,7 +7,6 @@ import { UPDATE_CUSTOMER } from './query'
 
 const modalAddCustomer = Form.create()(props => {
   const { form, hide, visible, refetch, customer } = props
-  const [state, setState] = useState({})
 
   const onSubmit = async () => {
     await form.validateFields(async (errors, formData) => {
@@ -47,7 +45,7 @@ const modalAddCustomer = Form.create()(props => {
     })
   }
 
-  useEffect(() => {}, [])
+  useEffect(() => { }, [])
 
   return (
     <Modal

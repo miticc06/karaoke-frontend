@@ -1,5 +1,4 @@
-/* eslint-disable linebreak-style */
-/* eslint-disable no-useless-escape */
+
 import { Modal, Form, Input, Select } from 'antd'
 import React, { useState, useEffect } from 'react'
 import { client } from 'config/client'
@@ -82,10 +81,10 @@ const ModalEditRoom = Form.create()(props => {
       <Form>
         <Form.Item label='Name:'>
           {form.getFieldDecorator('name', {
-             initialValue: room ? room.name : '',
+            initialValue: room ? room.name : '',
             rules: [{ required: true, message: 'Please Enter room Name' }]
           })(<Input type='name' />)}
-        </Form.Item> 
+        </Form.Item>
 
         <Form.Item label='Type:'>
           {form.getFieldDecorator('typeRoom', {
