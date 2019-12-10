@@ -1,6 +1,6 @@
-/* eslint-disable linebreak-style */
+
 /* eslint-disable arrow-body-style */
-/* eslint-disable linebreak-style */
+
 /* eslint-disable implicit-arrow-linebreak */
 /* eslint-disable brace-style */
 /* eslint-disable react/jsx-indent-props */
@@ -57,9 +57,9 @@ const RoomManagement = () => {
   const setTextValue = event => {
     let kw = event.target.value
     kw = kw.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-    if (kw !== '')
-    { setRooms(roomsList.filter(room =>
-      room.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(kw))) 
+    if (kw !== '') {
+      setRooms(roomsList.filter(room =>
+        room.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(kw)))
     }
     else setRooms(roomsList)
   }

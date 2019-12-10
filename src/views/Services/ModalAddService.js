@@ -1,24 +1,16 @@
-/* eslint-disable linebreak-style */
-/* eslint-disable no-undef */
-/* eslint-disable linebreak-style */
-/* eslint-disable no-useless-escape */
 import { Modal, Form, Input, Select } from 'antd'
-import FormControlLabel from '@material-ui/core/FormControlLabel'
-import Checkbox from '@material-ui/core/Checkbox'
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { client } from 'config/client'
 import { parseError } from 'helpers'
 import { Notify } from 'helpers/notify'
 import { ADD_SERVICE } from './query'
 
+const typeService = [
+  { value: 'perHOUR', label: 'Theo giờ' },
+  { value: 'perUNIT', label: 'Theo lượt' }
+]
 const modalAddService = Form.create()(props => {
   const { form, hide, visible, refetch } = props
-  const [state, setState] = useState({
-    types: [
-      { value: 'perHOUR', label: 'perHOUR' },
-      { value: 'perUNIT', label: 'perUNIT' }
-    ]
-  })
 
   const onSubmit = async () => {
     await form.validateFields(async (errors, formData) => {
@@ -27,7 +19,7 @@ const modalAddService = Form.create()(props => {
         const d = {
           name,
           type,
-         unitPrice: parseFloat(unitPrice)
+          unitPrice: parseFloat(unitPrice)
         }
         await client
           .mutate({
@@ -79,9 +71,9 @@ const modalAddService = Form.create()(props => {
             rules: [{ required: true, message: 'Please choose a type' }]
           })(
             <Select placeholder='Press to choose ...'>
-              {state.types.map(type => (
-                <Select.Option key={type.value} value={type.label}>
-                  {`${type.value} `}
+              {typeService.map(type => (
+                <Select.Option key={type.value} value={type.value}>
+                  {`${type.label} `}
                 </Select.Option>
               ))}
             </Select>

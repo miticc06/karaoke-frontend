@@ -1,20 +1,17 @@
-/* eslint-disable linebreak-style */
-/* eslint-disable no-useless-escape */
 import { Modal, Form, Input, Select } from 'antd'
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { client } from 'config/client'
 import { parseError } from 'helpers'
 import { Notify } from 'helpers/notify'
 import { UPDATE_SERVICE } from './query'
 
+const typeService = [
+  { value: 'perHOUR', label: 'Theo giờ' },
+  { value: 'perUNIT', label: 'Theo lượt' }
+]
+
 const ModalEditService = Form.create()(props => {
   const { form, hide, visible, refetch, service } = props
-  const [state, setState] = useState({
-    types: [
-      { value: 'perHOUR', label: 'perHOUR' },
-      { value: 'perUNIT', label: 'perUNIT' }
-    ]
-  })
 
   const onSubmit = async () => {
     await form.validateFields(async (errors, formData) => {
@@ -23,7 +20,7 @@ const ModalEditService = Form.create()(props => {
         const d = {
           name,
           type,
-         unitPrice: parseFloat(unitPrice)
+          unitPrice: parseFloat(unitPrice)
         }
         console.log(JSON.stringify(d))
         await client
@@ -68,20 +65,20 @@ const ModalEditService = Form.create()(props => {
       <Form>
         <Form.Item label='Name:'>
           {form.getFieldDecorator('name', {
-             initialValue: service ? service.name : '',
+            initialValue: service ? service.name : '',
             rules: [{ required: true, message: 'Please Enter service Name' }]
           })(<Input type='name' />)}
         </Form.Item>
 
         <Form.Item label='Type:'>
           {form.getFieldDecorator('type', {
-             initialValue: service ? service.type : '',
+            initialValue: service ? service.type : '',
             rules: [{ required: true, message: 'Please choose a type' }]
           })(
             <Select placeholder='Press to choose ...'>
-              {state.types.map(type => (
-                <Select.Option key={type.value} value={type.label}>
-                  {`${type.value} `}
+              {typeService.map(type => (
+                <Select.Option key={type.value} value={type.value}>
+                  {`${type.label} `}
                 </Select.Option>
               ))}
             </Select>
@@ -90,7 +87,7 @@ const ModalEditService = Form.create()(props => {
 
         <Form.Item label='Price: '>
           {form.getFieldDecorator('unitPrice', {
-             initialValue: service ? service.unitPrice : '',
+            initialValue: service ? service.unitPrice : '',
             rules: [{ required: true, message: 'Please enter value' }]
           })(<Input type='number' />)}
         </Form.Item>

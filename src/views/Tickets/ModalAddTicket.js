@@ -1,6 +1,5 @@
-/* eslint-disable no-useless-escape */
 import { Modal, Form, Input } from 'antd'
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import Select from 'react-select'
 import { client } from 'config/client'
 import { parseError } from 'helpers'
@@ -9,7 +8,7 @@ import { ADD_TICKET } from './query'
 
 const ModalAddTicket = Form.create()(props => {
   const { form, hide, visible, refetch, roomOptions, statusOptions } = props
-  
+
   const onSubmit = async () => {
     await form.validateFields(async (errors, formData) => {
       if (!errors) {
@@ -65,15 +64,15 @@ const ModalAddTicket = Form.create()(props => {
         <Form.Item label='Room'>
           {form.getFieldDecorator('selectedRoom', {
             rules: [{ required: true, message: 'Hãy nhập số phòng.' }]
-          })(<Select 
-            options={roomOptions} 
+          })(<Select
+            options={roomOptions}
           />)}
         </Form.Item>
 
         <Form.Item label='Status'>
           {form.getFieldDecorator('selectedStatus', {
             rules: [{ required: true, message: 'Hãy nhập trạng thái.' }]
-          })(<Select 
+          })(<Select
             options={statusOptions}
           />)}
         </Form.Item>

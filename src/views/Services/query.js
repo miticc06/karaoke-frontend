@@ -1,4 +1,4 @@
-/* eslint-disable linebreak-style */
+
 import gql from 'graphql-tag'
 
 export const GET_SERVICES = gql`

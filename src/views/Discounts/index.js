@@ -1,14 +1,5 @@
-/* eslint-disable arrow-body-style */
-/* eslint-disable linebreak-style */
-/* eslint-disable implicit-arrow-linebreak */
-/* eslint-disable brace-style */
-/* eslint-disable react/jsx-indent-props */
-/* eslint-disable react/jsx-first-prop-new-line */
-/* eslint-disable react/jsx-curly-newline */
-/* eslint-disable no-multiple-empty-lines */
 import React, { useState, useEffect } from 'react'
 import moment from 'moment'
-import IconButton from '@material-ui/core/IconButton'
 import SearchIcon from '@material-ui/icons/Search'
 import TextField from '@material-ui/core/TextField'
 import Checkbox from '@material-ui/core/Checkbox'
@@ -64,11 +55,9 @@ const DiscountManagement = () => {
   const setTextValue = event => {
     let kw = event.target.value
     kw = kw.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-    if (kw !== '')
-    { setDiscounts(discountsList.filter(discount =>
-      discount.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(kw))) 
-    }
-    else setDiscounts(discountsList)
+    if (kw !== '') {
+      setDiscounts(discountsList.filter(discount => discount.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(kw)))
+    } else setDiscounts(discountsList)
   }
 
   const columnDefs = [
@@ -134,42 +123,43 @@ const DiscountManagement = () => {
             checked={row.data.isActive}
             onClick={
               async () => {
-              confirm({
-                title: 'Do you want to change active status of this discount?',
-                okType: 'danger',
-                content: `- ${row.data.name} from ${row.data.isActive} to ${!row.data.isActive}`,
-                onOk: 
-                async () => {
-                  const d = {
-                    name: row.data.name,
-                    type: row.data.type,
-                    value: row.data.value,
-                    isActive: !row.data.isActive,
-                    createdBy: row.data.createdBy._id,
-                    createdAt: new Date(row.data.createdAt).getTime(),
-                    startDate: new Date(row.data.startDate).getTime(),
-                    endDate: new Date(row.data.endDate).getTime()
-                  }
-                  console.log(d)
-                  await client
-                    .mutate({
-                      mutation: UPDATE_DISCOUNT,
-                      variables: {
-                        discountId: row.data._id,
-                        input: d
+                confirm({
+                  title: 'Do you want to change active status of this discount?',
+                  okType: 'danger',
+                  content: `- ${row.data.name} from ${row.data.isActive} to ${!row.data.isActive}`,
+                  onOk:
+                    async () => {
+                      const d = {
+                        name: row.data.name,
+                        type: row.data.type,
+                        value: row.data.value,
+                        isActive: !row.data.isActive,
+                        createdBy: row.data.createdBy._id,
+                        createdAt: new Date(row.data.createdAt).getTime(),
+                        startDate: new Date(row.data.startDate).getTime(),
+                        endDate: new Date(row.data.endDate).getTime()
                       }
-                    })
-                    .then(async res => {
-                      if (!res || !res.data || !res.data.updateDiscount) {
-                        throw Error('Something went wrong!')
-                      }
-                      await getDiscounts()
-                      return new Notify('success', 'Change status successully!')
-                    })
-                    .catch(err => new Notify('error', parseError(err)))
-                }
-              })
-            }}
+                      console.log(d)
+                      await client
+                        .mutate({
+                          mutation: UPDATE_DISCOUNT,
+                          variables: {
+                            discountId: row.data._id,
+                            input: d
+                          }
+                        })
+                        .then(async res => {
+                          if (!res || !res.data || !res.data.updateDiscount) {
+                            throw Error('Something went wrong!')
+                          }
+                          await getDiscounts()
+                          return new Notify('success', 'Change status successully!')
+                        })
+                        .catch(err => new Notify('error', parseError(err)))
+                    }
+                })
+              }
+            }
             value='checkedB'
             color='primary'
             inputProps={{
