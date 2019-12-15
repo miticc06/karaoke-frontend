@@ -5,12 +5,14 @@ import { Col, Row, Tabs } from 'antd'
 import { client } from 'config/client'
 import { Notify } from 'helpers/notify'
 import { parseError } from 'helpers'
-import { GET_ROOMS } from './query'
+import { GET_ROOMS, GET_BILL_BY_ROOM_ID } from './query'
 
 const { TabPane } = Tabs
 
 const Payment = props => {
   const [rooms, setRooms] = useState([])
+  const [roomSelected, setRoomSelected] = useState(null)
+  const [bill, setBill] = useState(null)
 
   const getRooms = async () => {
     await client
@@ -22,6 +24,10 @@ const Payment = props => {
           throw new Error('Có lỗi xảy ra!')
         }
         setRooms(res.data.rooms)
+        if (!roomSelected) {
+          console.log('roomSelected:  ', res.data.rooms[0])
+          setRoomSelected(res.data.rooms[0])
+        }
       })
       .catch(err => new Notify('error', parseError(err)))
   }
@@ -29,6 +35,30 @@ const Payment = props => {
   useEffect(() => {
     getRooms()
   }, [])
+
+
+  const getBillByRoomId = async (roomId) => {
+    await client
+      .query({
+        query: GET_BILL_BY_ROOM_ID,
+        variables: {
+          roomId
+        }
+      })
+      .then(res => {
+        if (!res || !res.data) {
+          throw new Error('Có lỗi xảy ra!')
+        }
+        setBill(res.data.billByRoom)
+      })
+      .catch(err => new Notify('error', parseError(err)))
+  }
+
+  const handleSelectRoom = (roomId) => {
+    const room = rooms.filter(obj => obj._id === roomId)[0]
+    setRoomSelected(room)
+    getBillByRoomId(roomId)
+  }
 
   return (
     <Row className='payment'>
@@ -49,7 +79,11 @@ const Payment = props => {
             >
               <div className='rooms'>
                 {rooms.map(room => (
-                  <div className='room'>
+                  <div
+                    key={room._id}
+                    className={`room${roomSelected && roomSelected._id === room._id ? ' room-selected' : ''}`}
+                    onClick={() => handleSelectRoom(room._id)}
+                  >
                     {room.name}
                   </div>
                 ))}
@@ -72,7 +106,7 @@ const Payment = props => {
           <div className='title-bill'>Hóa đơn dịch vụ</div>
           <div className='room-bill'>
             Phòng
-            <div className='room-name'>A.4</div>
+            <div className='room-name'>{roomSelected && roomSelected.name}</div>
           </div>
 
         </div>
