@@ -25,21 +25,75 @@
   }
 
   .right {
-    .title-bill {
-      color: #3f51b5;
-      font-size: 20px;
-      margin: 25px;
-      display: flex;
-      justify-content: center;
-    }
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 64px);
+    justify-content: space-between;
 
-    .room-bill {
-      display: flex;
-      align-items: baseline;
-      .room-name {
-        margin-left: 8px;
+    .top-bill {
+      .title-bill {
         color: #3f51b5;
         font-size: 20px;
+        margin: 25px;
+        display: flex;
+        justify-content: center;
+      }
+
+      .room-bill {
+        display: flex;
+        align-items: baseline;
+        .room-name {
+          margin-left: 8px;
+          color: #3f51b5;
+          font-size: 20px;
+        }
+      }
+
+      .group-list-room-details {
+        margin: 25px;
+
+        .title-list-room-details {
+          font-weight: 600;
+        }
+
+        .list-room-details {
+          margin: 5px;
+          .room-detail-item {
+          }
+        }
+      }
+
+      .group-list-service-details {
+        margin: 25px;
+
+        .title-list-service-details {
+          font-weight: 600;
+        }
+
+        .list-service-details {
+          margin: 5px;
+
+          td {
+            padding: 16px 5px !important;
+          }
+          th {
+            padding: 16px 5px !important;
+          }
+        }
+      }
+    }
+    .bottom-bill {
+      display: flex;
+      justify-content: center;
+
+      .actions-bill {
+        margin: 25px;
+
+        button {
+          margin: 5px;
+          height: 50px;
+          width: 200px;
+        }
       }
     }
   }
