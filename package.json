@@ -52,7 +52,6 @@
     "validate.js": "^0.13.1"
   },
   "scripts": {
-
     "start": "BROWSER=none SOURCE_MAP=true react-app-rewired start",
     "start:win": "SET BROWSER=none SOURCE_MAP=true && react-app-rewired start",
     "build": "react-app-rewired build",
