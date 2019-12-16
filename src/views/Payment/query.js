@@ -72,49 +72,6 @@ export const CREATE_BILL = gql`
   mutation ($input: BillInput!){
   createBill(input: $input) {
     _id
-    customer {
-      _id
-      name
-    }
-    state
-    total
-    roomDetails {
-      room {
-        _id
-        name
-        typeRoom {
-          _id
-          name
-          unitPrice
-          updatedAt
-        }
-      }
-      startTime
-      endTime
-      total
-    }
-    serviceDetails {
-      service {
-        _id
-        name
-        type
-        unitPrice
-      }
-      startTime
-      endTime
-      quantity
-      total
-    }
-    createdAt
-    createdBy {
-      _id
-      username
-      role {
-        _id
-        code
-        name
-      }
-    }
   }
 }
 `
@@ -126,49 +83,60 @@ export const UPDATE_BILL = gql`
     input: $input 
   ) {
     _id
-    customer {
-      _id
-      name
-    }
-    state
-    total
-    roomDetails {
-      room {
-        _id
-        name
-        typeRoom {
-          _id
-          name
-          unitPrice
-        }
-      }
-      startTime
-      endTime
-      total
-    }
-    serviceDetails {
-      service {
-        _id
-        name
-        type
-        unitPrice
-      }
-      startTime
-      endTime
-      quantity
-      total
-    }
-    createdAt
-    createdBy {
-      _id
-      username
-      role {
-        _id
-        code
-        name
-      }
-    }
+    # customer {
+    #   _id
+    #   name
+    # }
+    # state
+    # total
+    # roomDetails {
+    #   room {
+    #     _id
+    #     name
+    #     typeRoom {
+    #       _id
+    #       name
+    #       unitPrice
+    #     }
+    #   }
+    #   startTime
+    #   endTime
+    #   total
+    # }
+    # serviceDetails {
+    #   service {
+    #     _id
+    #     name
+    #     type
+    #     unitPrice
+    #   }
+    #   startTime
+    #   endTime
+    #   quantity
+    #   total
+    # }
+    # createdAt
+    # createdBy {
+    #   _id
+    #   username
+    #   role {
+    #     _id
+    #     code
+    #     name
+    #   }
+    # }
   }
 }
+`
 
+
+export const GET_SERVICES = gql`
+query {
+  services {
+    _id
+    name
+    type
+    unitPrice
+  }
+}
 `
