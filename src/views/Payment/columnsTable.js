@@ -75,9 +75,16 @@ export const columnsServiceDetailsPerHOUR = [
 ]
 
 
-export const columnsServiceDetailsPerUNIT = [
+export const columnsServiceDetailsPerUNIT = (handleUpdateQuantityItem) => [
   {
-    render: data => <Button type='link' icon='close' style={{ color: 'red' }} />
+    render: data => (
+      <Button
+        type='link'
+        icon='close'
+        style={{ color: 'red' }}
+        onClick={() => handleUpdateQuantityItem(data.service._id, 0)}
+      />
+    )
   },
   {
     title: 'Dịch vụ',
@@ -91,15 +98,22 @@ export const columnsServiceDetailsPerUNIT = [
   },
   {
     title: 'Số lượng',
-    dataIndex: 'quantity',
-    key: 'quantity',
+    // dataIndex: 'quantity',
     render: data => {
       console.log(data)
       return (
         <>
-          <Button type='link' icon='down' />
-          {data}
-          <Button type='link' icon='up' />
+          <Button
+            type='link'
+            icon='down'
+            onClick={() => handleUpdateQuantityItem(data.service._id, data.quantity - 1)}
+          />
+          {data.quantity}
+          <Button
+            type='link'
+            icon='up'
+            onClick={() => handleUpdateQuantityItem(data.service._id, data.quantity + 1)}
+          />
         </>
       )
     }
@@ -108,7 +122,7 @@ export const columnsServiceDetailsPerUNIT = [
     title: 'Thành tiền',
     render: data => {
       if (data.service.type === 'perUNIT') {
-        return data.quantity * data.service.unitPrice
+        return data.total || (data.quantity * data.service.unitPrice)
       }
       return '...'
     }

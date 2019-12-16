@@ -7,7 +7,7 @@ import { client } from 'config/client'
 import { Notify } from 'helpers/notify'
 import { parseError } from 'helpers'
 import moment from 'moment'
-import { GET_ROOMS, GET_BILL_BY_ROOM_ID } from './query'
+import { GET_ROOMS, GET_BILL_BY_ROOM_ID, CREATE_BILL, UPDATE_BILL } from './query'
 import { columnsRoomDetails, columnsServiceDetailsPerHOUR, columnsServiceDetailsPerUNIT } from './columnsTable'
 
 const { TabPane } = Tabs
@@ -68,6 +68,102 @@ const Payment = props => {
     const room = rooms.filter(obj => obj._id === roomId)[0]
     setRoomSelected(room)
     // getBillByRoomId(roomId)
+  }
+
+  const handleCheckInRoom = async () => {
+    console.log(roomSelected)
+
+    await client
+      .mutate({
+        mutation: CREATE_BILL,
+        variables: {
+          input: {
+            roomDetails: [
+              {
+                room: {
+                  _id: roomSelected._id,
+                  name: roomSelected.name,
+                  typeRoom: roomSelected.typeRoom
+                },
+                startTime: +moment()
+              }
+            ],
+            serviceDetails: []
+          }
+        }
+      })
+      .then(async res => {
+        if (res && res.data && res.data.createBill) {
+          // eslint-disable-next-line
+          const notify = new Notify(
+            'success',
+            'Đã tiếp nhận',
+            2
+          )
+
+          // refetch data
+          await getRooms()
+          await getBillByRoomId(roomSelected._id)
+        }
+      })
+      .catch(err => {
+        // eslint-disable-next-line
+        const notify = new Notify('error', parseError(err), 3)
+      })
+  }
+
+  const handleUpdateBill = async (billId, input) => {
+    await client
+      .mutate({
+        mutation: UPDATE_BILL,
+        variables: {
+          billId,
+          input
+        }
+      })
+      .then(async res => {
+        if (res && res.data && res.data.updateBill) {
+          console.log('done', res.data.updateBill)
+          // refetch data
+          await getRooms()
+          await getBillByRoomId(roomSelected._id)
+        }
+      })
+      .catch(err => {
+        // eslint-disable-next-line
+        const notify = new Notify('error', parseError(err), 3)
+      })
+  }
+
+  const handleUpdateQuantityItem = async (serviceId, newQuantity) => {
+    console.log(serviceId, newQuantity)
+    const newBill = {
+      ...bill,
+      customer: bill && bill.customer ? bill.customer._id : null
+    }
+
+    delete newBill._id
+    delete newBill.state
+    delete newBill.total
+    delete newBill.createdAt
+    delete newBill.createdBy
+
+
+    if (newQuantity <= 0) {
+      newBill.serviceDetails = newBill.serviceDetails.filter(obj => obj.service._id !== serviceId)
+    } else {
+      const findService = newBill.serviceDetails.find(obj => obj.service._id === serviceId)
+      findService.quantity = newQuantity
+      console.log(findService)
+    }
+
+    // newBill.serviceDetails = newBill.serviceDetails.map(obj => {
+    //   const newObj = { ...obj }
+    //   delete newObj.total
+    //   return newObj
+    // })
+
+    await handleUpdateBill(bill._id, newBill)
   }
 
   const servicesPerHour = bill && bill.serviceDetails ? bill.serviceDetails.filter(obj => obj.service.type === 'perHOUR') : []
@@ -156,7 +252,7 @@ const Payment = props => {
                 </div>
                 <Table
                   className='list-service-details'
-                  columns={columnsServiceDetailsPerUNIT}
+                  columns={columnsServiceDetailsPerUNIT(handleUpdateQuantityItem)}
                   dataSource={servicesPerUnit}
                   pagination={false}
                 />
@@ -170,8 +266,24 @@ const Payment = props => {
             <div
               className='actions-bill'
             >
-              <Button type='primary'>TIẾP NHẬN</Button>
-              <Button>THANH TOÁN</Button>
+              {bill && (
+                <>
+                  <Button type='primary'>THANH TOÁN</Button>
+                  <Button>ĐỔI PHÒNG</Button>
+                </>
+              )}
+
+              {!bill && (
+                <>
+                  <Button
+                    onClick={handleCheckInRoom}
+                    type='primary'
+                  >
+                    TIẾP NHẬN
+                  </Button>
+                  <Button>TRA CƯỚC</Button>
+                </>
+              )}
             </div>
 
           </div>
@@ -181,16 +293,6 @@ const Payment = props => {
       </Col>
 
     </Row>
-
-
-    //     <div className='payment'>
-    //       <div className='left'>
-
-    // </div>
-    // <div className='right'>
-
-    // </div>
-    //     </div>
   )
 }
 export default withRouter(Payment)
