@@ -7,13 +7,14 @@ import { client } from 'config/client'
 import { Notify } from 'helpers/notify'
 import { parseError } from 'helpers'
 import moment from 'moment'
-import { GET_ROOMS, GET_BILL_BY_ROOM_ID, CREATE_BILL, UPDATE_BILL } from './query'
+import { GET_ROOMS, GET_BILL_BY_ROOM_ID, CREATE_BILL, UPDATE_BILL, GET_SERVICES } from './query'
 import { columnsRoomDetails, columnsServiceDetailsPerHOUR, columnsServiceDetailsPerUNIT } from './columnsTable'
 
 const { TabPane } = Tabs
 
 const Payment = props => {
   const [rooms, setRooms] = useState([])
+  const [services, setServices] = useState([])
   const [roomSelected, setRoomSelected] = useState(null)
   const [bill, setBill] = useState(null)
 
@@ -35,8 +36,23 @@ const Payment = props => {
       .catch(err => new Notify('error', parseError(err)))
   }
 
+  const getServices = async () => {
+    await client
+      .query({
+        query: GET_SERVICES
+      })
+      .then(res => {
+        if (!res || !res.data || !res.data.services) {
+          throw new Error('Có lỗi xảy ra!')
+        }
+        setServices(res.data.services)
+      })
+      .catch(err => new Notify('error', parseError(err)))
+  }
+
   useEffect(() => {
     getRooms()
+    getServices()
   }, [])
 
   const getBillByRoomId = async (roomId) => {
@@ -65,9 +81,8 @@ const Payment = props => {
 
 
   const handleSelectRoom = (roomId) => {
-    const room = rooms.filter(obj => obj._id === roomId)[0]
+    const room = rooms.find(obj => obj._id === roomId)
     setRoomSelected(room)
-    // getBillByRoomId(roomId)
   }
 
   const handleCheckInRoom = async () => {
@@ -113,6 +128,12 @@ const Payment = props => {
   }
 
   const handleUpdateBill = async (billId, input) => {
+    delete input._id
+    delete input.state
+    delete input.total
+    delete input.createdAt
+    delete input.createdBy
+    input.customer = input && input.customer ? input.customer._id : null
     await client
       .mutate({
         mutation: UPDATE_BILL,
@@ -138,16 +159,8 @@ const Payment = props => {
   const handleUpdateQuantityItem = async (serviceId, newQuantity) => {
     console.log(serviceId, newQuantity)
     const newBill = {
-      ...bill,
-      customer: bill && bill.customer ? bill.customer._id : null
+      ...bill
     }
-
-    delete newBill._id
-    delete newBill.state
-    delete newBill.total
-    delete newBill.createdAt
-    delete newBill.createdBy
-
 
     if (newQuantity <= 0) {
       newBill.serviceDetails = newBill.serviceDetails.filter(obj => obj.service._id !== serviceId)
@@ -156,15 +169,34 @@ const Payment = props => {
       findService.quantity = newQuantity
       console.log(findService)
     }
-
-    // newBill.serviceDetails = newBill.serviceDetails.map(obj => {
-    //   const newObj = { ...obj }
-    //   delete newObj.total
-    //   return newObj
-    // })
-
     await handleUpdateBill(bill._id, newBill)
   }
+
+
+  const handleSelectService = async (serviceId) => {
+    if (!bill) {
+      return new Notify('error', 'Bạn chưa Check-In phòng!', 2)
+    }
+    const service = services.find(obj => obj._id === serviceId)
+    console.log(service)
+
+    if (service.type === 'perUNIT') {
+      const findServiceExistInBill = bill.serviceDetails.find(obj => obj.service._id === serviceId)
+      if (findServiceExistInBill) {
+        await handleUpdateQuantityItem(serviceId, findServiceExistInBill.quantity + 1)
+      } else {
+        await handleUpdateBill(bill._id, {
+          ...bill,
+          serviceDetails: [...bill.serviceDetails, {
+            service,
+            startTime: +moment(),
+            quantity: 1
+          }]
+        })
+      }
+    }
+  }
+
 
   const servicesPerHour = bill && bill.serviceDetails ? bill.serviceDetails.filter(obj => obj.service.type === 'perHOUR') : []
   const servicesPerUnit = bill && bill.serviceDetails ? bill.serviceDetails.filter(obj => obj.service.type === 'perUNIT') : []
@@ -199,7 +231,17 @@ const Payment = props => {
               </div>
             </TabPane>
             <TabPane tab='Dịch vụ' key='2'>
-              tab2
+              <div className='services'>
+                {services.map(service => (
+                  <div
+                    key={service._id}
+                    className='service'
+                    onClick={() => handleSelectService(service._id)}
+                  >
+                    {service.name}
+                  </div>
+                ))}
+              </div>
             </TabPane>
           </Tabs>
 
