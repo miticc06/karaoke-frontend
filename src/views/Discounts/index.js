@@ -34,14 +34,6 @@ const DiscountManagement = () => {
           throw new Error('Có lỗi xảy ra!')
         }
 
-        res.data.discounts.forEach(element => {
-          element.createdAt = moment(element.createdAt).format('YYYY/MM/DD')
-          element.startDate = moment(element.startDate).format(
-            'YYYY/MM/DD'
-          )
-          element.endDate = moment(element.endDate).format('YYYY/MM/DD')
-        })
-
         setDiscounts(res.data.discounts)
         setDiscountsList(res.data.discounts)
       })
@@ -73,7 +65,8 @@ const DiscountManagement = () => {
       field: 'type',
       filter: 'agTextColumnFilter',
       resizable: true,
-      sortable: true
+      sortable: true,
+      cellRendererFramework: row => row.value === 'DEDUCT' ? 'Khấu trừ' : 'Phần trăm'
     },
     {
       headerName: 'Value',
@@ -87,21 +80,16 @@ const DiscountManagement = () => {
       field: 'startDate',
       filter: 'agTextColumnFilter',
       resizable: true,
-      sortable: true
+      sortable: true,
+      cellRendererFramework: row => moment(row.value).format('DD/MM/YYYY')
     },
     {
       headerName: 'End Date',
       field: 'endDate',
       filter: 'agTextColumnFilter',
       resizable: true,
-      sortable: true
-    },
-
-    {
-      headerName: 'Created Date',
-      field: 'createdAt',
-      resizable: true,
-      sortable: true
+      sortable: true,
+      cellRendererFramework: row => moment(row.value).format('DD/MM/YYYY')
     },
     {
       headerName: 'Created By',
@@ -135,9 +123,9 @@ const DiscountManagement = () => {
                         value: row.data.value,
                         isActive: !row.data.isActive,
                         createdBy: row.data.createdBy._id,
-                        createdAt: new Date(row.data.createdAt).getTime(),
-                        startDate: new Date(row.data.startDate).getTime(),
-                        endDate: new Date(row.data.endDate).getTime()
+                        createdAt: row.data.createdAt,
+                        startDate: row.data.startDate,
+                        endDate: row.data.endDate
                       }
                       console.log(d)
                       await client
@@ -179,11 +167,33 @@ const DiscountManagement = () => {
         <>
           <Icon
             style={{ cursor: 'pointer', margin: '5px' }}
+            onClick={async e => {
+              setVisibleEdit(true)
+              client
+                .query({
+                  query: GET_DISCOUNT,
+                  variables: {
+                    discountId: row.data._id
+                  }
+                })
+                .then(res => {
+                  if (!res || !res.data || !res.data.discount) {
+                    throw new Error('Something went wrong!')
+                  }
+                  setDiscountEdit(res.data.discount)
+                })
+                .catch(err => new Notify('error', parseError(err)))
+            }}
+            type='edit'
+          />
+
+          <Icon
+            style={{ cursor: 'pointer', margin: '5px' }}
             onClick={async () => {
               confirm({
                 title: 'Do you Want to delete this discount?',
                 okType: 'danger',
-                content: `- ${row.data._id} from ${row.data.startDate} to ${row.data.endDate}`,
+                content: `- "${row.data.name}" from ${row.data.startDate} to ${row.data.endDate}`,
                 onOk: async () => {
                   await client
                     .mutate({
@@ -206,29 +216,6 @@ const DiscountManagement = () => {
             type='delete'
           />
 
-          <Icon
-            style={{ cursor: 'pointer', margin: '5px' }}
-            onClick={async e => {
-              setVisibleEdit(true)
-              client
-                .query({
-                  query: GET_DISCOUNT,
-                  variables: {
-                    discountId: row.data._id
-                  }
-                })
-                .then(res => {
-                  if (!res || !res.data || !res.data.discount) {
-                    throw new Error('Something went wrong!')
-                  }
-                  res.data.discount.startDate = moment(res.data.discount.startDate).format('YYYY-MM-DD')
-                  res.data.discount.endDate = moment(res.data.discount.endDate).format('YYYY-MM-DD')
-                  setDiscountEdit(res.data.discount)
-                })
-                .catch(err => new Notify('error', parseError(err)))
-            }}
-            type='edit'
-          />
         </>
       )
     }

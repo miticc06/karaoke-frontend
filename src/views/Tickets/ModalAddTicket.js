@@ -6,7 +6,7 @@ import { Notify } from 'helpers/notify'
 import { ADD_TICKET } from './query'
 
 const ModalAddTicket = Form.create()(props => {
-  const { form, hide, visible, refetch, rooms, statusOptions } = props
+  const { form, hide, visible, refetch, rooms, statusOptions, roomNeedAddTicket } = props
 
   const onSubmit = async () => {
     await form.validateFields(async (errors, formData) => {
@@ -59,14 +59,23 @@ const ModalAddTicket = Form.create()(props => {
 
         <Form.Item label='Room'>
           {form.getFieldDecorator('room', {
-            rules: [{ required: true, message: 'Hãy nhập số phòng.' }]
+            rules: [{ required: true, message: 'Hãy nhập số phòng.' }],
+            initialValue: roomNeedAddTicket && roomNeedAddTicket._id
           })(
-            <Select placeholder='Please select room ...'>
+            <Select
+              disabled={roomNeedAddTicket && roomNeedAddTicket._id}
+              placeholder='Please select room ...'
+            >
               {rooms.map(room => (
                 <Select.Option key={room._id} value={room._id}>
                   {room.name}
                 </Select.Option>
               ))}
+              {roomNeedAddTicket && (
+                <Select.Option key={roomNeedAddTicket._id} value={roomNeedAddTicket._id}>
+                  {roomNeedAddTicket.name}
+                </Select.Option>
+              )}
             </Select>
           )}
         </Form.Item>
