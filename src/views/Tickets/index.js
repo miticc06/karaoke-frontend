@@ -6,6 +6,7 @@ import { Notify } from 'helpers/notify'
 import { parseError } from 'helpers'
 import { Grid } from '@material-ui/core'
 import { Icon, Button, Modal } from 'antd'
+import moment from 'moment'
 import { GET_TICKETS, GET_TICKET, DELETE_TICKET, GET_ROOMS } from './query'
 import './style.less'
 import ModalAddTicket from './ModalAddTicket'
@@ -49,31 +50,26 @@ const TicketManagement = () => {
     getRooms()
   }, [])
 
-  const roomOptions = Array.from(rooms, (room) => ({ label: room.name, value: room._id }))
-
   const statusOptions = [
-    { label: 'NEW', value: 'NEW' },
-    { label: 'OPEN', value: 'OPEN' },
-    { label: 'ON_HOLD', value: 'ON_HOLD' },
-    { label: 'PENDING', value: 'PENDING' },
-    { label: 'IN_PROGRESS', value: 'IN_PROGRESS' },
-    { label: 'SOLVED', value: 'SOLVED' },
-    { label: 'CLOSED', value: 'CLOSED' }
+    { label: 'Mới', value: 'OPEN' },
+    { label: 'Đang xử lý', value: 'IN_PROGRESS' },
+    { label: 'Đã xong', value: 'SOLVED' },
+    { label: 'Đã đóng', value: 'CLOSED' }
   ]
 
   const columnDefs = [
     {
-      headerName: 'Status', 
-      field: 'status', 
+      headerName: 'Status',
+      field: 'status',
       sortable: true,
       minWidth: 50,
       width: 100,
       maxWidth: 150,
       cellClassRules: {
-        'status status-new': function (params) { return params.value === 'NEW' },
+        // 'status status-new': function (params) { return params.value === 'NEW' },
         'status status-open': function (params) { return params.value === 'OPEN' },
-        'status status-on-hold': function (params) { return params.value === 'ON_HOLD' },
-        'status status-pending': function (params) { return params.value === 'PENDING' },
+        // 'status status-on-hold': function (params) { return params.value === 'ON_HOLD' },
+        // 'status status-pending': function (params) { return params.value === 'PENDING' },
         'status status-in-progress': function (params) { return params.value === 'IN_PROGRESS' },
         'status status-solved': function (params) { return params.value === 'SOLVED' },
         'status status-closed': function (params) { return params.value === 'CLOSED' }
@@ -83,16 +79,16 @@ const TicketManagement = () => {
       headerName: 'Subject', field: 'subject', sortable: true
     },
     {
-        headerName: 'Room', field: 'room.name', sortable: true
+      headerName: 'Room', field: 'room.name', sortable: true
     },
     {
       headerName: 'Created By', field: 'createdBy.name', sortable: true
     },
     {
-      headerName: 'Created At', 
-      field: 'createdAt', 
+      headerName: 'Created At',
+      field: 'createdAt',
       sortable: true,
-      cellRenderer: (data) => data.value ? (new Date(data.value)).toLocaleDateString() : ''
+      cellRenderer: (data) => data.value ? moment(data.value).format('HH:mm:ss - DD/MM/YYYY') : ''
     },
     {
       headerName: 'Action',
@@ -196,7 +192,7 @@ const TicketManagement = () => {
       </Grid>
 
       <ModalAddTicket
-        roomOptions={roomOptions}
+        rooms={rooms}
         statusOptions={statusOptions}
         visible={visibleAdd}
         hide={() => setVisibleAdd(false)}
@@ -205,7 +201,7 @@ const TicketManagement = () => {
 
       <ModalEditTicket
         ticket={ticketEdit}
-        roomOptions={roomOptions}
+        rooms={rooms}
         statusOptions={statusOptions}
         visible={visibleEdit}
         hide={() => setVisibleEdit(false)}

@@ -1,21 +1,17 @@
-import { Modal, Form, Input } from 'antd'
+import { Modal, Form, Input, Select } from 'antd'
 import React, { useEffect } from 'react'
-import ReactSelect from 'react-select'
 import { client } from 'config/client'
 import { parseError } from 'helpers'
 import { Notify } from 'helpers/notify'
 import { UPDATE_TICKET } from './query'
 
 const ModalEditTicket = Form.create()(props => {
-  const { form, hide, visible, refetch, ticket, roomOptions, statusOptions } = props
+  const { form, hide, visible, refetch, ticket, rooms, statusOptions } = props
 
   const onSubmit = async () => {
     await form.validateFields(async (errors, formData) => {
       if (!errors) {
-        const { subject, selectedRoom, selectedStatus } = formData
-        const room = selectedRoom.value
-        const status = selectedStatus.value
-
+        const { subject, room, status } = formData
         await client
           .mutate({
             mutation: UPDATE_TICKET,
@@ -62,26 +58,38 @@ const ModalEditTicket = Form.create()(props => {
         <Form.Item label='Subject'>
           {form.getFieldDecorator('subject', {
             initialValue: ticket && ticket.subject ? ticket.subject : '',
-            rules: [{ required: true, message: 'Hãy nhập tiêu đề.' }]
+            rules: [{ required: true, message: 'Vui lòng nhập tiêu đề.' }]
           })(<Input type='text' />)}
         </Form.Item>
 
         <Form.Item label='Room'>
-          {form.getFieldDecorator('selectedRoom', {
-            rules: [{ required: true, message: 'Hãy nhập số phòng.' }],
-            initialValue: ticket && ticket.room ? { label: ticket.room.name, value: ticket.room._id } : { label: '', value: '' }
-          })(<ReactSelect
-            options={roomOptions}
-          />)}
+          {form.getFieldDecorator('room', {
+            rules: [{ required: true, message: 'Vui lòng chọn phòng.' }],
+            initialValue: ticket && ticket.room ? ticket.room._id : ''
+          })(
+            <Select placeholder='Please select room ...'>
+              {rooms.map(room => (
+                <Select.Option key={room._id} value={room._id}>
+                  {room.name}
+                </Select.Option>
+              ))}
+            </Select>
+          )}
         </Form.Item>
 
         <Form.Item label='Status'>
-          {form.getFieldDecorator('selectedStatus', {
-            rules: [{ required: true, message: 'Hãy nhập trạng thái.' }],
-            initialValue: ticket && ticket.status ? { label: ticket.status, value: ticket.status } : { label: '', value: '' }
-          })(<ReactSelect
-            options={statusOptions}
-          />)}
+          {form.getFieldDecorator('status', {
+            rules: [{ required: true, message: 'Vui lòng chọn trạng thái.' }],
+            initialValue: ticket && ticket.status
+          })(
+            <Select placeholder='Please select room ...'>
+              {statusOptions.map(status => (
+                <Select.Option key={status.value} value={status.value}>
+                  {status.label}
+                </Select.Option>
+              ))}
+            </Select>
+          )}
         </Form.Item>
       </Form>
     </Modal>
