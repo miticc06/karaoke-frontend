@@ -12,8 +12,17 @@ export const columnsRoomDetails = [
   {
     title: 'Số giờ',
     key: 'so-gio',
-    dataIndex: 'startTime',
-    render: data => moment(+moment() - data).format('HH:mm')
+    render: data => {
+      let date1 = data.startTime
+      let date2 = data.endTime || moment()
+      let diff = date2 - date1
+      let hours = Math.floor(diff / (1000 * 60 * 60))
+      diff -= hours * (1000 * 60 * 60)
+
+      let mins = Math.floor(diff / (1000 * 60))
+      diff -= mins * (1000 * 60)
+      return `${hours}:${mins}`
+    }
   },
   {
     title: 'Phòng',
@@ -32,57 +41,77 @@ export const columnsRoomDetails = [
   },
   {
     title: 'Tổng',
-    render: data => {
-      console.log(data)
-      return '...'
-    }
+    dataIndex: 'total',
+    render: data => data ? Math.round(data) : '...'
+
   }
 ]
 
 
-export const columnsServiceDetailsPerHOUR = (handleUpdateQuantityItem) => [
-  {
-    render: data => (
-      <Button
-        type='link'
-        icon='close'
-        style={{ color: 'red' }}
-        onClick={() => handleUpdateQuantityItem(data.service._id, data.startTime, 0)}
-      />
-    )
-  },
-  {
-    title: 'Giờ',
-    dataIndex: 'startTime',
-    key: 'startTime',
-    render: data => moment(data).format('DD/MM/YY - HH:mm')
-  },
-  {
-    title: 'Số giờ',
-    key: 'so-gio',
-    dataIndex: 'startTime',
-    render: data => moment(+moment() - data).format('HH:mm')
-  },
-  {
-    title: 'Dịch vụ',
-    dataIndex: 'service.name',
-    key: 'service.name'
-  },
-  {
-    title: 'Đơn giá',
-    dataIndex: 'service.unitPrice',
-    key: 'service.unitPrice'
-  },
-  {
-    title: 'Thành tiền',
-    render: data => {
-      if (data.service.type === 'perUNIT') {
-        return data.quantity * data.service.unitPrice
+export const columnsServiceDetailsPerHOUR = (
+  handleUpdateQuantityItem,
+  setVisibleChangeEndTimeService,
+  setServiceNeedChangeEndTime
+) => [
+    {
+      render: data => (
+        <Button
+          type='link'
+          icon='close'
+          style={{ color: 'red' }}
+          onClick={() => handleUpdateQuantityItem(data.service._id, data.startTime, 0)}
+        />
+      )
+    },
+    {
+      title: 'Giờ bắt đầu',
+      dataIndex: 'startTime',
+      key: 'startTime',
+      render: data => moment(data).format('DD/MM/YY - HH:mm')
+    },
+    {
+      title: 'Giờ kết thúc',
+      key: 'so-gio',
+      render: data => (
+        <div
+          className='item-change-endTime'
+          onClick={() => {
+            setVisibleChangeEndTimeService(true)
+            setServiceNeedChangeEndTime(data)
+          }}
+        >
+          {data.endTime ? (
+            `${moment(data.endTime).format('HH:mm')}(${Math.round((data.endTime - data.startTime) / 60000)} phút)`
+          ) : (
+              `... (${Math.round((moment() - data.startTime) / 60000)} phút)`
+            )}
+        </div>
+      )
+
+    },
+    {
+      title: 'Dịch vụ',
+      dataIndex: 'service.name',
+      key: 'service.name'
+    },
+    {
+      title: 'Đơn giá (h)',
+      dataIndex: 'service.unitPrice',
+      key: 'service.unitPrice'
+    },
+    {
+      title: 'Thành tiền',
+      render: data => {
+        if (data.service.type === 'perUNIT') {
+          return Math.round(data.quantity * data.service.unitPrice)
+        }
+        if (data.service.type === 'perHOUR' && data.endTime) {
+          return Math.round(data.service.unitPrice * (((data.endTime - data.startTime) / 60000) / 60))
+        }
+        return '...'
       }
-      return '...'
     }
-  }
-]
+  ]
 
 
 export const columnsServiceDetailsPerUNIT = (handleUpdateQuantityItem) => [
@@ -108,25 +137,22 @@ export const columnsServiceDetailsPerUNIT = (handleUpdateQuantityItem) => [
   },
   {
     title: 'Số lượng',
-    // dataIndex: 'quantity',
-    render: data => {
-      console.log(data)
-      return (
-        <>
-          <Button
-            type='link'
-            icon='down'
-            onClick={() => handleUpdateQuantityItem(data.service._id, data.startTime, data.quantity - 1)}
-          />
-          {data.quantity}
-          <Button
-            type='link'
-            icon='up'
-            onClick={() => handleUpdateQuantityItem(data.service._id, data.startTime, data.quantity + 1)}
-          />
-        </>
-      )
-    }
+    render: data => (
+      <>
+        <Button
+          type='link'
+          icon='down'
+          onClick={() => handleUpdateQuantityItem(data.service._id, data.startTime, data.quantity - 1)}
+        />
+        {data.quantity}
+        <Button
+          type='link'
+          icon='up'
+          onClick={() => handleUpdateQuantityItem(data.service._id, data.startTime, data.quantity + 1)}
+        />
+      </>
+    )
+
   },
   {
     title: 'Thành tiền',

@@ -2,18 +2,20 @@
 import React, { useEffect, useState } from 'react'
 import { withRouter } from 'react-router-dom'
 import './style.less'
-import { Col, Row, Tabs, Button, Table, Icon, Tooltip, Modal } from 'antd'
+import { Col, Row, Tabs, Button, Table, Icon, Tooltip, Modal, Select } from 'antd'
 import { client } from 'config/client'
 import { Notify } from 'helpers/notify'
 import { parseError } from 'helpers'
 import moment from 'moment'
-import { GET_ROOMS, GET_BILL_BY_ROOM_ID, CREATE_BILL, UPDATE_BILL, GET_SERVICES } from './query'
+import { GET_ROOMS, GET_BILL_BY_ROOM_ID, CREATE_BILL, UPDATE_BILL, GET_SERVICES, SEARCH_CUSTOMERS } from './query'
 import { columnsRoomDetails, columnsServiceDetailsPerHOUR, columnsServiceDetailsPerUNIT } from './columnsTable'
 import ModalAddTicket from '../Tickets/ModalAddTicket'
+import ModalChangeEndTimeService from './ModalChangeEndTimeService'
+import ModalChangeRoom from './ModalChangeRoom'
 
 const { confirm } = Modal
 const { TabPane } = Tabs
-
+const { Option } = Select
 const Payment = props => {
   const [rooms, setRooms] = useState([])
   const [services, setServices] = useState([])
@@ -21,7 +23,10 @@ const Payment = props => {
   const [bill, setBill] = useState(null)
   const [visibleAddTicket, setVisibleAddTicket] = useState(false)
   const [roomNeedAddTicket, setRoomNeedAddTicket] = useState(null)
-
+  const [visibleChangeEndTimeService, setVisibleChangeEndTimeService] = useState(false)
+  const [serviceNeedChangeEndTime, setServiceNeedChangeEndTime] = useState(null)
+  const [visibleChangeRoom, setVisibleChangeRoom] = useState(false)
+  const [customers, setCustomers] = useState([])
   const getRooms = async () => {
     await client
       .query({
@@ -33,7 +38,6 @@ const Payment = props => {
         }
         setRooms(res.data.rooms)
         if (!roomSelected) {
-          console.log('roomSelected:  ', res.data.rooms[0])
           setRoomSelected(res.data.rooms[0])
         }
       })
@@ -54,10 +58,6 @@ const Payment = props => {
       .catch(err => new Notify('error', parseError(err)))
   }
 
-  useEffect(() => {
-    getRooms()
-    getServices()
-  }, [])
 
   const getBillByRoomId = async (roomId) => {
     await client
@@ -77,12 +77,17 @@ const Payment = props => {
   }
 
   useEffect(() => {
+    getRooms()
+    getServices()
+  }, [])
+
+
+  useEffect(() => {
     // getRooms()
     if (roomSelected) {
       getBillByRoomId(roomSelected._id)
     }
   }, [roomSelected])
-
 
   const handleSelectRoom = (roomId) => {
     const room = rooms.find(obj => obj._id === roomId)
@@ -129,7 +134,7 @@ const Payment = props => {
           const notify = new Notify('error', parseError(err), 3)
         })
     }
-
+    console.log(roomSelected)
     if (roomSelected.tickets.length) {
       confirm({
         title: 'Thông báo',
@@ -140,6 +145,8 @@ const Payment = props => {
         },
         onCancel () { }
       })
+    } else {
+      submit()
     }
   }
 
@@ -160,7 +167,7 @@ const Payment = props => {
       })
       .then(async res => {
         if (res && res.data && res.data.updateBill) {
-          console.log('done', res.data.updateBill)
+          // console.log('done', res.data.updateBill)
           // refetch data
           await getRooms()
           await getBillByRoomId(roomSelected._id)
@@ -173,21 +180,16 @@ const Payment = props => {
   }
 
   const handleUpdateQuantityItem = async (serviceId, startTime, newQuantity) => {
-    console.log(serviceId, newQuantity)
     const newBill = {
       ...bill
     }
 
     if (newQuantity <= 0) {
       const indexService = newBill.serviceDetails.findIndex(obj => obj.service._id === serviceId && startTime === obj.startTime)
-      console.log(newBill.serviceDetails)
-      console.log('find: indexService', indexService, newBill.serviceDetails[indexService])
       newBill.serviceDetails.splice(indexService, 1)
-      // newBill.serviceDetails = newBill.serviceDetails.filter(obj => obj.service._id !== serviceId)
     } else {
       const findService = newBill.serviceDetails.find(obj => obj.service._id === serviceId && startTime === obj.startTime)
       findService.quantity = newQuantity
-      console.log(findService)
     }
     await handleUpdateBill(bill._id, newBill)
   }
@@ -198,7 +200,6 @@ const Payment = props => {
       return new Notify('error', 'Bạn chưa Check-In phòng!', 2)
     }
     const service = services.find(obj => obj._id === serviceId)
-    console.log(service)
 
     if (service.type === 'perUNIT') {
       const findServiceExistInBill = bill.serviceDetails.find(obj => obj.service._id === serviceId)
@@ -215,7 +216,6 @@ const Payment = props => {
         })
       }
     } else {
-      console.log(service)
       await handleUpdateBill(bill._id, {
         ...bill,
         serviceDetails: [...bill.serviceDetails, {
@@ -227,6 +227,23 @@ const Payment = props => {
     }
   }
 
+  const handleSearchCustomer = async text => {
+    console.log('text', text)
+    await client.query({
+      query: SEARCH_CUSTOMERS,
+      variables: {
+        text
+      }
+    }).then(res => {
+      if (res && res.data && res.data.searchCustomers) {
+        setCustomers(res.data.searchCustomers)
+      }
+    })
+  }
+
+  const handleChangeCustomer = (e) => {
+    console.log(e)
+  }
 
   const servicesPerHour = bill && bill.serviceDetails ? bill.serviceDetails.filter(obj => obj.service.type === 'perHOUR') : []
   const servicesPerUnit = bill && bill.serviceDetails ? bill.serviceDetails.filter(obj => obj.service.type === 'perUNIT') : []
@@ -241,6 +258,23 @@ const Payment = props => {
         visible={visibleAddTicket}
         hide={() => setVisibleAddTicket(false)}
         refetch={async () => { await getRooms() }}
+      />
+
+      <ModalChangeEndTimeService
+        visible={visibleChangeEndTimeService}
+        service={serviceNeedChangeEndTime}
+        hide={() => setVisibleChangeEndTimeService(false)}
+        bill={bill}
+        handleUpdateBill={handleUpdateBill}
+      />
+
+      <ModalChangeRoom
+        visible={visibleChangeRoom}
+        rooms={rooms}
+        roomSelected={roomSelected}
+        hide={() => setVisibleChangeRoom(false)}
+        bill={bill}
+        handleUpdateBill={handleUpdateBill}
       />
 
       <Col
@@ -301,7 +335,10 @@ const Payment = props => {
                         </Tooltip>
                       )}
                     </div>
-                    <div className='room-center'>{room.name}</div>
+                    <div className='room-center'>
+                      <div className='room-name'>{room.name}</div>
+                      <div className='typeroom-name'>{room.typeRoom.name}</div>
+                    </div>
                     <div className='room-bottom'>
                       <div className='room-status'>
                         {room.bill && (<div style={{ background: 'red', height: '11px', width: '11px', borderRadius: '50px', margin: '5px' }} />)}
@@ -350,9 +387,34 @@ const Payment = props => {
         <div className='right'>
           <div className='top-bill'>
             <div className='title-bill'>Hóa đơn dịch vụ</div>
+
             <div className='room-bill'>
-              Phòng
-              <div className='room-name'>{roomSelected && roomSelected.name}</div>
+              <div className='left-room-bill'>
+                Phòng
+                <div className='room-name'>{roomSelected && roomSelected.name}</div>
+
+              </div>
+              <div className='right-room-bill'>
+                {bill && (
+                  <Select
+                    showSearch
+                    allowClear
+                    style={{ width: 300 }}
+                    placeholder='Chọn khách hàng'
+                    optionFilterProp='children'
+                    onChange={handleChangeCustomer}
+                    onSearch={handleSearchCustomer}
+                    filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                  >
+                    {customers.map(customer => (
+                      // eslint-disable-next-line max-len
+                      <Option key={customer._id} value={`[${customer._id}]_${customer.name}_${customer.email}_${customer.phone}`}>{`${customer.name} (${customer.phone})`}</Option>
+                    ))}
+                  </Select>
+
+                )}
+              </div>
+
             </div>
 
             <div className='group-list-room-details'>
@@ -374,7 +436,11 @@ const Payment = props => {
                 </div>
                 <Table
                   className='list-service-details'
-                  columns={columnsServiceDetailsPerHOUR(handleUpdateQuantityItem)}
+                  columns={columnsServiceDetailsPerHOUR(
+                    handleUpdateQuantityItem,
+                    setVisibleChangeEndTimeService,
+                    setServiceNeedChangeEndTime
+                  )}
                   dataSource={servicesPerHour}
                   pagination={false}
                 />
@@ -405,7 +471,11 @@ const Payment = props => {
               {bill && (
                 <>
                   <Button type='primary'>THANH TOÁN</Button>
-                  <Button>ĐỔI PHÒNG</Button>
+                  <Button
+                    onClick={() => setVisibleChangeRoom(true)}
+                  >
+                    ĐỔI PHÒNG
+                  </Button>
                 </>
               )}
 

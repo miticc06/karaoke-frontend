@@ -29,8 +29,16 @@
         .room-center {
           display: flex;
           justify-content: center;
-          font-size: 16px;
-          font-weight: 500;
+          font-size: 17px;
+          align-items: center;
+          flex-direction: column;
+          // font-weight: 500;
+
+          .room-name {
+          }
+          .typeroom-name {
+            font-size: 13px;
+          }
         }
         .room-bottom {
           display: flex;
@@ -47,7 +55,9 @@
         border: #3f51b5 solid 2px;
 
         .room-center {
-          font-weight: 600;
+          .room-name {
+            font-weight: 600;
+          }
         }
       }
 
@@ -108,11 +118,22 @@
 
       .room-bill {
         display: flex;
+        justify-content: space-between;
         align-items: baseline;
-        .room-name {
-          margin-left: 8px;
-          color: #3f51b5;
-          font-size: 20px;
+
+        .left-room-bill {
+          display: flex;
+          align-items: baseline;
+
+          .room-name {
+            margin-left: 8px;
+            color: #3f51b5;
+            font-size: 20px;
+          }
+        }
+
+        .right-room-bill {
+          margin: 0px 20px;
         }
       }
 
@@ -146,6 +167,15 @@
           th {
             padding: 16px 5px !important;
           }
+        }
+
+        .item-change-endTime {
+          cursor: pointer;
+          padding: 5px;
+        }
+
+        .item-change-endTime:hover {
+          background: #b9b9b9;
         }
       }
     }
