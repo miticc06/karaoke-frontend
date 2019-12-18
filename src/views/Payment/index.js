@@ -172,16 +172,20 @@ const Payment = props => {
       })
   }
 
-  const handleUpdateQuantityItem = async (serviceId, newQuantity) => {
+  const handleUpdateQuantityItem = async (serviceId, startTime, newQuantity) => {
     console.log(serviceId, newQuantity)
     const newBill = {
       ...bill
     }
 
     if (newQuantity <= 0) {
-      newBill.serviceDetails = newBill.serviceDetails.filter(obj => obj.service._id !== serviceId)
+      const indexService = newBill.serviceDetails.findIndex(obj => obj.service._id === serviceId && startTime === obj.startTime)
+      console.log(newBill.serviceDetails)
+      console.log('find: indexService', indexService, newBill.serviceDetails[indexService])
+      newBill.serviceDetails.splice(indexService, 1)
+      // newBill.serviceDetails = newBill.serviceDetails.filter(obj => obj.service._id !== serviceId)
     } else {
-      const findService = newBill.serviceDetails.find(obj => obj.service._id === serviceId)
+      const findService = newBill.serviceDetails.find(obj => obj.service._id === serviceId && startTime === obj.startTime)
       findService.quantity = newQuantity
       console.log(findService)
     }
@@ -199,7 +203,7 @@ const Payment = props => {
     if (service.type === 'perUNIT') {
       const findServiceExistInBill = bill.serviceDetails.find(obj => obj.service._id === serviceId)
       if (findServiceExistInBill) {
-        await handleUpdateQuantityItem(serviceId, findServiceExistInBill.quantity + 1)
+        await handleUpdateQuantityItem(serviceId, findServiceExistInBill.startTime, findServiceExistInBill.quantity + 1)
       } else {
         await handleUpdateBill(bill._id, {
           ...bill,
@@ -210,6 +214,16 @@ const Payment = props => {
           }]
         })
       }
+    } else {
+      console.log(service)
+      await handleUpdateBill(bill._id, {
+        ...bill,
+        serviceDetails: [...bill.serviceDetails, {
+          service,
+          startTime: +moment(),
+          quantity: 1
+        }]
+      })
     }
   }
 
@@ -309,7 +323,16 @@ const Payment = props => {
                     className='service'
                     onClick={() => handleSelectService(service._id)}
                   >
-                    {service.name}
+                    <div className='service-top' />
+                    <div className='service-center'>
+                      <div>{service.name}</div>
+                      <div>
+                        {service.unitPrice}
+                        đ/
+                        {service.type === 'perHOUR' ? 'giờ' : 'lượt'}
+                      </div>
+                    </div>
+                    <div className='service-bottom' />
                   </div>
                 ))}
               </div>
@@ -351,7 +374,7 @@ const Payment = props => {
                 </div>
                 <Table
                   className='list-service-details'
-                  columns={columnsServiceDetailsPerHOUR}
+                  columns={columnsServiceDetailsPerHOUR(handleUpdateQuantityItem)}
                   dataSource={servicesPerHour}
                   pagination={false}
                 />
