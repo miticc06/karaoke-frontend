@@ -1,21 +1,17 @@
-import { Modal, Form, Input } from 'antd'
+import { Modal, Form, Input, Select } from 'antd'
 import React from 'react'
-import Select from 'react-select'
 import { client } from 'config/client'
 import { parseError } from 'helpers'
 import { Notify } from 'helpers/notify'
 import { ADD_TICKET } from './query'
 
 const ModalAddTicket = Form.create()(props => {
-  const { form, hide, visible, refetch, roomOptions, statusOptions } = props
+  const { form, hide, visible, refetch, rooms, statusOptions } = props
 
   const onSubmit = async () => {
     await form.validateFields(async (errors, formData) => {
       if (!errors) {
-        const { subject, selectedRoom, selectedStatus } = formData
-        const room = selectedRoom.value
-        const status = selectedStatus.value
-
+        const { subject, room, status } = formData
         await client
           .mutate({
             mutation: ADD_TICKET,
@@ -62,17 +58,25 @@ const ModalAddTicket = Form.create()(props => {
         </Form.Item>
 
         <Form.Item label='Room'>
-          {form.getFieldDecorator('selectedRoom', {
+          {form.getFieldDecorator('room', {
             rules: [{ required: true, message: 'Hãy nhập số phòng.' }]
-          })(<Select
-            options={roomOptions}
-          />)}
+          })(
+            <Select placeholder='Please select room ...'>
+              {rooms.map(room => (
+                <Select.Option key={room._id} value={room._id}>
+                  {room.name}
+                </Select.Option>
+              ))}
+            </Select>
+          )}
         </Form.Item>
 
         <Form.Item label='Status'>
-          {form.getFieldDecorator('selectedStatus', {
-            rules: [{ required: true, message: 'Hãy nhập trạng thái.' }]
+          {form.getFieldDecorator('status', {
+            rules: [{ required: true, message: 'Hãy chọn trạng thái.' }],
+            initialValue: 'OPEN'
           })(<Select
+            disabled
             options={statusOptions}
           />)}
         </Form.Item>
