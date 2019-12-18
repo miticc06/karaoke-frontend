@@ -149,3 +149,15 @@ query {
   }
 }
 `
+export const SEARCH_CUSTOMERS = gql`
+query ($text:String) {
+  searchCustomers(text: $text) {
+    _id
+    name
+    dateOfBirth
+    phone
+    email
+    points
+  }
+}
+`
