@@ -13,6 +13,15 @@ export const GET_ROOMS = gql`
         name
         unitPrice
       }
+      bill {
+        _id
+      }
+      tickets {
+        _id
+        subject
+        status
+        createdAt
+      }
     }
   }
 `

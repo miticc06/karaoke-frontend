@@ -1,9 +1,12 @@
-import { Modal, Form, Input, Select } from 'antd'
+import { Modal, Form, Input, Select, DatePicker } from 'antd'
 import React from 'react'
 import { client } from 'config/client'
 import { parseError } from 'helpers'
 import { Notify } from 'helpers/notify'
+import moment from 'moment'
 import { UPDATE_DISCOUNT } from './query'
+
+const { RangePicker } = DatePicker
 
 const typeCoupon = [
   { value: 'DEDUCT', label: 'Khấu trừ' },
@@ -17,15 +20,15 @@ const modalAddDiscount = Form.create()(props => {
   const onSubmit = async () => {
     await form.validateFields(async (errors, formData) => {
       if (!errors) {
-        const { name, type, startDate, endDate, value } = formData
+        const { name, type, value, rangeDate } = formData
         const d = {
           name,
           type,
           value: parseFloat(value),
-          startDate: new Date(startDate).getTime(),
-          endDate: new Date(endDate).getTime()
+          startDate: rangeDate[0].valueOf(),
+          endDate: rangeDate[1].valueOf()
         }
-        console.log(JSON.stringify(d))
+
         await client
           .mutate({
             mutation: UPDATE_DISCOUNT,
@@ -95,28 +98,23 @@ const modalAddDiscount = Form.create()(props => {
           })(<Input type='number' />)}
         </Form.Item>
 
-        <Form.Item label='Start Date: '>
-          {form.getFieldDecorator('startDate', {
-            initialValue: discount ? discount.startDate : '',
-            rules: [
-              {
-                required: true,
-                message: 'Please the date this discount affects'
-              }
-            ]
-          })(<Input type='date' />)}
-        </Form.Item>
 
-        <Form.Item label='End Date: '>
-          {form.getFieldDecorator('endDate', {
-            initialValue: discount ? discount.endDate : '',
+        <Form.Item label='Range Date: '>
+          {form.getFieldDecorator('rangeDate', {
+            initialValue:
+              discount
+                && discount.startDate
+                && discount.endDate
+                ? [moment(discount.startDate), moment(discount.endDate)] : [moment(), moment()],
             rules: [
               {
                 required: true,
-                message: 'Please the date this discount stops affecting'
+                message: 'Please the date this discount affects and stops affecting'
               }
             ]
-          })(<Input type='date' />)}
+          })(
+            <RangePicker format='DD/MM/YYYY' />
+          )}
         </Form.Item>
       </Form>
     </Modal>

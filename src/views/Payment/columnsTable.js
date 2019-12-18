@@ -40,7 +40,17 @@ export const columnsRoomDetails = [
 ]
 
 
-export const columnsServiceDetailsPerHOUR = [
+export const columnsServiceDetailsPerHOUR = (handleUpdateQuantityItem) => [
+  {
+    render: data => (
+      <Button
+        type='link'
+        icon='close'
+        style={{ color: 'red' }}
+        onClick={() => handleUpdateQuantityItem(data.service._id, data.startTime, 0)}
+      />
+    )
+  },
   {
     title: 'Giờ',
     dataIndex: 'startTime',
@@ -82,7 +92,7 @@ export const columnsServiceDetailsPerUNIT = (handleUpdateQuantityItem) => [
         type='link'
         icon='close'
         style={{ color: 'red' }}
-        onClick={() => handleUpdateQuantityItem(data.service._id, 0)}
+        onClick={() => handleUpdateQuantityItem(data.service._id, data.startTime, 0)}
       />
     )
   },
@@ -106,13 +116,13 @@ export const columnsServiceDetailsPerUNIT = (handleUpdateQuantityItem) => [
           <Button
             type='link'
             icon='down'
-            onClick={() => handleUpdateQuantityItem(data.service._id, data.quantity - 1)}
+            onClick={() => handleUpdateQuantityItem(data.service._id, data.startTime, data.quantity - 1)}
           />
           {data.quantity}
           <Button
             type='link'
             icon='up'
-            onClick={() => handleUpdateQuantityItem(data.service._id, data.quantity + 1)}
+            onClick={() => handleUpdateQuantityItem(data.service._id, data.startTime, data.quantity + 1)}
           />
         </>
       )

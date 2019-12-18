@@ -2,14 +2,16 @@
 import React, { useEffect, useState } from 'react'
 import { withRouter } from 'react-router-dom'
 import './style.less'
-import { Col, Row, Tabs, Button, Table } from 'antd'
+import { Col, Row, Tabs, Button, Table, Icon, Tooltip, Modal } from 'antd'
 import { client } from 'config/client'
 import { Notify } from 'helpers/notify'
 import { parseError } from 'helpers'
 import moment from 'moment'
 import { GET_ROOMS, GET_BILL_BY_ROOM_ID, CREATE_BILL, UPDATE_BILL, GET_SERVICES } from './query'
 import { columnsRoomDetails, columnsServiceDetailsPerHOUR, columnsServiceDetailsPerUNIT } from './columnsTable'
+import ModalAddTicket from '../Tickets/ModalAddTicket'
 
+const { confirm } = Modal
 const { TabPane } = Tabs
 
 const Payment = props => {
@@ -17,6 +19,8 @@ const Payment = props => {
   const [services, setServices] = useState([])
   const [roomSelected, setRoomSelected] = useState(null)
   const [bill, setBill] = useState(null)
+  const [visibleAddTicket, setVisibleAddTicket] = useState(false)
+  const [roomNeedAddTicket, setRoomNeedAddTicket] = useState(null)
 
   const getRooms = async () => {
     await client
@@ -86,45 +90,57 @@ const Payment = props => {
   }
 
   const handleCheckInRoom = async () => {
-    console.log(roomSelected)
-
-    await client
-      .mutate({
-        mutation: CREATE_BILL,
-        variables: {
-          input: {
-            roomDetails: [
-              {
-                room: {
-                  _id: roomSelected._id,
-                  name: roomSelected.name,
-                  typeRoom: roomSelected.typeRoom
-                },
-                startTime: +moment()
-              }
-            ],
-            serviceDetails: []
+    const submit = async () => {
+      await client
+        .mutate({
+          mutation: CREATE_BILL,
+          variables: {
+            input: {
+              roomDetails: [
+                {
+                  room: {
+                    _id: roomSelected._id,
+                    name: roomSelected.name,
+                    typeRoom: roomSelected.typeRoom
+                  },
+                  startTime: +moment()
+                }
+              ],
+              serviceDetails: []
+            }
           }
-        }
-      })
-      .then(async res => {
-        if (res && res.data && res.data.createBill) {
-          // eslint-disable-next-line
-          const notify = new Notify(
-            'success',
-            'Đã tiếp nhận',
-            2
-          )
+        })
+        .then(async res => {
+          if (res && res.data && res.data.createBill) {
+            // eslint-disable-next-line
+            const notify = new Notify(
+              'success',
+              'Đã tiếp nhận',
+              2
+            )
 
-          // refetch data
-          await getRooms()
-          await getBillByRoomId(roomSelected._id)
-        }
+            // refetch data
+            await getRooms()
+            await getBillByRoomId(roomSelected._id)
+          }
+        })
+        .catch(err => {
+          // eslint-disable-next-line
+          const notify = new Notify('error', parseError(err), 3)
+        })
+    }
+
+    if (roomSelected.tickets.length) {
+      confirm({
+        title: 'Thông báo',
+        // eslint-disable-next-line max-len
+        content: `Phòng đang yêu cầu hỗ trợ "${roomSelected.tickets.map(ticket => ticket.subject).join('; ')}". Bạn có chắc chắn muốn nhận khách không?`,
+        onOk () {
+          submit()
+        },
+        onCancel () { }
       })
-      .catch(err => {
-        // eslint-disable-next-line
-        const notify = new Notify('error', parseError(err), 3)
-      })
+    }
   }
 
   const handleUpdateBill = async (billId, input) => {
@@ -156,16 +172,20 @@ const Payment = props => {
       })
   }
 
-  const handleUpdateQuantityItem = async (serviceId, newQuantity) => {
+  const handleUpdateQuantityItem = async (serviceId, startTime, newQuantity) => {
     console.log(serviceId, newQuantity)
     const newBill = {
       ...bill
     }
 
     if (newQuantity <= 0) {
-      newBill.serviceDetails = newBill.serviceDetails.filter(obj => obj.service._id !== serviceId)
+      const indexService = newBill.serviceDetails.findIndex(obj => obj.service._id === serviceId && startTime === obj.startTime)
+      console.log(newBill.serviceDetails)
+      console.log('find: indexService', indexService, newBill.serviceDetails[indexService])
+      newBill.serviceDetails.splice(indexService, 1)
+      // newBill.serviceDetails = newBill.serviceDetails.filter(obj => obj.service._id !== serviceId)
     } else {
-      const findService = newBill.serviceDetails.find(obj => obj.service._id === serviceId)
+      const findService = newBill.serviceDetails.find(obj => obj.service._id === serviceId && startTime === obj.startTime)
       findService.quantity = newQuantity
       console.log(findService)
     }
@@ -183,7 +203,7 @@ const Payment = props => {
     if (service.type === 'perUNIT') {
       const findServiceExistInBill = bill.serviceDetails.find(obj => obj.service._id === serviceId)
       if (findServiceExistInBill) {
-        await handleUpdateQuantityItem(serviceId, findServiceExistInBill.quantity + 1)
+        await handleUpdateQuantityItem(serviceId, findServiceExistInBill.startTime, findServiceExistInBill.quantity + 1)
       } else {
         await handleUpdateBill(bill._id, {
           ...bill,
@@ -194,6 +214,16 @@ const Payment = props => {
           }]
         })
       }
+    } else {
+      console.log(service)
+      await handleUpdateBill(bill._id, {
+        ...bill,
+        serviceDetails: [...bill.serviceDetails, {
+          service,
+          startTime: +moment(),
+          quantity: 1
+        }]
+      })
     }
   }
 
@@ -203,6 +233,16 @@ const Payment = props => {
 
   return (
     <Row className='payment'>
+
+      <ModalAddTicket
+        roomNeedAddTicket={roomNeedAddTicket}
+        rooms={rooms}
+        statusOptions={[{ label: 'Mới', value: 'OPEN' }]}
+        visible={visibleAddTicket}
+        hide={() => setVisibleAddTicket(false)}
+        refetch={async () => { await getRooms() }}
+      />
+
       <Col
         xs={24}
         md={12}
@@ -225,7 +265,52 @@ const Payment = props => {
                     className={`room${roomSelected && roomSelected._id === room._id ? ' room-selected' : ''}`}
                     onClick={() => handleSelectRoom(room._id)}
                   >
-                    {room.name}
+
+                    <div className='room-top'>
+                      {room.tickets.length === 0 && (
+                        <Tooltip
+                          placement='bottomLeft'
+                          title='Bấm vào đây để báo hỏng!'
+                          onClick={(e) => {
+                            setVisibleAddTicket(true)
+                            setRoomNeedAddTicket(room)
+                          }}
+                        >
+                          <Icon
+                            style={{ margin: '8px', color: '#a7a7a7' }}
+                            type='warning'
+                            theme='filled'
+                          />
+                        </Tooltip>
+                      )}
+
+                      {room.tickets.length > 0 && (
+                        <Tooltip
+                          placement='bottomLeft'
+                          title={room.tickets.map(ticket => ticket.subject).join('; ')}
+                          onClick={(e) => {
+                            setVisibleAddTicket(true)
+                            setRoomNeedAddTicket(room)
+                          }}
+                        >
+                          <Icon
+                            style={{ margin: '8px', color: '#ff444e' }}
+                            type='warning'
+                            theme='filled'
+                          />
+                        </Tooltip>
+                      )}
+                    </div>
+                    <div className='room-center'>{room.name}</div>
+                    <div className='room-bottom'>
+                      <div className='room-status'>
+                        {room.bill && (<div style={{ background: 'red', height: '11px', width: '11px', borderRadius: '50px', margin: '5px' }} />)}
+                        {room.bill && 'Đang sử dụng'}
+                        {!room.bill && (<div style={{ background: 'green', height: '11px', width: '11px', borderRadius: '50px', margin: '5px' }} />)}
+                        {!room.bill && 'Còn phòng'}
+                      </div>
+                    </div>
+
                   </div>
                 ))}
               </div>
@@ -238,7 +323,16 @@ const Payment = props => {
                     className='service'
                     onClick={() => handleSelectService(service._id)}
                   >
-                    {service.name}
+                    <div className='service-top' />
+                    <div className='service-center'>
+                      <div>{service.name}</div>
+                      <div>
+                        {service.unitPrice}
+                        đ/
+                        {service.type === 'perHOUR' ? 'giờ' : 'lượt'}
+                      </div>
+                    </div>
+                    <div className='service-bottom' />
                   </div>
                 ))}
               </div>
@@ -280,7 +374,7 @@ const Payment = props => {
                 </div>
                 <Table
                   className='list-service-details'
-                  columns={columnsServiceDetailsPerHOUR}
+                  columns={columnsServiceDetailsPerHOUR(handleUpdateQuantityItem)}
                   dataSource={servicesPerHour}
                   pagination={false}
                 />
@@ -333,6 +427,7 @@ const Payment = props => {
 
         </div>
       </Col>
+
 
     </Row>
   )
