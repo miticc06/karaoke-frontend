@@ -2,7 +2,7 @@ sudo: required
 
 language: node_js
 node_js:
-  - 12.13.1
+  - 13.1.0
 
 before_script:
   - openssl aes-256-cbc -K $encrypted_624b4ed64e85_key -iv $encrypted_624b4ed64e85_iv -in deploy_rsa.enc -out deploy_rsa -d
@@ -18,7 +18,7 @@ stages:
   - name: Build
 
   - name: DeployKaraokeTest
-    if: branch = cicd AND type=push OR branch=Tien_webpack
+    if: branch = cicd AND type=push OR branch=Tien_add_page_payment
 
   - name: DeployKaraoke
     if: branch = master AND type=push
