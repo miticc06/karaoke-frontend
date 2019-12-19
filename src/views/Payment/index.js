@@ -9,6 +9,7 @@ import { parseError } from 'helpers'
 import moment from 'moment'
 import { GET_ROOMS, GET_BILL_BY_ROOM_ID, CREATE_BILL, UPDATE_BILL, GET_SERVICES } from './query'
 import { columnsRoomDetails, columnsServiceDetailsPerHOUR, columnsServiceDetailsPerUNIT } from './columnsTable'
+import { BillExport } from './billExport'
 import ModalAddTicket from '../Tickets/ModalAddTicket'
 
 const { confirm } = Modal
@@ -406,6 +407,7 @@ const Payment = props => {
                 <>
                   <Button type='primary'>THANH TOÁN</Button>
                   <Button>ĐỔI PHÒNG</Button>
+                  <Button onClick={BillExport}>IN HOÁ ĐƠN</Button>
                 </>
               )}
 
