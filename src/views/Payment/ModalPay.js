@@ -1,11 +1,12 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 
-import { Modal, Form, Input, Select, Table, InputNumber } from 'antd'
+import { Modal, Form, Select, Table, InputNumber } from 'antd'
 import React, { useState, useEffect } from 'react'
 import moment from 'moment'
 import { client } from 'config/client'
 import { FormatMoney } from 'helpers'
 import { columnsRoomDetails, columnsServiceDetailsPerHOUR, columnsServiceDetailsPerUNIT } from './columnsTableModalPay'
-import { GET_DISCOUNTS } from './query'
+import { GET_DISCOUNTS, UPDATE_CUSTOMER } from './query'
 
 const { Option } = Select
 
@@ -13,7 +14,7 @@ const ModalPay = Form.create()(props => {
   const [discounts, setDiscounts] = useState([])
   const [endTime, setEndTime] = useState(moment())
   const { form, hide, visible, bill, handleUpdateBill } = props
-  console.log(props)
+
   const onSubmit = async () => {
     await form.validateFields(async (errors, formData) => {
       if (!errors) {
@@ -24,7 +25,7 @@ const ModalPay = Form.create()(props => {
           total,
           state: 20
         }
-        // console.log('newBill', newBill)
+
         newBill.roomDetails = newBill.roomDetails.map(roomDetail => {
           if (!roomDetail.total) {
             roomDetail.endTime = +endTime
@@ -47,7 +48,23 @@ const ModalPay = Form.create()(props => {
           return serviceDetail
         })
 
-        console.log(newBill)
+        if (newBill.customer) {
+          const newCustomer = {
+            ...newBill.customer,
+            points: newBill.customer.points + Math.round(total / 10000)
+          }
+          delete newCustomer._id
+
+          await client
+            .mutate({
+              mutation: UPDATE_CUSTOMER,
+              variables: {
+                id: newBill.customer._id,
+                input: newCustomer
+              }
+            })
+        }
+
         await handleUpdateBill(bill._id, newBill, `Thanh toán thành công hóa đơn ${FormatMoney(total)} VNĐ`)
         hide()
       }
@@ -80,7 +97,6 @@ const ModalPay = Form.create()(props => {
       }
       return total + obj.room.typeRoom.unitPrice * (((endTime - obj.startTime) / 60000) / 60)
     }, 0)
-    // console.log('totalRooms:', totalRooms)
 
     const totalServicesPerHour = servicesPerHour.reduce((total, obj) => {
       if (obj.total) {
@@ -91,7 +107,6 @@ const ModalPay = Form.create()(props => {
       }
       return total + (obj.service.unitPrice * (((endTime - obj.startTime) / 60000) / 60))
     }, 0)
-    // console.log('totalServicesPerHour', totalServicesPerHour)
 
 
     const totalServicesPerUnit = servicesPerUnit.reduce((total, obj) => {
@@ -100,8 +115,6 @@ const ModalPay = Form.create()(props => {
       }
       return total + (obj.quantity * obj.service.unitPrice)
     }, 0)
-
-    // console.log('totalServicesPerUnit', totalServicesPerUnit)
 
     if (form.getFieldsValue().coupon) {
       const coupon = discounts.find(discount => discount._id === form.getFieldsValue().coupon)
@@ -115,7 +128,6 @@ const ModalPay = Form.create()(props => {
     return totalRooms + totalServicesPerHour + totalServicesPerUnit
   }
 
-  // console.log(calTotal())
 
   return (
     <Modal

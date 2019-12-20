@@ -33,6 +33,11 @@ export const GET_BILL_BY_ROOM_ID = gql`
     customer {
       _id
       name
+      dateOfBirth
+      phone
+      email
+      points
+      createdAt
     }
     state
     total
@@ -178,6 +183,14 @@ query {
     }
     startDate
     endDate
+  }
+}
+`
+
+export const UPDATE_CUSTOMER = gql`
+mutation ($id: String!,$input: CustomerInput!){
+  updateCustomer(id: $id, input:$input) {
+    _id
   }
 }
 `

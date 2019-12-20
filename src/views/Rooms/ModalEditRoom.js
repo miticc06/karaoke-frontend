@@ -20,7 +20,6 @@ const ModalEditRoom = Form.create()(props => {
           name,
           typeRoom
         }
-        console.log(JSON.stringify(d))
         await client
           .mutate({
             mutation: UPDATE_ROOM,

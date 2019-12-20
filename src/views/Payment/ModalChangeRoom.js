@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 
 import { Modal, Form, Select } from 'antd'
 import React, { useEffect } from 'react'
