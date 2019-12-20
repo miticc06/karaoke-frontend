@@ -28,7 +28,7 @@ const ModalEditPaymentSlip = Form.create()(props => {
           .then(async res => {
             if (res && res.data && res.data.updatePaymentSlip) {
               // eslint-disable-next-line
-              const notify = new Notify('success', 'Cập nhật payment-slip thành công!', 2)
+              const notify = new Notify('success', 'Cập nhật thông tin phiếu chi thành công!', 2)
               await refetch()
               hide()
               form.resetFields()
@@ -47,7 +47,7 @@ const ModalEditPaymentSlip = Form.create()(props => {
 
   return (
     <Modal
-      title='Cập nhật Payment Slip'
+      title='Cập nhật thông tin phiếu chi'
       headerIcon='edit'
       onCancel={hide}
       visible={visible}
@@ -56,21 +56,21 @@ const ModalEditPaymentSlip = Form.create()(props => {
       width='600px'
     >
       <Form>
-        <Form.Item label='Description'>
+        <Form.Item label='Tên phiếu chi'>
           {form.getFieldDecorator('description', {
             initialValue: paymentSlip && paymentSlip.description ? paymentSlip.description : '',
-            rules: [{ required: true, message: 'Hãy nhập thông tin payment-slip' }]
+            rules: [{ required: true, message: 'Hãy nhập tên phiếu chi!' }]
           })(<Input type='description' />)}
         </Form.Item>
 
-        <Form.Item label='Price'>
+        <Form.Item label='Giá tiền'>
           {form.getFieldDecorator('sprice', {
             initialValue: paymentSlip && paymentSlip.price ? paymentSlip.price : '',
             rules: [
-              { required: true, message: 'Hãy nhập giá tiền.' },
+              { required: true, message: 'Hãy nhập giá tiền!' },
               {
                 pattern: /^[1-9][0-9]*$/gm,
-                message: 'Price chỉ bao gồm số.'
+                message: 'Giá tiền chỉ bao gồm số!'
               }
             ]
           })(<Input type='price' />)}

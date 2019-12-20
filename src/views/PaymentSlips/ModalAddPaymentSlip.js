@@ -28,7 +28,7 @@ const ModalAddPaymentSlip = Form.create()(props => {
           .then(async res => {
             if (res && res.data && res.data.createPaymentSlip) {
               // eslint-disable-next-line
-              const notify = new Notify('success', 'Thêm payment-slip thành công!', 2)
+              const notify = new Notify('success', 'Thêm phiếu chi thành công!', 2)
               await refetch()
               hide()
               form.resetFields()
@@ -47,7 +47,7 @@ const ModalAddPaymentSlip = Form.create()(props => {
 
   return (
     <Modal
-      title='Thêm Payment Slip'
+      title='Thêm phiếu chi'
       headerIcon='plus'
       onCancel={hide}
       visible={visible}
@@ -56,19 +56,19 @@ const ModalAddPaymentSlip = Form.create()(props => {
       width='600px'
     >
       <Form>
-        <Form.Item label='Description'>
+        <Form.Item label='Tên phiếu chi'>
           {form.getFieldDecorator('description', {
-            rules: [{ required: true, message: 'Hãy nhập thông tin payment-slip' }]
+            rules: [{ required: true, message: 'Hãy nhập tên phiếu chi!' }]
           })(<Input type='text' />)}
         </Form.Item>
 
-        <Form.Item label='Price'>
+        <Form.Item label='Giá tiền'>
           {form.getFieldDecorator('sprice', {
             rules: [
-              { required: true, message: 'Hãy nhập giá tiền.' },
+              { required: true, message: 'Hãy nhập giá tiền!' },
               {
                 pattern: /^[1-9][0-9]*$/gm,
-                message: 'Price chỉ bao gồm số.'
+                message: 'Giá tiền chỉ bao gồm số!'
               }
             ]
           })(<Input type='number' />)}
