@@ -36,7 +36,7 @@ const ModalPay = Form.create()(props => {
         newBill.serviceDetails = newBill.serviceDetails.map(serviceDetail => {
           if (!serviceDetail.total) {
             if (serviceDetail.service.type === 'perUNIT') {
-              serviceDetail.total = serviceDetail.quantity * serviceDetail.service.unitPrice
+              serviceDetail.total = Math.round(serviceDetail.quantity * serviceDetail.service.unitPrice)
             }
             if (serviceDetail.service.type === 'perHOUR') {
               if (!serviceDetail.endTime) {

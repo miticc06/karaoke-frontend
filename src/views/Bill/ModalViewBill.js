@@ -2,10 +2,9 @@ import { Modal, Form, Table, Button } from 'antd'
 import React from 'react'
 import moment from 'moment'
 import { FormatMoney } from 'helpers'
-import { FormHelperText } from '@material-ui/core'
 
 const ModalViewDiscount = Form.create()(props => {
-  const { form, hide, visible, refetch, bill } = props
+  const { form, hide, visible, bill } = props
 
   const styles = {
     row: {
@@ -56,13 +55,13 @@ const ModalViewDiscount = Form.create()(props => {
       title: 'Đơn giá',
       dataIndex: 'room.typeRoom.unitPrice',
       key: 'room.typeRoom.unitPrice',
-      render: data => FormatMoney(`${data}`)
+      render: data => FormatMoney(data)
     },
     {
       title: 'Thành tiền',
       dataIndex: 'total',
       key: 'total',
-      render: data => data ? FormatMoney(`${data}`) : '-'
+      render: data => data ? FormatMoney(data) : '-'
     }
   ]
 
@@ -115,7 +114,7 @@ const ModalViewDiscount = Form.create()(props => {
       key: 'service.unitPrice',
       render: data => FormatMoney(`${data}`)
     },
-    
+
     {
       title: 'Thành tiền',
       dataIndex: 'total',
@@ -129,7 +128,7 @@ const ModalViewDiscount = Form.create()(props => {
   const { servicePerUnitDetails } = bill && bill.serviceDetails ? bill.serviceDetails.filter(obj => obj.service.type === 'perUNIT') : []
 
   return (
-    
+
 
     <Modal
       title='Bill Information'
@@ -147,69 +146,63 @@ const ModalViewDiscount = Form.create()(props => {
       {bill ? (
         <div>
           <div style={styles.row}>
-            <div style={styles.item}> 
+            <div style={styles.item}>
               <div style={styles.label}>ID: </div>
               <div style={styles.value}>{bill._id}</div>
             </div>
-            <div style={styles.item}> 
+            <div style={styles.item}>
               <div style={styles.label}>Trạng thái: </div>
               <div style={styles.value}>{bill.state === 0 ? 'ĐÃ HUỶ' : (bill.state === 10 ? 'CHƯA HOÀN TẤT' : 'HOÀN TẤT')}</div>
             </div>
           </div>
           <div style={styles.row}>
-            <div style={styles.item}> 
+            <div style={styles.item}>
               <div style={styles.label}>Ngày tạo: </div>
               <div style={styles.value}>{moment(bill.createdAt).format('DD/MM/YYYY HH:mm')}</div>
             </div>
-            <div style={styles.item}> 
+            <div style={styles.item}>
               <div style={styles.label}>Người tạo: </div>
               <div style={styles.value}>{bill.createdBy.username}</div>
             </div>
           </div>
           <div style={styles.row}>
-            <div style={styles.item}> 
+            <div style={styles.item}>
               <div style={styles.label}>Khách hàng: </div>
-              <div style={styles.value}>{bill.state === 10 ? '-' : (bill.customer ? bill.customer.name : '(Không)')}</div>
+              <div style={styles.value}>{bill.customer ? bill.customer.name : '(Không)'}</div>
             </div>
-            
-            <div style={styles.item}> 
+
+            <div style={styles.item}>
               <div style={styles.label}>Tổng tiền: </div>
-              {bill.state === 10 ? (
-                <div style={styles.total}>-</div>
-              ) : (
-                <div style={styles.total}>
-                  {FormatMoney(`${bill.total}`)}
-                  {' '}
-                  {'VND'}
-                </div>
-              )}
+              <div style={styles.total}>
+                {bill.state === 10 ? '-' : `${FormatMoney(bill.total)} VND`}
+              </div>
             </div>
           </div>
 
           {roomDetails ? (
-            <div style={{ marginTop: '10px' }}> 
+            <div style={{ marginTop: '10px' }}>
               <div style={styles.label}>Dịch vụ phòng: </div>
               <Table columns={columnRoomDefs} dataSource={roomDetails} pagination={false} />
             </div>
           ) : ''}
 
           {servicePerHourDetails ? (
-            <div style={{ marginTop: '10px' }}> 
+            <div style={{ marginTop: '10px' }}>
               <div style={styles.label}>Dịch vụ theo giờ: </div>
               <Table columns={columnServicePerHourDefs} dataSource={servicePerHourDetails} pagination={false} />
             </div>
           ) : ''}
 
           {servicePerUnitDetails ? (
-            <div style={{ marginTop: '10px' }}> 
+            <div style={{ marginTop: '10px' }}>
               <div style={styles.label}>Dịch vụ theo lượt: </div>
               <Table columns={columnServicePerUnitDefs} dataSource={servicePerUnitDetails} pagination={false} />
             </div>
           ) : ''}
         </div>
-      ) : null }
-      
-      
+      ) : null}
+
+
     </Modal>
   )
 })
