@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-one-expression-per-line */
 /* eslint-disable react/require-default-props */
 /* eslint-disable react/forbid-prop-types */
 /* eslint-disable no-shadow */
@@ -57,25 +58,27 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundImage: 'url(/images/auth.jpg)',
+    backgroundImage: 'url(/images/microphone.jpg)',
     backgroundSize: 'cover',
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'center'
   },
   quoteInner: {
-    textAlign: 'center',
+    textAlign: 'right',
     flexBasis: '600px'
   },
   quoteText: {
     color: theme.palette.white,
-    fontWeight: 300
+    fontWeight: 400
   },
   name: {
-    marginTop: theme.spacing(3),
-    color: theme.palette.white
+    marginTop: theme.spacing(1),
+    color: theme.palette.white,
+    fontSize: 16
   },
   bio: {
-    color: theme.palette.white
+    color: theme.palette.white,
+    fontStyle: 'italic'
   },
   contentContainer: {},
   content: {
@@ -198,23 +201,52 @@ const Login = props => {
                 className={classes.quoteText}
                 variant='h1'
               >
-                Hella narwhal Cosby sweater McSweeney's, salvia kitsch before
-                they sold out High Life.
+                WEBSITE QUẢN LÝ QUÁN KARAOKE THOUSAND-STARS
               </Typography>
+
               <div className={classes.person}>
                 <Typography
                   className={classes.name}
                   variant='body1'
                 >
-                  Takamaru Ayako
+                  Đặng Minh Tiến - 16521215
                 </Typography>
                 <Typography
                   className={classes.bio}
-                  variant='body2'
+                  variant='body1'
                 >
-                  Manager at inVision
+                  {'<Quản lý tổng />'}
                 </Typography>
               </div>
+              <div className={classes.person}>
+                <Typography
+                  className={classes.name}
+                  variant='body1'
+                >
+                  Nguyễn Bá Tùng - 16521395
+                </Typography>
+                <Typography
+                  className={classes.bio}
+                  variant='body1'
+                >
+                  {'<Quản lý nhân viên />'}
+                </Typography>
+              </div>
+              <div className={classes.person}>
+                <Typography
+                  className={classes.name}
+                  variant='body1'
+                >
+                  Nguyễn Thành Luân - 16520703
+                </Typography>
+                <Typography
+                  className={classes.bio}
+                  variant='body1'
+                >
+                  {'<Quản lý tài chính />'}
+                </Typography>
+              </div>
+
             </div>
           </div>
         </Grid>
