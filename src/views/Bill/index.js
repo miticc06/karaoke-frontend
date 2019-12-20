@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import moment from 'moment'
 import SearchIcon from '@material-ui/icons/Search'
-import TextField from '@material-ui/core/TextField'
-import Checkbox from '@material-ui/core/Checkbox'
 import { AgGridReact } from 'ag-grid-react'
 import { client } from 'config/client'
 import { Notify } from 'helpers/notify'
 import { parseError } from 'helpers'
 import { Grid } from '@material-ui/core'
 import { Icon, Modal, Select } from 'antd'
-import { GET_BILLS, GET_BILL, GET_USERS, DELETE_BILL } from './query'
+import { GET_BILLS, GET_BILL, DELETE_BILL } from './query'
 import './style.less'
 
 import ModalViewBill from './ModalViewBill'
@@ -19,7 +17,6 @@ const { Option } = Select
 
 const BillManagement = () => {
   const [bills, setBills] = useState([])
-  const [users, setUsers] = useState([])
   const [billsList, setBillsList] = useState([])
   const [visibleView, setVisibleView] = useState(false)
   const [billView, setBillView] = useState('')
@@ -40,24 +37,8 @@ const BillManagement = () => {
       .catch(err => new Notify('error', parseError(err)))
   }
 
-  const getUser = async () => {
-    await client
-      .query({
-        query: GET_USERS
-      })
-      .then(res => {
-        if (!res || !res.data || !res.data.users) {
-          throw new Error('Không lấy được danh sách User!')
-        }
-
-        setUsers(res.data.users)
-      })
-      .catch(err => new Notify('error', parseError(err)))
-  }
-
   useEffect(() => {
     getBills()
-    getUser()
   }, [])
 
   const states = [
@@ -81,7 +62,7 @@ const BillManagement = () => {
     } else {
       setBillsList(bills.filter(bill => bill.state.toString() === event))
     }
-  } 
+  }
 
   const columnDefs = [
     {

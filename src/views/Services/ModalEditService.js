@@ -22,7 +22,7 @@ const ModalEditService = Form.create()(props => {
           type,
           unitPrice: parseFloat(unitPrice)
         }
-        console.log(JSON.stringify(d))
+
         await client
           .mutate({
             mutation: UPDATE_SERVICE,
