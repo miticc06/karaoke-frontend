@@ -26,7 +26,7 @@ const ModalAddTicket = Form.create()(props => {
           .then(async res => {
             if (res && res.data && res.data.createTicket) {
               // eslint-disable-next-line
-              const notify = new Notify('success', 'Thêm ticket thành công!', 2)
+              const notify = new Notify('success', 'Thêm yêu cầu thành công!', 2)
               await refetch()
               hide()
               form.resetFields()
@@ -42,7 +42,7 @@ const ModalAddTicket = Form.create()(props => {
 
   return (
     <Modal
-      title='Thêm Ticket'
+      title='Thêm yêu cầu'
       headerIcon='plus'
       onCancel={hide}
       visible={visible}
@@ -51,20 +51,20 @@ const ModalAddTicket = Form.create()(props => {
       width='600px'
     >
       <Form>
-        <Form.Item label='Subject'>
+        <Form.Item label='Tiêu đề'>
           {form.getFieldDecorator('subject', {
-            rules: [{ required: true, message: 'Hãy nhập tiêu đề.' }]
+            rules: [{ required: true, message: 'Hãy nhập tiêu đề!' }]
           })(<Input type='text' />)}
         </Form.Item>
 
-        <Form.Item label='Room'>
+        <Form.Item label='Phòng hát'>
           {form.getFieldDecorator('room', {
-            rules: [{ required: true, message: 'Hãy nhập số phòng.' }],
+            rules: [{ required: true, message: 'Hãy chọn phòng hát!' }],
             initialValue: roomNeedAddTicket && roomNeedAddTicket._id
           })(
             <Select
               disabled={roomNeedAddTicket && roomNeedAddTicket._id}
-              placeholder='Please select room ...'
+              placeholder='Nhấp để chọn...'
             >
               {rooms.map(room => (
                 <Select.Option key={room._id} value={room._id}>
@@ -80,9 +80,9 @@ const ModalAddTicket = Form.create()(props => {
           )}
         </Form.Item>
 
-        <Form.Item label='Status'>
+        <Form.Item label='Trạng thái'>
           {form.getFieldDecorator('status', {
-            rules: [{ required: true, message: 'Hãy chọn trạng thái.' }],
+            rules: [{ required: true, message: 'Hãy chọn trạng thái!' }],
             initialValue: 'OPEN'
           })(<Select
             disabled

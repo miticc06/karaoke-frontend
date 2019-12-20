@@ -27,7 +27,7 @@ const ModalEditTicket = Form.create()(props => {
           .then(async res => {
             if (res && res.data && res.data.updateTicket) {
               // eslint-disable-next-line
-              const notify = new Notify('success', 'Cập nhật ticket thành công!', 2)
+              const notify = new Notify('success', 'Cập nhật thông tin yêu cầu thành công!', 2)
               await refetch()
               hide()
               form.resetFields()
@@ -46,7 +46,7 @@ const ModalEditTicket = Form.create()(props => {
 
   return (
     <Modal
-      title='Cập nhật Ticket'
+      title='Cập nhật thông tin yêu cầu'
       headerIcon='edit'
       onCancel={hide}
       visible={visible}
@@ -55,19 +55,19 @@ const ModalEditTicket = Form.create()(props => {
       width='600px'
     >
       <Form>
-        <Form.Item label='Subject'>
+        <Form.Item label='Tiêu đề'>
           {form.getFieldDecorator('subject', {
             initialValue: ticket && ticket.subject ? ticket.subject : '',
-            rules: [{ required: true, message: 'Vui lòng nhập tiêu đề.' }]
+            rules: [{ required: true, message: 'Hãy nhập tiêu đề!' }]
           })(<Input type='text' />)}
         </Form.Item>
 
-        <Form.Item label='Room'>
+        <Form.Item label='Phòng hát'>
           {form.getFieldDecorator('room', {
-            rules: [{ required: true, message: 'Vui lòng chọn phòng.' }],
+            rules: [{ required: true, message: 'Hãy chọn phòng hát!' }],
             initialValue: ticket && ticket.room ? ticket.room._id : ''
           })(
-            <Select placeholder='Please select room ...'>
+            <Select placeholder='Nhấp để chọn...'>
               {rooms.map(room => (
                 <Select.Option key={room._id} value={room._id}>
                   {room.name}
@@ -77,12 +77,12 @@ const ModalEditTicket = Form.create()(props => {
           )}
         </Form.Item>
 
-        <Form.Item label='Status'>
+        <Form.Item label='Trạng thái'>
           {form.getFieldDecorator('status', {
-            rules: [{ required: true, message: 'Vui lòng chọn trạng thái.' }],
+            rules: [{ required: true, message: 'Hãy chọn trạng thái!' }],
             initialValue: ticket && ticket.status
           })(
-            <Select placeholder='Please select room ...'>
+            <Select placeholder='Nhấp để chọn...'>
               {statusOptions.map(status => (
                 <Select.Option key={status.value} value={status.value}>
                   {status.label}
