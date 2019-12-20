@@ -252,12 +252,17 @@ const Payment = props => {
 
 
   const handleChangeCustomer = async (value) => {
-    const customerId = value.match(/\[(.+)\]_\[(.+)\]_\[(.+)\]_/)[1]
-    await handleUpdateBill(bill._id, {
-      ...bill,
-      customer: {
+    let customer = null
+    if (value) {
+      console.log(value)
+      const customerId = value.match(/\[(.*)\]_\[(.*)\]_\[(.*)\]_/)[1]
+      customer = {
         _id: customerId
       }
+    }
+    await handleUpdateBill(bill._id, {
+      ...bill,
+      customer
     }, 'Cập nhật khách hàng thành công!')
   }
 
