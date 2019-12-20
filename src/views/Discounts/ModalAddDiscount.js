@@ -40,7 +40,7 @@ const ModalAddDiscount = Form.create()(props => {
               // eslint-disable-next-line
               const notify = new Notify(
                 'success',
-                'Add Discount successfully!',
+                'Thêm mới khuyến mãi thành công!',
                 2
               )
               await refetch()
@@ -58,7 +58,7 @@ const ModalAddDiscount = Form.create()(props => {
 
   return (
     <Modal
-      title='Create Discount'
+      title='Thêm mới khuyến mãi'
       headerIcon='plus'
       onCancel={hide}
       visible={visible}
@@ -67,17 +67,17 @@ const ModalAddDiscount = Form.create()(props => {
       width='600px'
     >
       <Form>
-        <Form.Item label='Name:'>
+        <Form.Item label='Tên khuyến mãi'>
           {form.getFieldDecorator('name', {
-            rules: [{ required: true, message: 'Please Enter Discount Name' }]
+            rules: [{ required: true, message: 'Hãy nhập tên khuyến mãi!' }]
           })(<Input type='name' />)}
         </Form.Item>
 
-        <Form.Item label='Type:'>
+        <Form.Item label='Hình thức'>
           {form.getFieldDecorator('type', {
-            rules: [{ required: true, message: 'Please choose a type' }]
+            rules: [{ required: true, message: 'Hãy chọn hình thức khuyến mãi!' }]
           })(
-            <Select placeholder='Press to choose ...'>
+            <Select placeholder='Nhấp vào để chọn...'>
               {typeCoupon.map(type => (
                 <Select.Option key={type.value} value={type.value}>
                   {`${type.label} `}
@@ -87,20 +87,20 @@ const ModalAddDiscount = Form.create()(props => {
           )}
         </Form.Item>
 
-        <Form.Item label='Value: '>
+        <Form.Item label='Trị số'>
           {form.getFieldDecorator('value', {
-            rules: [{ required: true, message: 'Please enter value' }]
+            rules: [{ required: true, message: 'Hãy nhập trị số!' }]
           })(<Input type='number' />)}
         </Form.Item>
 
 
-        <Form.Item label='Range Date: '>
+        <Form.Item label='Thời gian diễn ra khuyến mãi'>
           {form.getFieldDecorator('rangeDate', {
             initialValue: [moment(), moment()],
             rules: [
               {
                 required: true,
-                message: 'Please the date this discount affects and stops affecting'
+                message: 'Hãy chọn thời gian diễn ra khuyến mãi!'
               }
             ]
           })(

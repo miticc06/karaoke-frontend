@@ -1,19 +1,24 @@
+import SearchIcon from '@material-ui/icons/Search'
+import TextField from '@material-ui/core/TextField'
 import React, { useState, useEffect } from 'react'
 import { AgGridReact } from 'ag-grid-react'
 import { client } from 'config/client'
 import { Notify } from 'helpers/notify'
-import { parseError } from 'helpers'
+import { parseError, FormatMoney } from 'helpers'
 import { Grid } from '@material-ui/core'
 import { Icon, Button, Modal } from 'antd'
+import moment from 'moment'
 import { GET_PAYMENTSLIPS, GET_PAYMENTSLIP, DELETE_PAYMENTSLIP } from './query'
 import './style.less'
 import ModalAddPaymentSlip from './ModalAddPaymentSlip'
 import ModalEditPaymentSlip from './ModalEditPaymentSlip'
 
+
 const { confirm } = Modal
 
 const PaymentSlipManagement = () => {
   const [paymentSlips, setPaymentSlips] = useState([])
+  const [paymentSlipsList, setPaymentSlipsList] = useState([])
   const [visibleAdd, setVisibleAdd] = useState(false)
   const [visibleEdit, setVisibleEdit] = useState(false)
   const [paymentSlipEdit, setPaymentSlipEdit] = useState(null)
@@ -26,6 +31,7 @@ const PaymentSlipManagement = () => {
         throw new Error('Có lỗi xảy ra!')
       }
       setPaymentSlips(res.data.paymentSlips)
+      setPaymentSlipsList(res.data.paymentSlips)
     })
       .catch(err => new Notify('error', parseError(err)))
   }
@@ -34,26 +40,39 @@ const PaymentSlipManagement = () => {
     getPaymentSlips()
   }, [])
 
+  const setTextValue = (event) => {
+    let kw = event.target.value
+    kw = kw.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    console.log(kw)
+    if (kw !== '') {
+      // eslint-disable-next-line max-len
+      setPaymentSlips(paymentSlipsList.filter(payment => payment.description.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(kw)))
+    } else setPaymentSlips(paymentSlipsList)
+  }
+
   const columnDefs = [
     {
-      headerName: 'Description', field: 'description', sortable: true
+      headerName: 'Tên phiếu chi', field: 'description', sortable: true
     },
     {
-      headerName: 'Price', field: 'price', sortable: true
+      headerName: 'Giá tiền', 
+      field: 'price', 
+      sortable: true, 
+      cellRenderer: (data) => FormatMoney(`${data.value}`)
     },
     {
-      headerName: 'Created By', field: 'createdBy.name', sortable: true
+      headerName: 'Người tạo', field: 'createdBy.name', sortable: true
     },
     {
-      headerName: 'Created At', 
+      headerName: 'Ngày tạo', 
       field: 'createdAt', 
       sortable: true,
-      cellRenderer: (data) => data.value ? (new Date(data.value)).toLocaleDateString() : ''
+      cellRenderer: (data) => data.value ? moment(data.value).format('DD/MM/YYYY HH:mm') : ''
     },
     {
-      headerName: 'Action',
+      headerName: 'Thao tác',
       minWidth: 50,
-      width: 50,
+      width: 70,
       maxWidth: 100,
       suppressMenu: true,
       cellRendererFramework: row => (
@@ -82,7 +101,7 @@ const PaymentSlipManagement = () => {
             style={{ cursor: 'pointer', margin: '5px' }}
             onClick={async () => {
               confirm({
-                title: 'Bạn có muốn xoá payment-slip?',
+                title: 'Xác nhận xoá phiếu chi?',
                 okType: 'danger',
                 content: `- ${row.data.description}`,
                 onOk: async () => {
@@ -96,7 +115,7 @@ const PaymentSlipManagement = () => {
                       throw Error('Có lỗi xảy ra!')
                     }
                     await getPaymentSlips()
-                    return new Notify('success', 'Xóa payment-slip thành công!')
+                    return new Notify('success', 'Xóa phiếu chi thành công!')
                   })
                     .catch(err => new Notify('error', parseError(err)))
                 }
@@ -116,8 +135,23 @@ const PaymentSlipManagement = () => {
   return (
     <div className='page-paymentSlipsManagement'>
       <h2 className='title-page'>
-        Payment Slips Management
+        QUẢN LÝ PHIẾU CHI
       </h2>
+
+      <form className='margin'>
+        <Grid container spacing={1} alignItems='flex-end'>
+          <Grid item>
+            <SearchIcon />
+          </Grid>
+          <Grid item>
+            <TextField
+              id='input-with-icon-grid'
+              label='Tìm kiếm tên phiếu chi...'
+              onChange={setTextValue}
+            />
+          </Grid>
+        </Grid>
+      </form>
 
       <Grid
         container
@@ -137,7 +171,7 @@ const PaymentSlipManagement = () => {
               name='btn-add-paymentSlip'
               onClick={() => setVisibleAdd(true)}
             >
-              Add Payment Slip
+              Thêm mới
             </Button>
           </Grid>
 

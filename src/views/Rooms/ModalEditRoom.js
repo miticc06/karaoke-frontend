@@ -2,7 +2,7 @@
 import { Modal, Form, Input, Select } from 'antd'
 import React, { useState, useEffect } from 'react'
 import { client } from 'config/client'
-import { parseError } from 'helpers'
+import { parseError, FormatMoney } from 'helpers'
 import { Notify } from 'helpers/notify'
 import { UPDATE_ROOM, GET_TYPES } from './query'
 
@@ -33,7 +33,7 @@ const ModalEditRoom = Form.create()(props => {
               // eslint-disable-next-line
               const notify = new Notify(
                 'success',
-                'Room updated successfully!',
+                'Cập nhật thông tin phòng hát thành công!',
                 2
               )
               await refetch()
@@ -69,7 +69,7 @@ const ModalEditRoom = Form.create()(props => {
 
   return (
     <Modal
-      title='Update Room Information'
+      title='Cập nhật thông tin phòng hát'
       headerIcon='edit'
       onCancel={hide}
       visible={visible}
@@ -78,22 +78,22 @@ const ModalEditRoom = Form.create()(props => {
       width='600px'
     >
       <Form>
-        <Form.Item label='Name:'>
+        <Form.Item label='Tên phòng hát'>
           {form.getFieldDecorator('name', {
             initialValue: room ? room.name : '',
-            rules: [{ required: true, message: 'Please Enter room Name' }]
+            rules: [{ required: true, message: 'Hãy nhập tên phòng hát!' }]
           })(<Input type='name' />)}
         </Form.Item>
 
-        <Form.Item label='Type:'>
+        <Form.Item label='Loại phòng'>
           {form.getFieldDecorator('typeRoom', {
             initialValue: room && room.typeRoom && room.typeRoom._id ? room.typeRoom._id : '',
-            rules: [{ required: true, message: 'Please choose a type' }]
+            rules: [{ required: true, message: 'Hãy nhập loại phòng hát!' }]
           })(
-            <Select placeholder='Press to choose ...'>
+            <Select placeholder='Nhấp vào để chọn'>
               {state.types.map(type => (
                 <Select.Option key={type._id} value={type._id}>
-                  {`${type.name} | ${type.unitPrice}/hour`}
+                  {`${type.name} | ${FormatMoney(`${type.unitPrice}`)} VND/hour`}
                 </Select.Option>
               ))}
             </Select>

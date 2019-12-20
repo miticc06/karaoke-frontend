@@ -78,7 +78,7 @@ const AccountProfile = props => {
           />
         </div>
         <div className={classes.progress}>
-          <Typography variant='body1'>Profile Completeness: 70%</Typography>
+          <Typography variant='body1'>Độ hoàn thành hồ sơ: 70%</Typography>
           <LinearProgress
             value={70}
             variant='determinate'
@@ -92,9 +92,9 @@ const AccountProfile = props => {
           color='primary'
           variant='text'
         >
-          Upload picture
+          TẢI ẢNH LÊN
         </Button>
-        <Button variant='text'>Remove picture</Button>
+        <Button variant='text'>GỠ BỎ ẢNH</Button>
       </CardActions>
     </Card>
   )
