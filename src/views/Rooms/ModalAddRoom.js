@@ -5,7 +5,7 @@
 import { Modal, Form, Input, Select } from 'antd'
 import React, { useState, useEffect } from 'react'
 import { client } from 'config/client'
-import { parseError } from 'helpers'
+import { parseError, FormatMoney } from 'helpers'
 import { Notify } from 'helpers/notify'
 import { ADD_ROOM, GET_TYPES } from './query'
 
@@ -35,7 +35,7 @@ const modalAddRoom = Form.create()(props => {
               // eslint-disable-next-line
               const notify = new Notify(
                 'success',
-                'Add Room successfully!',
+                'Thêm phòng hát thành công!',
                 2
               )
               await refetch()
@@ -71,7 +71,7 @@ const modalAddRoom = Form.create()(props => {
 
   return (
     <Modal
-      title='Create Room'
+      title='Thêm phòng hát'
       headerIcon='plus'
       onCancel={hide}
       visible={visible}
@@ -80,20 +80,20 @@ const modalAddRoom = Form.create()(props => {
       width='600px'
     >
       <Form>
-        <Form.Item label='Name:'>
+        <Form.Item label='Tên phòng hát'>
           {form.getFieldDecorator('name', {
-            rules: [{ required: true, message: 'Please Enter Room Name' }]
+            rules: [{ required: true, message: 'Hãy nhập tên phòng hát!' }]
           })(<Input type='name' />)}
         </Form.Item>
 
-        <Form.Item label='Type:'>
+        <Form.Item label='Loại phòng'>
           {form.getFieldDecorator('typeRoom', {
-            rules: [{ required: true, message: 'Please choose a type' }]
+            rules: [{ required: true, message: 'Hãy nhập loại phòng hát!' }]
           })(
-            <Select placeholder='Press to choose ...'>
+            <Select placeholder='Nhấp vào để chọn...'>
               {state.types.map(type => (
                 <Select.Option key={type._id} value={type._id}>
-                  {`${type.name} | ${type.unitPrice}/hour`}
+                  {`${type.name} | ${FormatMoney(`${type.unitPrice}`)} VND/hour`}
                 </Select.Option>
               ))}
             </Select>
