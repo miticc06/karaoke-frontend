@@ -1,6 +1,7 @@
 import React from 'react'
 import moment from 'moment'
 import { Button } from 'antd'
+import { FormatMoney } from 'helpers'
 
 export const columnsRoomDetails = [
   {
@@ -37,12 +38,13 @@ export const columnsRoomDetails = [
   {
     title: 'Đơn giá',
     dataIndex: 'room.typeRoom.unitPrice',
-    key: 'room.typeRoom.unitPrice'
+    key: 'room.typeRoom.unitPrice',
+    render: data => FormatMoney(data)
   },
   {
     title: 'Tổng',
     dataIndex: 'total',
-    render: data => data ? Math.round(data) : '...'
+    render: data => data ? FormatMoney(Math.round(data)) : '...'
 
   }
 ]
@@ -97,16 +99,17 @@ export const columnsServiceDetailsPerHOUR = (
     {
       title: 'Đơn giá (h)',
       dataIndex: 'service.unitPrice',
-      key: 'service.unitPrice'
+      key: 'service.unitPrice',
+      render: data => FormatMoney(data)
     },
     {
       title: 'Thành tiền',
       render: data => {
-        if (data.service.type === 'perUNIT') {
-          return Math.round(data.quantity * data.service.unitPrice)
-        }
+        // if (data.service.type === 'perUNIT') {
+        //   return FormatMoney(Math.round(data.quantity * data.service.unitPrice))
+        // }
         if (data.service.type === 'perHOUR' && data.endTime) {
-          return Math.round(data.service.unitPrice * (((data.endTime - data.startTime) / 60000) / 60))
+          return FormatMoney(Math.round(data.service.unitPrice * (((data.endTime - data.startTime) / 60000) / 60)))
         }
         return '...'
       }
@@ -133,7 +136,8 @@ export const columnsServiceDetailsPerUNIT = (handleUpdateQuantityItem) => [
   {
     title: 'Đơn giá',
     dataIndex: 'service.unitPrice',
-    key: 'service.unitPrice'
+    key: 'service.unitPrice',
+    render: data => FormatMoney(data)
   },
   {
     title: 'Số lượng',
@@ -158,7 +162,7 @@ export const columnsServiceDetailsPerUNIT = (handleUpdateQuantityItem) => [
     title: 'Thành tiền',
     render: data => {
       if (data.service.type === 'perUNIT') {
-        return data.total || (data.quantity * data.service.unitPrice)
+        return data.total ? FormatMoney(data.total) : FormatMoney(data.quantity * data.service.unitPrice)
       }
       return '...'
     }

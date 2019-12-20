@@ -161,3 +161,23 @@ query ($text:String) {
   }
 }
 `
+
+export const GET_DISCOUNTS = gql`
+query {
+  discounts {
+    _id
+    name
+    type
+    value
+    createdAt
+    createdBy {
+      _id
+      username
+      email
+      name
+    }
+    startDate
+    endDate
+  }
+}
+`

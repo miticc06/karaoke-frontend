@@ -1,74 +1,210 @@
 
-import { Modal, Form, Input, Switch, TimePicker, Select } from 'antd'
+import { Modal, Form, Input, Select, Table, InputNumber } from 'antd'
 import React, { useState, useEffect } from 'react'
 import moment from 'moment'
+import { client } from 'config/client'
+import { FormatMoney } from 'helpers'
+import { columnsRoomDetails, columnsServiceDetailsPerHOUR, columnsServiceDetailsPerUNIT } from './columnsTableModalPay'
+import { GET_DISCOUNTS } from './query'
 
 const { Option } = Select
 
-
 const ModalPay = Form.create()(props => {
-  const { form, hide, visible, roomSelected, rooms, bill, handleUpdateBill } = props
-
+  const [discounts, setDiscounts] = useState([])
+  const [endTime, setEndTime] = useState(moment())
+  const { form, hide, visible, bill, handleUpdateBill } = props
+  console.log(props)
   const onSubmit = async () => {
     await form.validateFields(async (errors, formData) => {
       if (!errors) {
-        const { newRoomId } = formData
-
+        const { total, coupon } = formData
         const newBill = {
-          ...bill
+          ...bill,
+          discount: coupon,
+          total,
+          state: 20
         }
-        const lastRoom = newBill.roomDetails[newBill.roomDetails.length - 1]
-
-        lastRoom.endTime = +moment()
-        lastRoom.total = lastRoom.room.typeRoom.unitPrice * (((lastRoom.endTime - lastRoom.startTime) / 60000) / 60)
-        const findRoom = rooms.find(obj => obj._id === newRoomId)
-
-        newBill.roomDetails.push({
-          room: {
-            _id: findRoom._id,
-            name: findRoom.name,
-            typeRoom: findRoom.typeRoom
-          },
-          startTime: +moment()
+        // console.log('newBill', newBill)
+        newBill.roomDetails = newBill.roomDetails.map(roomDetail => {
+          if (!roomDetail.total) {
+            roomDetail.endTime = +endTime
+            roomDetail.total = Math.round(roomDetail.room.typeRoom.unitPrice * (((roomDetail.endTime - roomDetail.startTime) / 60000) / 60))
+          }
+          return roomDetail
+        })
+        newBill.serviceDetails = newBill.serviceDetails.map(serviceDetail => {
+          if (!serviceDetail.total) {
+            if (serviceDetail.service.type === 'perUNIT') {
+              serviceDetail.total = serviceDetail.quantity * serviceDetail.service.unitPrice
+            }
+            if (serviceDetail.service.type === 'perHOUR') {
+              if (!serviceDetail.endTime) {
+                serviceDetail.endTime = +endTime
+              }
+              serviceDetail.total = Math.round(serviceDetail.service.unitPrice * (((serviceDetail.endTime - serviceDetail.startTime) / 60000) / 60))
+            }
+          }
+          return serviceDetail
         })
 
-        await handleUpdateBill(bill._id, newBill)
+        console.log(newBill)
+        await handleUpdateBill(bill._id, newBill, `Thanh toán thành công hóa đơn ${FormatMoney(total)} VNĐ`)
         hide()
       }
     })
   }
 
+  const getDiscount = async () => {
+    await client.query({
+      query: GET_DISCOUNTS
+    }).then(res => {
+      setDiscounts(res.data.discounts)
+    })
+  }
+
   useEffect(() => {
+    getDiscount()
     form.resetFields()
+    setEndTime(moment())
   }, [visible])
+
+  const servicesPerHour = bill && bill.serviceDetails ? bill.serviceDetails.filter(obj => obj.service.type === 'perHOUR') : []
+  const servicesPerUnit = bill && bill.serviceDetails ? bill.serviceDetails.filter(obj => obj.service.type === 'perUNIT') : []
+
+  const calTotal = () => {
+    if (!bill) { return 0 }
+
+    const totalRooms = bill.roomDetails.reduce((total, obj) => {
+      if (obj.total) {
+        return total + obj.total
+      }
+      return total + obj.room.typeRoom.unitPrice * (((endTime - obj.startTime) / 60000) / 60)
+    }, 0)
+    // console.log('totalRooms:', totalRooms)
+
+    const totalServicesPerHour = servicesPerHour.reduce((total, obj) => {
+      if (obj.total) {
+        return total + obj.total
+      }
+      if (obj.endTime) {
+        return total + (obj.service.unitPrice * (((obj.endTime - obj.startTime) / 60000) / 60))
+      }
+      return total + (obj.service.unitPrice * (((endTime - obj.startTime) / 60000) / 60))
+    }, 0)
+    // console.log('totalServicesPerHour', totalServicesPerHour)
+
+
+    const totalServicesPerUnit = servicesPerUnit.reduce((total, obj) => {
+      if (obj.total) {
+        return total + obj.total
+      }
+      return total + (obj.quantity * obj.service.unitPrice)
+    }, 0)
+
+    // console.log('totalServicesPerUnit', totalServicesPerUnit)
+
+    if (form.getFieldsValue().coupon) {
+      const coupon = discounts.find(discount => discount._id === form.getFieldsValue().coupon)
+      if (coupon.type === 'PERCENT') {
+        return (totalRooms + totalServicesPerHour + totalServicesPerUnit) * (coupon.value / 100)
+      }
+      if (coupon.type === 'DEDUCT') {
+        return Math.max(0, (totalRooms + totalServicesPerHour + totalServicesPerUnit) - coupon.value)
+      }
+    }
+    return totalRooms + totalServicesPerHour + totalServicesPerUnit
+  }
+
+  // console.log(calTotal())
 
   return (
     <Modal
-      title='Đổi phòng'
+      title='Thanh toán Hóa đơn dịch vụ'
       headerIcon='edit'
       onCancel={hide}
       visible={visible}
       fieldsError={form.getFieldsError()}
       onOk={onSubmit}
+      width={700}
     >
+
+      <div className='top-bill'>
+        <div className='group-list-room-details'>
+          <div className='title-list-room-details'>
+            Dịch vụ phòng
+          </div>
+          <Table
+            className='list-room-details'
+            columns={columnsRoomDetails(endTime)}
+            dataSource={bill && bill.roomDetails}
+            pagination={false}
+          />
+        </div>
+
+        {servicesPerHour.length > 0 ? (
+          <div className='group-list-service-details'>
+            <div className='title-list-service-details'>
+              Dịch vụ theo giờ
+            </div>
+            <Table
+              className='list-service-details'
+              columns={columnsServiceDetailsPerHOUR(endTime)}
+              dataSource={servicesPerHour}
+              pagination={false}
+            />
+          </div>
+        ) : ''}
+
+        {servicesPerUnit.length > 0 ? (
+          <div className='group-list-service-details'>
+            <div className='title-list-service-details'>
+              Dịch vụ theo lượt
+            </div>
+            <Table
+              className='list-service-details'
+              columns={columnsServiceDetailsPerUNIT}
+              dataSource={servicesPerUnit}
+              pagination={false}
+            />
+          </div>
+        ) : ''}
+
+      </div>
+
+
       <Form>
-        <Form.Item label='Chọn phòng'>
-          {form.getFieldDecorator('newRoomId', {
-            rules: [{ required: true, message: 'Hãy chọn phòng mới cần đổi' }]
+        <Form.Item label='Chọn coupon'>
+          {form.getFieldDecorator('coupon', {
           })(
             <Select
               showSearch
               style={{ width: 300 }}
-              placeholder='Chọn phòng mới'
-              notFoundContent='Không còn phòng trống nào!'
-              filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+              placeholder='Chọn coupon'
+              allowClear
             >
-              {roomSelected && rooms && rooms.filter(roo => !roo.bill && roo._id !== roomSelected._id)
-                .map(obj => (
-                  <Option value={obj._id} key={obj._id}>{obj.name}</Option>
+              {discounts.map(discount => (
+                <Option key={discount._id} value={discount._id}>{discount.name}</Option>
+              ))}
 
-                ))}
             </Select>
+          )}
+        </Form.Item>
+
+        <Form.Item label='Tổng thành tiền'>
+          {form.getFieldDecorator('total', {
+            initialValue: bill && Math.round(calTotal())
+          })(
+            <InputNumber
+              disabled
+              style={{ width: 300 }}
+              formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+              parser={value => value.replace(/\$\s?|(,*)/g, '')}
+            />
+            // <Input
+            //   disabled
+
+            //   style={{ width: 300 }}
+            // />
           )}
         </Form.Item>
 

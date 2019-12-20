@@ -107,6 +107,11 @@ const Sidebar = props => {
       title: 'Rooms',
       href: '/rooms',
       icon: <RoomIcon />
+    },
+    {
+      title: 'Bills',
+      href: '/bills',
+      icon: <RoomIcon />
     }
   ]
 
