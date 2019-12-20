@@ -131,7 +131,7 @@ const ModalViewDiscount = Form.create()(props => {
 
 
     <Modal
-      title='Bill Information'
+      title='Chi tiết hoá đơn thanh toán'
       headerIcon='plus'
       onCancel={hide}
       visible={visible}
@@ -152,7 +152,7 @@ const ModalViewDiscount = Form.create()(props => {
             </div>
             <div style={styles.item}>
               <div style={styles.label}>Trạng thái: </div>
-              <div style={styles.value}>{bill.state === 0 ? 'ĐÃ HUỶ' : (bill.state === 10 ? 'CHƯA HOÀN TẤT' : 'HOÀN TẤT')}</div>
+              <div style={styles.value}>{bill.state === 0 ? 'ĐÃ HUỶ' : (bill.state === 10 ? 'CHƯA HOÀN THÀNH' : 'ĐÃ HOÀN THÀNH')}</div>
             </div>
           </div>
           <div style={styles.row}>
