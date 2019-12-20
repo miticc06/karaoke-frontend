@@ -117,7 +117,8 @@ const useStyles = makeStyles(theme => ({
     marginRight: theme.spacing(1)
   },
   sugestion: {
-    marginTop: theme.spacing(2)
+    marginTop: theme.spacing(2),
+    textAlign: 'left'
   },
   textField: {
     marginTop: theme.spacing(2)
@@ -266,13 +267,14 @@ const Login = props => {
                   className={classes.title}
                   variant='h2'
                 >
-                  Sign in
+                  Đăng nhập
                 </Typography>
                 <Typography
                   color='textSecondary'
                   gutterBottom
+                  style={{ paddingTop: 10, marginBottom: -15, marginTop: 15 }}
                 >
-                  Sign in with social media
+                  Đăng nhập với mạng xã hội
                 </Typography>
                 <Grid
                   className={classes.socialButtons}
@@ -287,7 +289,7 @@ const Login = props => {
                       variant='contained'
                     >
                       <FacebookIcon className={classes.socialIcon} />
-                      Login with Facebook
+                      Facebook
                     </Button>
                   </Grid>
                   <Grid item>
@@ -297,7 +299,7 @@ const Login = props => {
                       variant='contained'
                     >
                       <GoogleIcon className={classes.socialIcon} />
-                      Login with Google
+                      Google
                     </Button>
                   </Grid>
                 </Grid>
@@ -307,7 +309,7 @@ const Login = props => {
                   color='textSecondary'
                   variant='body1'
                 >
-                  or login with account
+                  hoặc bằng tài khoản người dùng
                 </Typography>
                 <TextField
                   className={classes.textField}
@@ -316,7 +318,7 @@ const Login = props => {
                   helperText={
                     hasError('username') ? formState.errors.username[0] : null
                   }
-                  label='username'
+                  label='Tên tài khoản'
                   name='username'
                   onChange={handleChange}
                   type='text'
@@ -330,7 +332,7 @@ const Login = props => {
                   helperText={
                     hasError('password') ? formState.errors.password[0] : null
                   }
-                  label='Password'
+                  label='Mật khẩu'
                   name='password'
                   onChange={handleChange}
                   type='password'
@@ -346,7 +348,7 @@ const Login = props => {
                   type='submit'
                   variant='contained'
                 >
-                  Sign in now
+                  ĐĂNG NHẬP
                 </Button>
               </form>
             </div>
