@@ -75,7 +75,8 @@ const ModalPay = Form.create()(props => {
     await client.query({
       query: GET_DISCOUNTS
     }).then(res => {
-      setDiscounts(res.data.discounts)
+      const now = moment()
+      setDiscounts(res.data.discounts.filter(discount => (discount.isActive && discount.startDate <= now && now <= discount.endDate)))
     })
   }
 

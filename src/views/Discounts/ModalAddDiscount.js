@@ -1,10 +1,11 @@
 import { Modal, Form, Input, Select, DatePicker } from 'antd'
-import React from 'react'
+import React, { useState } from 'react'
 import moment from 'moment'
 import { client } from 'config/client'
 import { parseError } from 'helpers'
 import { Notify } from 'helpers/notify'
 import { ADD_DISCOUNT } from './query'
+import { TimePicker } from './TimePicker'
 
 const { RangePicker } = DatePicker
 
@@ -15,7 +16,8 @@ const typeCoupon = [
 
 const ModalAddDiscount = Form.create()(props => {
   const { form, hide, visible, refetch } = props
-
+  const [startTime, setStartTime] = useState('')
+  const [endTime, setEndTime] = useState('')
 
   const onSubmit = async () => {
     await form.validateFields(async (errors, formData) => {
@@ -25,8 +27,8 @@ const ModalAddDiscount = Form.create()(props => {
           name,
           type,
           value: parseFloat(value),
-          startDate: rangeDate[0].valueOf(),
-          endDate: rangeDate[1].valueOf()
+          startDate: startTime,
+          endDate: endTime
         }
         await client
           .mutate({
@@ -104,7 +106,8 @@ const ModalAddDiscount = Form.create()(props => {
               }
             ]
           })(
-            <RangePicker format='DD/MM/YYYY' />
+            // <RangePicker format='DD/MM/YYYY' />
+            <TimePicker setStartTime={setStartTime} setEndTime={setEndTime} />
           )}
         </Form.Item>
       </Form>

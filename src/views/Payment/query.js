@@ -171,6 +171,7 @@ export const GET_DISCOUNTS = gql`
 query {
   discounts {
     _id
+    isActive
     name
     type
     value
