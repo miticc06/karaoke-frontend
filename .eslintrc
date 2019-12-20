@@ -94,6 +94,7 @@
     "react/jsx-props-no-spreading": 0,
     "react/no-deprecated": 1,
     "react/prefer-stateless-function": 0,
-    "import/extensions": 1
+    "import/extensions": 1,
+    "react-hooks/exhaustive-deps": 0
   }
 }
