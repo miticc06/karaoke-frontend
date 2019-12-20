@@ -69,11 +69,6 @@ const Sidebar = props => {
       icon: <AccountBoxIcon />
     },
     {
-      title: 'Cài đặt',
-      href: '/settings',
-      icon: <SettingsIcon />
-    },
-    {
       title: 'Quản lý người dùng',
       href: '/users',
       icon: <PeopleIcon />
@@ -117,6 +112,11 @@ const Sidebar = props => {
       title: 'Quản lý hoá đơn',
       href: '/bills',
       icon: <ReceiptIcon />
+    },
+    {
+      title: 'Cài đặt',
+      href: '/settings',
+      icon: <SettingsIcon />
     }
   ]
 
