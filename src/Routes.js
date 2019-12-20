@@ -26,7 +26,8 @@ import {
   Tickets as TicketView,
   Discount as DiscountView,
   Services as ServiceView,
-  Rooms as RoomView
+  Rooms as RoomView,
+  Bills as BillView
 } from './views'
 
 const PRIVATE_KEY = 'privateKey@12345678'
@@ -188,6 +189,15 @@ const Routes = props => {
           exact
           layout={MainLayout}
           path='/tickets'
+          refetchcurrentuser={getUser}
+          {...state}
+        />
+
+        <RouteWithLayout
+          component={BillView}
+          exact
+          layout={MainLayout}
+          path='/bills'
           refetchcurrentuser={getUser}
           {...state}
         />
