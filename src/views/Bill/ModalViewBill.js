@@ -1,206 +1,211 @@
-import { Modal, Form } from 'antd'
+import { Modal, Form, Table, Button } from 'antd'
 import React from 'react'
 import moment from 'moment'
-import { AgGridReact } from 'ag-grid-react'
-import { Grid } from '@material-ui/core'
-import './style.less'
-import { GET_BILL } from './query'
+import { FormatMoney } from 'helpers'
+import { FormHelperText } from '@material-ui/core'
 
 const ModalViewDiscount = Form.create()(props => {
   const { form, hide, visible, refetch, bill } = props
 
   const styles = {
+    row: {
+      // display: 'flex'
+    },
     item: {
-      margin: '10px'
+      display: 'flex',
+      justifyContent: 'space-between',
+      marginBottom: '5px'
     },
     label: {
       fontWeight: '600'
     },
     value: {
-      fontWeight: 'normal'
-    },
-    groupValue: {
       fontWeight: 'normal',
-      marginLeft: '10px'
+      marginLeft: '5px'
     },
-    aggridTable: {
-      height: 'calc(100vh - 250px)',
-      width: '100%'
-    },
-    table: {
-      overflow: 'auto'
+    total: {
+      fontSize: 18,
+      fontWeight: 'bold'
     }
   }
 
   const columnRoomDefs = [
     {
-      headerName: 'Giờ vào',
-      field: 'startTime',
-      resizable: true,
-      cellRendererFramework: row => moment(row.value).format('DD/MM/YYYY HH:mm')
+      title: 'Giờ vào',
+      dataIndex: 'startTime',
+      key: 'startTime',
+      render: data => moment(data).format('DD/MM/YYYY HH:mm')
     },
     {
-      headerName: 'Giờ ra',
-      field: 'endTime',
-      resizable: true,
-      cellRendererFramework: row => moment(row.value).format('DD/MM/YYYY HH:mm')
+      title: 'Giờ ra',
+      dataIndex: 'endTime',
+      key: 'endTime',
+      render: data => data ? moment(data).format('DD/MM/YYYY HH:mm') : '-'
     },
     {
-      headerName: 'Phòng',
-      field: 'room.name',
-      resizable: true
+      title: 'Phòng',
+      dataIndex: 'room.name',
+      key: 'room.name'
     },
     {
-      headerName: 'Loại phòng',
-      field: 'room.typeRoom.name',
-      resizable: true
+      title: 'Loại phòng',
+      dataIndex: 'room.typeRoom.name',
+      key: 'room.typeRoom.name'
     },
     {
-      headerName: 'Đơn giá',
-      field: 'room.typeRoom.unitPrice',
-      resizable: true
+      title: 'Đơn giá',
+      dataIndex: 'room.typeRoom.unitPrice',
+      key: 'room.typeRoom.unitPrice',
+      render: data => FormatMoney(`${data}`)
     },
     {
-      headerName: 'Thành tiền',
-      field: 'total',
-      resizable: true
+      title: 'Thành tiền',
+      dataIndex: 'total',
+      key: 'total',
+      render: data => data ? FormatMoney(`${data}`) : '-'
     }
   ]
 
   const columnServicePerHourDefs = [
     {
-      headerName: 'Giờ vào',
-      field: 'startTime',
-      resizable: true,
-      cellRendererFramework: row => moment(row.value).format('DD/MM/YYYY HH:mm')
+      title: 'Giờ vào',
+      dataIndex: 'startTime',
+      key: 'startTime',
+      render: data => moment(data).format('DD/MM/YYYY HH:mm')
     },
     {
-      headerName: 'Giờ ra',
-      field: 'endTime',
-      resizable: true,
-      cellRendererFramework: row => moment(row.value).format('DD/MM/YYYY HH:mm')
+      title: 'Giờ ra',
+      dataIndex: 'endTime',
+      key: 'endTime',
+      render: data => data ? moment(data).format('DD/MM/YYYY HH:mm') : '-'
     },
     {
-      headerName: 'Dịch vụ',
-      field: 'service.name',
-      resizable: true
+      title: 'Dịch vụ',
+      dataIndex: 'service.name',
+      key: 'service.name'
     },
     {
-      headerName: 'Đơn giá',
-      field: 'service.unitPrice',
-      resizable: true
+      title: 'Đơn giá',
+      dataIndex: 'service.unitPrice',
+      key: 'service.unitPrice',
+      render: data => FormatMoney(`${data}`)
     },
     {
-      headerName: 'Thành tiền',
-      field: 'total',
-      resizable: true
+      title: 'Thành tiền',
+      dataIndex: 'total',
+      key: 'total',
+      render: data => data ? FormatMoney(Math.round(data)) : '-'
     }
   ]
 
   const columnServicePerUnitDefs = [
     {
-      headerName: 'Dịch vụ',
-      field: 'service.name',
-      resizable: true
+      title: 'Dịch vụ',
+      dataIndex: 'service.name',
+      key: 'service.name'
     },
     {
-      headerName: 'Đơn giá',
-      field: 'service.unitPrice',
-      resizable: true
+      title: 'Số lượng',
+      dataIndex: 'quantity',
+      key: 'quantity'
     },
     {
-      headerName: 'Số lượng',
-      field: 'quantity',
-      resizable: true
+      title: 'Đơn giá',
+      dataIndex: 'service.unitPrice',
+      key: 'service.unitPrice',
+      render: data => FormatMoney(`${data}`)
     },
+    
     {
-      headerName: 'Thành tiền',
-      field: 'total',
-      resizable: true
+      title: 'Thành tiền',
+      dataIndex: 'total',
+      key: 'total',
+      render: data => data ? FormatMoney(`${data}`) : '-'
     }
   ]
 
-  const onGridReady = params => {
-    params.api.sizeColumnsToFit()
-  }
+  const { roomDetails } = bill
+  const { servicePerHourDetails } = bill && bill.serviceDetails ? bill.serviceDetails.filter(obj => obj.service.type === 'perHOUR') : []
+  const { servicePerUnitDetails } = bill && bill.serviceDetails ? bill.serviceDetails.filter(obj => obj.service.type === 'perUNIT') : []
 
   return (
+    
+
     <Modal
       title='Bill Information'
       headerIcon='plus'
       onCancel={hide}
       visible={visible}
       fieldsError={form.getFieldsError()}
-      width='600px'
+      width='700px'
+      footer={[
+        <Button type='primary' onClick={hide}>
+          OK
+        </Button>
+      ]}
     >
       {bill ? (
         <div>
-          <div style={styles.item}> 
-            <div style={styles.label}>ID: </div>
-            <div style={styles.value}>{bill._id}</div>
+          <div style={styles.row}>
+            <div style={styles.item}> 
+              <div style={styles.label}>ID: </div>
+              <div style={styles.value}>{bill._id}</div>
+            </div>
+            <div style={styles.item}> 
+              <div style={styles.label}>Trạng thái: </div>
+              <div style={styles.value}>{bill.state === 0 ? 'ĐÃ HUỶ' : (bill.state === 10 ? 'CHƯA HOÀN TẤT' : 'HOÀN TẤT')}</div>
+            </div>
           </div>
-          <div style={styles.item}> 
-            <div style={styles.label}>Ngày tạo: </div>
-            <div style={styles.value}>{moment(bill.createdAt).format('DD/MM/YYYY HH:mm')}</div>
+          <div style={styles.row}>
+            <div style={styles.item}> 
+              <div style={styles.label}>Ngày tạo: </div>
+              <div style={styles.value}>{moment(bill.createdAt).format('DD/MM/YYYY HH:mm')}</div>
+            </div>
+            <div style={styles.item}> 
+              <div style={styles.label}>Người tạo: </div>
+              <div style={styles.value}>{bill.createdBy.username}</div>
+            </div>
           </div>
-          <div style={styles.item}> 
-            <div style={styles.label}>Người tạo: </div>
-            <div style={styles.value}>{bill.createdBy.username}</div>
-          </div>
-          <div style={styles.item}> 
-            <div style={styles.label}>Khách hàng: </div>
-            <div style={styles.value}>{(bill.customer ? bill.customer.name : '(Không)')}</div>
-          </div>
-          <div style={styles.item}> 
-            <div style={styles.label}>Trạng thái: </div>
-            <div style={styles.value}>{bill.state}</div>
-          </div>
-          <div style={styles.item}> 
-            <div style={styles.label}>Tổng tiền: </div>
-            <div style={styles.value}>{`${bill.total}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</div>
-          </div>
-
-          <div style={styles.item}> 
-            <div style={styles.label}>Dịch vụ phòng: </div>
-            <Grid container direction='row' justify='center' alignItems='center'>
-              <div style={styles.aggridTable}>
-                <AgGridReact
-                  style={styles.table}
-                  columnDefs={columnRoomDefs}
-                  rowData={bill.roomDetails}
-                  onGridReady={onGridReady}
-                />
-              </div>
-            </Grid>
-          </div>
-
-          <div style={styles.item}> 
-            <div style={styles.label}>Dịch vụ theo giờ: </div>
-            <Grid container direction='row' justify='center' alignItems='center'>
-              <div style={styles.aggridTable}>
-                <AgGridReact
-                  style={styles.table}
-                  columnDefs={columnServicePerHourDefs}
-                  rowData={bill.serviceDetails.filter(x => x.service.type === 'perHOUR')}
-                  onGridReady={onGridReady}
-                />
-              </div>
-            </Grid>
+          <div style={styles.row}>
+            <div style={styles.item}> 
+              <div style={styles.label}>Khách hàng: </div>
+              <div style={styles.value}>{bill.state === 10 ? '-' : (bill.customer ? bill.customer.name : '(Không)')}</div>
+            </div>
+            
+            <div style={styles.item}> 
+              <div style={styles.label}>Tổng tiền: </div>
+              {bill.state === 10 ? (
+                <div style={styles.total}>-</div>
+              ) : (
+                <div style={styles.total}>
+                  {FormatMoney(`${bill.total}`)}
+                  {' '}
+                  {'VND'}
+                </div>
+              )}
+            </div>
           </div>
 
-          <div style={styles.item}> 
-            <div style={styles.label}>Dịch vụ theo lượt: </div>
-            <Grid container direction='row' justify='center' alignItems='center'>
-              <div style={styles.aggridTable}>
-                <AgGridReact
-                  style={styles.table}
-                  columnDefs={columnServicePerUnitDefs}
-                  rowData={bill.serviceDetails.filter(x => x.service.type === 'perUNIT')}
-                  onGridReady={onGridReady}
-                />
-              </div>
-            </Grid>
-          </div>
+          {roomDetails ? (
+            <div style={{ marginTop: '10px' }}> 
+              <div style={styles.label}>Dịch vụ phòng: </div>
+              <Table columns={columnRoomDefs} dataSource={roomDetails} pagination={false} />
+            </div>
+          ) : ''}
+
+          {servicePerHourDetails ? (
+            <div style={{ marginTop: '10px' }}> 
+              <div style={styles.label}>Dịch vụ theo giờ: </div>
+              <Table columns={columnServicePerHourDefs} dataSource={servicePerHourDetails} pagination={false} />
+            </div>
+          ) : ''}
+
+          {servicePerUnitDetails ? (
+            <div style={{ marginTop: '10px' }}> 
+              <div style={styles.label}>Dịch vụ theo lượt: </div>
+              <Table columns={columnServicePerUnitDefs} dataSource={servicePerUnitDetails} pagination={false} />
+            </div>
+          ) : ''}
         </div>
       ) : null }
       

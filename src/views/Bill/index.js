@@ -8,16 +8,18 @@ import { client } from 'config/client'
 import { Notify } from 'helpers/notify'
 import { parseError } from 'helpers'
 import { Grid } from '@material-ui/core'
-import { Icon, Button, Modal } from 'antd'
-import { GET_BILLS, GET_BILL, UPDATE_BILL, DELETE_BILL } from './query'
+import { Icon, Modal, Select } from 'antd'
+import { GET_BILLS, GET_BILL, GET_USERS, DELETE_BILL } from './query'
 import './style.less'
 
 import ModalViewBill from './ModalViewBill'
 
 const { confirm } = Modal
+const { Option } = Select
 
 const BillManagement = () => {
   const [bills, setBills] = useState([])
+  const [users, setUsers] = useState([])
   const [billsList, setBillsList] = useState([])
   const [visibleView, setVisibleView] = useState(false)
   const [billView, setBillView] = useState('')
@@ -33,22 +35,53 @@ const BillManagement = () => {
         }
 
         setBills(res.data.bills)
-        setBillsList(res.data.billsList)
+        setBillsList(res.data.bills)
+      })
+      .catch(err => new Notify('error', parseError(err)))
+  }
+
+  const getUser = async () => {
+    await client
+      .query({
+        query: GET_USERS
+      })
+      .then(res => {
+        if (!res || !res.data || !res.data.users) {
+          throw new Error('Không lấy được danh sách User!')
+        }
+
+        setUsers(res.data.users)
       })
       .catch(err => new Notify('error', parseError(err)))
   }
 
   useEffect(() => {
     getBills()
+    getUser()
   }, [])
 
-  const setTextValue = event => {
-    let kw = event.target.value
-    kw = kw.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-    if (kw !== '') {
-      setBillsList(billsList.filter(bill => bill.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(kw)))
-    } else setBills(billsList)
-  }
+  const states = [
+    { key: '-1', label: 'Tất cả' },
+    { key: '0', label: 'Đã huỷ' },
+    { key: '10', label: 'Chưa hoàn thành' },
+    { key: '20', label: 'Đã hoàn thành' }
+  ]
+
+  // const filterByCreatedBy = event => {
+  //   let kw = event.target.value
+  //   kw = kw.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+  //   let filterResult = (kw === '' 
+  //             ? bills  
+  //             : bills.filter(bill => (bill.createdBy.username).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(kw)))
+  // }
+
+  const filterState = event => {
+    if (event === '-1') {
+      setBillsList(bills)
+    } else {
+      setBillsList(bills.filter(bill => bill.state.toString() === event))
+    }
+  } 
 
   const columnDefs = [
     {
@@ -70,21 +103,24 @@ const BillManagement = () => {
       headerName: 'Customer',
       field: 'customer.name',
       resizable: true,
-      sortable: true
+      sortable: true,
+      cellRendererFramework: row => (row.value ? `${row.value}` : '-')
     },
     {
       headerName: 'State',
       field: 'state',
       filter: 'agTextColumnFilter',
       resizable: true,
-      sortable: true
+      sortable: true,
+      cellRendererFramework: row => (row.value === 0 ? 'Đã huỷ' : (row.value === 10 ? 'Chưa hoàn thành' : 'Đã hoàn thành'))
     },
     {
       headerName: 'Total',
       field: 'total',
       filter: 'agTextColumnFilter',
       resizable: true,
-      sortable: true
+      sortable: true,
+      cellRendererFramework: row => (row.value ? `${(row.value).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}` : '-')
     },
     {
       headerName: 'Action',
@@ -122,7 +158,7 @@ const BillManagement = () => {
               confirm({
                 title: 'Do you Want to delete this bill?',
                 okType: 'danger',
-                // content: `- "${row.data.name}" from ${row.data.startDate} to ${row.data.endDate}`,
+                content: `- "${row.data.name}" from ${row.data.startDate} to ${row.data.endDate}`,
                 onOk: async () => {
                   await client
                     .mutate({
@@ -132,7 +168,7 @@ const BillManagement = () => {
                       }
                     })
                     .then(async res => {
-                      if (!res || !res.data || !res.data.deleteDiscount) {
+                      if (!res || !res.data || !res.data.deleteBill) {
                         throw Error('Something went wrong!')
                       }
                       await getBills()
@@ -164,12 +200,22 @@ const BillManagement = () => {
             <SearchIcon />
           </Grid>
           <Grid item>
+            <Select defaultValue='-1' onSelect={(e) => filterState(e)} style={{ width: '200px' }}>
+              {states.map(state => (
+                <Option value={state.key}>
+                  <div>{state.label}</div>
+                </Option>
+              ))}
+            </Select>
+          </Grid>
+          {/* <Grid item>
             <TextField
               id='input-with-icon-grid'
-              label='Search Bill'
-              onChange={setTextValue}
+              label='Người tạo...'
+              onChange={(e) => setCreatedByFilter(e.target.value.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''))}
+              style={{ marginLeft: '15px', width: '200px' }}
             />
-          </Grid>
+          </Grid> */}
         </Grid>
       </form>
 
@@ -178,7 +224,7 @@ const BillManagement = () => {
           <AgGridReact
             className='billGrid'
             columnDefs={columnDefs}
-            rowData={bills}
+            rowData={billsList}
             onGridReady={onGridReady}
           />
         </div>

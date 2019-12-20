@@ -155,3 +155,20 @@ export const DELETE_BILL = gql`
     deleteBill(billId: $billId)
   }
 `
+export const GET_USERS = gql`
+  query {
+    users {
+      _id
+      username
+      email
+      name
+      createdAt
+      isActive
+      role {
+        _id
+        code
+        name
+      }
+    }
+  }
+`
