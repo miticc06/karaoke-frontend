@@ -1,13 +1,13 @@
 
-import { Modal, Form, Input, Select, Table } from 'antd'
+import { Modal, Form, Input, Select, Table, InputNumber } from 'antd'
 import React, { useState, useEffect } from 'react'
 import moment from 'moment'
 import { client } from 'config/client'
+import { FormatMoney } from 'helpers'
 import { columnsRoomDetails, columnsServiceDetailsPerHOUR, columnsServiceDetailsPerUNIT } from './columnsTableModalPay'
 import { GET_DISCOUNTS } from './query'
 
 const { Option } = Select
-
 
 const ModalPay = Form.create()(props => {
   const [discounts, setDiscounts] = useState([])
@@ -20,7 +20,7 @@ const ModalPay = Form.create()(props => {
         const { total, coupon } = formData
         const newBill = {
           ...bill,
-          coupon,
+          discount: coupon,
           total,
           state: 20
         }
@@ -48,7 +48,7 @@ const ModalPay = Form.create()(props => {
         })
 
         console.log(newBill)
-        await handleUpdateBill(bill._id, newBill)
+        await handleUpdateBill(bill._id, newBill, `Thanh toán thành công hóa đơn ${FormatMoney(total)} VNĐ`)
         hide()
       }
     })
@@ -194,7 +194,17 @@ const ModalPay = Form.create()(props => {
           {form.getFieldDecorator('total', {
             initialValue: bill && Math.round(calTotal())
           })(
-            <Input style={{ width: 300 }} />
+            <InputNumber
+              disabled
+              style={{ width: 300 }}
+              formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+              parser={value => value.replace(/\$\s?|(,*)/g, '')}
+            />
+            // <Input
+            //   disabled
+
+            //   style={{ width: 300 }}
+            // />
           )}
         </Form.Item>
 
