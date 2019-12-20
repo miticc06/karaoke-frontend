@@ -181,7 +181,7 @@ const BillManagement = () => {
             <SearchIcon />
           </Grid>
           <Grid item>
-            <Select defaultValue='-1' onSelect={(e) => filterState(e)} style={{ width: '200px' }}>
+            <Select defaultValue='-1' onSelect={(e) => filterState(e)} style={{ marginTop: '20px', width: '200px' }}>
               {states.map(state => (
                 <Option value={state.key}>
                   <div>{state.label}</div>
@@ -189,14 +189,6 @@ const BillManagement = () => {
               ))}
             </Select>
           </Grid>
-          {/* <Grid item>
-            <TextField
-              id='input-with-icon-grid'
-              label='Người tạo...'
-              onChange={(e) => setCreatedByFilter(e.target.value.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''))}
-              style={{ marginLeft: '15px', width: '200px' }}
-            />
-          </Grid> */}
         </Grid>
       </form>
 

@@ -32,7 +32,7 @@ const modalAddUser = Form.create()(props => {
           .then(async res => {
             if (res && res.data && res.data.updateUserByAdmin) {
               // eslint-disable-next-line
-              const notify = new Notify('success', 'Cập nhật user thành công!', 2)
+              const notify = new Notify('success', 'Cập nhật người dùng thành công!', 2)
               await refetch()
               hide()
               form.resetFields()
@@ -69,7 +69,7 @@ const modalAddUser = Form.create()(props => {
 
   return (
     <Modal
-      title='Cập nhật user'
+      title='Cập nhật thông tin người dùng'
       headerIcon='edit'
       onCancel={hide}
       visible={visible}
@@ -78,45 +78,45 @@ const modalAddUser = Form.create()(props => {
       width='600px'
     >
       <Form>
-        <Form.Item label='Username'>
+        <Form.Item label='Tên tài khoản'>
           {form.getFieldDecorator('username', {
             initialValue: user && user.username ? user.username : ''
           })(<Input disabled='true' />)}
         </Form.Item>
 
-        <Form.Item label='New password'>
+        <Form.Item label='Mật khẩu đăng nhập mới'>
           {form.getFieldDecorator('newPassword', {
           })(<Input type='password' />)}
         </Form.Item>
 
-        <Form.Item label='name'>
+        <Form.Item label='Tên người dùng'>
           {form.getFieldDecorator('name', {
             initialValue: user && user.name ? user.name : '',
-            rules: [{ required: true, message: 'Hãy nhập họ tên' }]
+            rules: [{ required: true, message: 'Hãy nhập tên người dùng!' }]
           })(<Input type='name' />)}
         </Form.Item>
 
-        <Form.Item label='email'>
+        <Form.Item label='Email'>
           {form.getFieldDecorator('email', {
             initialValue: user && user.email ? user.email : '',
             rules: [
-              { required: true, message: 'Hãy nhập email' },
+              { required: true, message: 'Hãy nhập email!' },
               {
                 // eslint-disable-next-line max-len
                 pattern: /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/igm,
-                message: 'Địa chỉ email không hợp lệ'
+                message: 'Địa chỉ email không hợp lệ!'
               }
             ]
           })(<Input type='email' />)}
         </Form.Item>
 
 
-        <Form.Item label='Role'>
+        <Form.Item label='Phân quyền'>
           {form.getFieldDecorator('roleId', {
             initialValue: user && user.role && user.role._id ? user.role._id : '',
-            rules: [{ required: true, message: 'Hãy phân Role cho user' }]
+            rules: [{ required: true, message: 'Hãy phân quyền cho người dùng!' }]
           })(
-            <Select placeholder='Please select role ...'>
+            <Select placeholder='Nhấp để chọn...'>
               {state.roles.map(role => (
                 <Select.Option key={role._id} value={role._id}>
                   {`${role.code} (${role.name})`}
