@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react'
 import { withRouter } from 'react-router-dom'
 import './style.less'
@@ -12,6 +11,7 @@ import { columnsRoomDetails, columnsServiceDetailsPerHOUR, columnsServiceDetails
 import ModalAddTicket from '../Tickets/ModalAddTicket'
 import ModalChangeEndTimeService from './ModalChangeEndTimeService'
 import ModalChangeRoom from './ModalChangeRoom'
+import ModalPay from './ModalPay'
 
 const { confirm } = Modal
 const { TabPane } = Tabs
@@ -27,6 +27,7 @@ const Payment = props => {
   const [serviceNeedChangeEndTime, setServiceNeedChangeEndTime] = useState(null)
   const [visibleChangeRoom, setVisibleChangeRoom] = useState(false)
   const [customers, setCustomers] = useState([])
+  const [visibleModalPay, setVisibleModelPay] = useState(false)
   const getRooms = async () => {
     await client
       .query({
@@ -152,8 +153,8 @@ const Payment = props => {
 
   const handleUpdateBill = async (billId, input) => {
     delete input._id
-    delete input.state
-    delete input.total
+    // delete input.state
+    // delete input.total
     delete input.createdAt
     delete input.createdBy
     input.customer = input && input.customer ? input.customer._id : null
@@ -275,6 +276,13 @@ const Payment = props => {
         hide={() => setVisibleChangeRoom(false)}
         bill={bill}
         handleUpdateBill={handleUpdateBill}
+      />
+
+      <ModalPay
+        visible={visibleModalPay}
+        bill={bill}
+        handleUpdateBill={handleUpdateBill}
+        hide={() => setVisibleModelPay(false)}
       />
 
       <Col
@@ -470,7 +478,13 @@ const Payment = props => {
             >
               {bill && (
                 <>
-                  <Button type='primary'>THANH TOÁN</Button>
+                  <Button
+                    type='primary'
+                    onClick={() => setVisibleModelPay(true)}
+                  >
+                    THANH TOÁN
+
+                  </Button>
                   <Button
                     onClick={() => setVisibleChangeRoom(true)}
                   >
