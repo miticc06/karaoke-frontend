@@ -114,11 +114,11 @@ const Sidebar = props => {
       href: '/bills',
       icon: <ReceiptIcon />
     },
-    {
-      title: 'Cài đặt',
-      href: '/settings',
-      icon: <SettingsIcon />
-    }
+    // {
+    //   title: 'Cài đặt',
+    //   href: '/settings',
+    //   icon: <SettingsIcon />
+    // }
     ,
     {
       title: 'Báo cáo',
