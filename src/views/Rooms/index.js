@@ -14,7 +14,7 @@ import TextField from '@material-ui/core/TextField'
 import { AgGridReact } from 'ag-grid-react'
 import { client } from 'config/client'
 import { Notify } from 'helpers/notify'
-import { parseError } from 'helpers'
+import { parseError, FormatMoney } from 'helpers'
 import { Grid } from '@material-ui/core'
 import { Icon, Button, Modal } from 'antd'
 import { GET_ROOMS, GET_ROOM, DELETE_ROOM } from './query'
@@ -66,33 +66,34 @@ const RoomManagement = () => {
 
   const columnDefs = [
     {
-      headerName: 'Name',
+      headerName: 'Tên phòng',
       field: 'name',
       filter: 'agTextColumnFilter',
       sortable: true,
       resizable: true
     },
     {
-      headerName: 'Created Date',
+      headerName: 'Ngày tạo',
       field: 'createdAt',
       resizable: true,
       sortable: true
     },
     {
-      headerName: 'Type',
+      headerName: 'Loại phòng',
       field: 'typeRoom.name',
       filter: 'agTextColumnFilter',
       resizable: true,
       sortable: true
     },
     {
-      headerName: 'Price Per Hour',
+      headerName: 'Đơn giá theo giờ',
       field: 'typeRoom.unitPrice',
       resizable: true,
-      sortable: true
+      sortable: true,
+      cellRendererFramework: data => `${FormatMoney(`${data.value}`)} VND`
     },
     {
-      headerName: 'Action',
+      headerName: 'Thao tác',
       minWidth: 50,
       width: 150,
       maxWidth: 100,
@@ -112,7 +113,7 @@ const RoomManagement = () => {
                 })
                 .then(res => {
                   if (!res || !res.data || !res.data.room) {
-                    throw new Error('Something went wrong!')
+                    throw new Error('Có lỗi xảy ra!')
                   }
                   setRoomEdit(res.data.room)
                 })
@@ -124,7 +125,7 @@ const RoomManagement = () => {
             style={{ cursor: 'pointer', margin: '5px' }}
             onClick={async () => {
               confirm({
-                title: 'Do you Want to delete this room?',
+                title: 'Xác nhận xoá phòng hát?',
                 okType: 'danger',
                 content: `- ${row.data.name} `,
                 onOk: async () => {
@@ -137,10 +138,10 @@ const RoomManagement = () => {
                     })
                     .then(async res => {
                       if (!res || !res.data || !res.data.deleteRoom) {
-                        throw Error('Something went wrong!')
+                        throw Error('Có lỗi xảy ra!')
                       }
                       await getRooms()
-                      return new Notify('success', 'Delete Room successfully!')
+                      return new Notify('success', 'Xoá phòng hát thành công!')
                     })
                     .catch(err => new Notify('error', parseError(err)))
                 }
@@ -160,7 +161,7 @@ const RoomManagement = () => {
 
   return (
     <div className='page-discountManagement'>
-      <h2 className='title-page'>Room List</h2>
+      <h2 className='title-page'>QUẢN LÝ PHÒNG HÁT</h2>
 
       <form className='margin'>
         <Grid container spacing={1} alignItems='flex-end'>
@@ -170,7 +171,7 @@ const RoomManagement = () => {
           <Grid item>
             <TextField
               id='input-with-icon-grid'
-              label='Search Room'
+              label='Tìm kiếm tên phòng hát...'
               onChange={setTextValue}
             />
           </Grid>
@@ -183,7 +184,7 @@ const RoomManagement = () => {
         name='btn-add-discount'
         onClick={() => setVisibleAdd(true)}
       >
-        Add Room
+        Thêm mới
       </Button>
 
       <Grid container direction='row' justify='center' alignItems='center'>

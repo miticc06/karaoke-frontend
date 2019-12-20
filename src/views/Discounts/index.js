@@ -54,14 +54,14 @@ const DiscountManagement = () => {
 
   const columnDefs = [
     {
-      headerName: 'Name',
+      headerName: 'Tên khuyến mãi',
       filter: 'agTextColumnFilter',
       field: 'name',
       sortable: true,
       resizable: true
     },
     {
-      headerName: 'Type',
+      headerName: 'Hình thức',
       field: 'type',
       filter: 'agTextColumnFilter',
       resizable: true,
@@ -69,14 +69,14 @@ const DiscountManagement = () => {
       cellRendererFramework: row => row.value === 'DEDUCT' ? 'Khấu trừ' : 'Phần trăm'
     },
     {
-      headerName: 'Value',
+      headerName: 'Trị số',
       field: 'value',
       resizable: true,
       sortable: true
     },
 
     {
-      headerName: 'Start Date',
+      headerName: 'Ngày bắt đầu',
       field: 'startDate',
       filter: 'agTextColumnFilter',
       resizable: true,
@@ -84,7 +84,7 @@ const DiscountManagement = () => {
       cellRendererFramework: row => moment(row.value).format('DD/MM/YYYY')
     },
     {
-      headerName: 'End Date',
+      headerName: 'Ngày kết thúc',
       field: 'endDate',
       filter: 'agTextColumnFilter',
       resizable: true,
@@ -92,7 +92,7 @@ const DiscountManagement = () => {
       cellRendererFramework: row => moment(row.value).format('DD/MM/YYYY')
     },
     {
-      headerName: 'Created By',
+      headerName: 'Người tạo',
       field: 'createdBy.name',
       filter: 'agTextColumnFilter',
       resizable: true,
@@ -100,7 +100,7 @@ const DiscountManagement = () => {
     },
 
     {
-      headerName: 'Active',
+      headerName: 'Hiệu lực',
       minWidth: 50,
       width: 120,
       maxWidth: 100,
@@ -112,9 +112,10 @@ const DiscountManagement = () => {
             onClick={
               async () => {
                 confirm({
-                  title: 'Do you want to change active status of this discount?',
+                  title: 'Xác nhận thay đổi trạng thái áp dụng khuyến mãi?',
                   okType: 'danger',
-                  content: `- ${row.data.name} from ${row.data.isActive} to ${!row.data.isActive}`,
+                  // eslint-disable-next-line max-len
+                  content: `- ${row.data.name}, từ ${moment(row.data.startDate).format('DD/MM/YYYY')} tới ${moment(row.data.endDate).format('DD/MM/YYYY')}`,
                   onOk:
                     async () => {
                       const d = {
@@ -138,10 +139,10 @@ const DiscountManagement = () => {
                         })
                         .then(async res => {
                           if (!res || !res.data || !res.data.updateDiscount) {
-                            throw Error('Something went wrong!')
+                            throw Error('Có lỗi xảy ra!')
                           }
                           await getDiscounts()
-                          return new Notify('success', 'Change status successully!')
+                          return new Notify('success', 'Cập nhật trạng thái thành công!')
                         })
                         .catch(err => new Notify('error', parseError(err)))
                     }
@@ -158,7 +159,7 @@ const DiscountManagement = () => {
       )
     },
     {
-      headerName: 'Action',
+      headerName: 'Thao tác',
       minWidth: 50,
       width: 150,
       maxWidth: 100,
@@ -178,7 +179,7 @@ const DiscountManagement = () => {
                 })
                 .then(res => {
                   if (!res || !res.data || !res.data.discount) {
-                    throw new Error('Something went wrong!')
+                    throw new Error('Có lỗi xảy ra!')
                   }
                   setDiscountEdit(res.data.discount)
                 })
@@ -191,9 +192,10 @@ const DiscountManagement = () => {
             style={{ cursor: 'pointer', margin: '5px' }}
             onClick={async () => {
               confirm({
-                title: 'Do you Want to delete this discount?',
+                title: 'Xác nhận xoá khuyến mãi?',
                 okType: 'danger',
-                content: `- "${row.data.name}" from ${row.data.startDate} to ${row.data.endDate}`,
+                // eslint-disable-next-line max-len
+                content: `- ${row.data.name}, từ ${moment(row.data.startDate).format('DD/MM/YYYY')} tới ${moment(row.data.endDate).format('DD/MM/YYYY')}`,
                 onOk: async () => {
                   await client
                     .mutate({
@@ -204,10 +206,10 @@ const DiscountManagement = () => {
                     })
                     .then(async res => {
                       if (!res || !res.data || !res.data.deleteDiscount) {
-                        throw Error('Something went wrong!')
+                        throw Error('Có lỗi xảy ra!')
                       }
                       await getDiscounts()
-                      return new Notify('success', 'Delete discount successfully!')
+                      return new Notify('success', 'Xoá khuyến mãi thành công!')
                     })
                     .catch(err => new Notify('error', parseError(err)))
                 }
@@ -227,7 +229,7 @@ const DiscountManagement = () => {
 
   return (
     <div className='page-discountManagement'>
-      <h2 className='title-page'>Discount List</h2>
+      <h2 className='title-page'>QUẢN LÝ KHUYẾN MÃI</h2>
 
       <form className='margin'>
         <Grid container spacing={1} alignItems='flex-end'>
@@ -237,7 +239,7 @@ const DiscountManagement = () => {
           <Grid item>
             <TextField
               id='input-with-icon-grid'
-              label='Search Discount'
+              label='Tìm kiếm tên khuyến mãi...'
               onChange={setTextValue}
             />
           </Grid>
@@ -250,7 +252,7 @@ const DiscountManagement = () => {
         name='btn-add-discount'
         onClick={() => setVisibleAdd(true)}
       >
-        Add Discount
+        Thêm mới
       </Button>
 
       <Grid container direction='row' justify='center' alignItems='center'>

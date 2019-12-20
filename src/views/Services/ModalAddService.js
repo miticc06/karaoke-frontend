@@ -33,7 +33,7 @@ const modalAddService = Form.create()(props => {
               // eslint-disable-next-line
               const notify = new Notify(
                 'success',
-                'Add Service successfully!',
+                'Thêm dịch vụ phòng thành công!',
                 2
               )
               await refetch()
@@ -51,7 +51,7 @@ const modalAddService = Form.create()(props => {
 
   return (
     <Modal
-      title='Create Service'
+      title='Thêm dịch vụ phòng'
       headerIcon='plus'
       onCancel={hide}
       visible={visible}
@@ -60,17 +60,17 @@ const modalAddService = Form.create()(props => {
       width='600px'
     >
       <Form>
-        <Form.Item label='Name:'>
+        <Form.Item label='Tên dịch vụ'>
           {form.getFieldDecorator('name', {
-            rules: [{ required: true, message: 'Please Enter Service Name' }]
+            rules: [{ required: true, message: 'Hãy nhập tên dịch vụ!' }]
           })(<Input type='name' />)}
         </Form.Item>
 
-        <Form.Item label='Type:'>
+        <Form.Item label='Loại hình dịch vụ'>
           {form.getFieldDecorator('type', {
-            rules: [{ required: true, message: 'Please choose a type' }]
+            rules: [{ required: true, message: 'Hãy chọn loại hình dịch vụ!' }]
           })(
-            <Select placeholder='Press to choose ...'>
+            <Select placeholder='Nhấp vào để chọn...'>
               {typeService.map(type => (
                 <Select.Option key={type.value} value={type.value}>
                   {`${type.label} `}
@@ -80,9 +80,9 @@ const modalAddService = Form.create()(props => {
           )}
         </Form.Item>
 
-        <Form.Item label='Price: '>
+        <Form.Item label='Đơn giá'>
           {form.getFieldDecorator('unitPrice', {
-            rules: [{ required: true, message: 'Please enter price' }]
+            rules: [{ required: true, message: 'Hãy nhập đơn giá dịch vụ!' }]
           })(<Input type='number' />)}
         </Form.Item>
       </Form>

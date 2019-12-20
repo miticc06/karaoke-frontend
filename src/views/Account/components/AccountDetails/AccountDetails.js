@@ -177,8 +177,8 @@ const AccountDetails = props => {
     <Card className={clsx(classes.root, className)}>
       <form autoComplete='off' noValidate>
         <CardHeader
-          subheader='Thông tin có thể  chỉnh sửa'
-          title='Profile'
+          subheader='Thông tin có thể chỉnh sửa'
+          title='HỒ SƠ NGƯỜI DÙNG'
         />
         <Divider />
         <CardContent>
@@ -187,7 +187,7 @@ const AccountDetails = props => {
               <TextField
                 disabled
                 fullWidth
-                label='Username'
+                label='Tên tài khoản'
                 margin='dense'
                 name='username'
                 value={formState.values.username}
@@ -204,7 +204,7 @@ const AccountDetails = props => {
                 helperText={
                   hasError('name') ? formState.errors.name[0] : null
                 }
-                label='Full name'
+                label='Họ và tên'
                 margin='dense'
                 name='name'
                 onChange={handleChange}
@@ -220,7 +220,7 @@ const AccountDetails = props => {
                 helperText={
                   hasError('email') ? formState.errors.email[0] : null
                 }
-                label='Email Address'
+                label='Email'
                 margin='dense'
                 name='email'
                 onChange={handleChange}
@@ -253,7 +253,7 @@ const AccountDetails = props => {
               <Grid item xs={12} sm={12} md={12}>
                 <TextField
                   fullWidth
-                  label='Current Password'
+                  label='Mật khẩu hiện tại'
                   name='currentPassword'
                   error={hasError('currentPassword')}
                   helperText={
@@ -270,7 +270,7 @@ const AccountDetails = props => {
               <Grid item xs={12} sm={12} md={12}>
                 <TextField
                   fullWidth
-                  label='Password'
+                  label='Mật khẩu mới'
                   name='newPassword'
                   error={hasError('newPassword')}
                   helperText={
@@ -288,7 +288,7 @@ const AccountDetails = props => {
               <Grid item xs={12} sm={12} md={12}>
                 <TextField
                   fullWidth
-                  label='Confirm password'
+                  label='Nhập lại mật khẩu mới'
                   name='confirmNewPassword'
                   error={hasError('confirmNewPassword')}
                   helperText={
@@ -314,7 +314,7 @@ const AccountDetails = props => {
             color='primary'
             variant='contained'
           >
-            Save details
+            Lưu thông tin
           </Button>
         </CardActions>
       </form>

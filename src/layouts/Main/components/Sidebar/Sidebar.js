@@ -16,6 +16,11 @@ import PersonIcon from '@material-ui/icons/Person'
 import ReceiptIcon from '@material-ui/icons/Receipt'
 import RoomServiceIcon from '@material-ui/icons/RoomService'
 import RoomIcon from '@material-ui/icons/Room'
+import MeetingRoom from '@material-ui/icons/MeetingRoom'
+import Category from '@material-ui/icons/Category'
+import ShoppingCart from '@material-ui/icons/ShoppingCart'
+import Redeem from '@material-ui/icons/Redeem'
+import Warning from '@material-ui/icons/Warning'
 
 import { Profile, SidebarNav } from './components'
 
@@ -54,64 +59,64 @@ const Sidebar = props => {
       icon: <DashboardIcon />
     },
     {
-      title: 'Users',
-      href: '/users',
-      icon: <PeopleIcon />
-    },
-    {
-      title: 'Payment',
+      title: 'Thanh toán',
       href: '/payment',
-      icon: <Receipt />
+      icon: <MeetingRoom />
     },
     {
-      title: 'Icons',
-      href: '/icons',
-      icon: <ImageIcon />
-    },
-    {
-      title: 'Account',
+      title: 'Tài khoản',
       href: '/account',
       icon: <AccountBoxIcon />
     },
     {
-      title: 'Settings',
-      href: '/settings',
-      icon: <SettingsIcon />
+      title: 'Quản lý người dùng',
+      href: '/users',
+      icon: <PeopleIcon />
     },
     {
-      title: 'Customers',
+      title: 'Quản lý khách hàng',
       href: '/customers',
       icon: <PersonIcon />
     },
+    // {
+    //   title: 'Icons',
+    //   href: '/icons',
+    //   icon: <ImageIcon />
+    // },
     {
-      title: 'Payment Slips',
+      title: 'Quản lý phiếu chi',
       href: '/paymentslips',
-      icon: <PersonIcon />
+      icon: <ShoppingCart />
     },
     {
-      title: 'Discounts',
+      title: 'Quản lý khuyến mãi',
       href: '/discounts',
-      icon: <ReceiptIcon />
+      icon: <Redeem />
     },
     {
-      title: 'Tickets',
+      title: 'Quản lý yêu cầu',
       href: '/tickets',
-      icon: <PersonIcon />
+      icon: <Warning />
     },
     {
-      title: 'Services',
+      title: 'Quản lý dịch vụ phòng',
       href: '/services',
       icon: <RoomServiceIcon />
     },
     {
-      title: 'Rooms',
+      title: 'Quản lý phòng hát',
       href: '/rooms',
       icon: <RoomIcon />
     },
     {
-      title: 'Bills',
+      title: 'Quản lý hoá đơn',
       href: '/bills',
-      icon: <RoomIcon />
+      icon: <ReceiptIcon />
+    },
+    {
+      title: 'Cài đặt',
+      href: '/settings',
+      icon: <SettingsIcon />
     }
   ]
 

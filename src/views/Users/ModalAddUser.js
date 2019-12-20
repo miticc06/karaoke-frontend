@@ -32,7 +32,7 @@ const modalAddUser = Form.create()(props => {
           .then(async res => {
             if (res && res.data && res.data.createUser) {
               // eslint-disable-next-line
-              const notify = new Notify('success', 'Thêm user thành công!', 2)
+              const notify = new Notify('success', 'Thêm người dùng thành công!', 2)
               await refetch()
               hide()
               form.resetFields()
@@ -71,7 +71,7 @@ const modalAddUser = Form.create()(props => {
 
   return (
     <Modal
-      title='Thêm user'
+      title='Thêm người dùng'
       headerIcon='plus'
       onCancel={hide}
       visible={visible}
@@ -80,38 +80,38 @@ const modalAddUser = Form.create()(props => {
       width='600px'
     >
       <Form>
-        <Form.Item label='Username'>
+        <Form.Item label='Tên tài khoản'>
           {form.getFieldDecorator('username', {
             rules: [
-              { required: true, message: 'Hãy nhập Username' },
+              { required: true, message: 'Hãy nhập tên tài khoản!' },
               {
                 min: 3,
-                message: 'Username phải chứa ít nhất 3 ký tự'
+                message: 'Tên tài khoản phải chứa ít nhất 3 ký tự'
               },
               {
                 pattern: /^[\w]{3,}$/gi,
-                message: 'Username chỉ được chứa chữ, số và dấu _'
+                message: 'Tên tài khoản chỉ được chứa chữ, số và dấu _'
               }
             ]
           })(<Input />)}
         </Form.Item>
 
-        <Form.Item label='password'>
+        <Form.Item label='Mật khẩu đăng nhập'>
           {form.getFieldDecorator('password', {
-            rules: [{ required: true, message: 'Hãy nhập Password' }]
+            rules: [{ required: true, message: 'Hãy nhập mật khẩu' }]
           })(<Input type='password' />)}
         </Form.Item>
 
-        <Form.Item label='name'>
+        <Form.Item label='Tên người dùng'>
           {form.getFieldDecorator('name', {
-            rules: [{ required: true, message: 'Hãy nhập họ tên' }]
+            rules: [{ required: true, message: 'Hãy nhập tên người dùng!' }]
           })(<Input type='name' />)}
         </Form.Item>
 
-        <Form.Item label='email'>
+        <Form.Item label='Email'>
           {form.getFieldDecorator('email', {
             rules: [
-              { required: true, message: 'Hãy nhập email' },
+              { required: true, message: 'Hãy nhập email!' },
               {
                 // eslint-disable-next-line max-len
                 pattern: /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/igm,
@@ -122,11 +122,11 @@ const modalAddUser = Form.create()(props => {
         </Form.Item>
 
 
-        <Form.Item label='Role'>
+        <Form.Item label='Phân quyền'>
           {form.getFieldDecorator('roleId', {
-            rules: [{ required: true, message: 'Hãy phân Role cho user' }]
+            rules: [{ required: true, message: 'Hãy phân quyền cho người dùng' }]
           })(
-            <Select placeholder='Please select role ...'>
+            <Select placeholder='Nhấp để chọn...'>
               {state.roles.map(role => (
                 <Select.Option key={role._id} value={role._id}>
                   {`${role.code} (${role.name})`}

@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { AgGridReact } from 'ag-grid-react'
+import SearchIcon from '@material-ui/icons/Search'
+import TextField from '@material-ui/core/TextField'
 import { client } from 'config/client'
 import { Notify } from 'helpers/notify'
 import { parseError } from 'helpers'
@@ -14,6 +16,7 @@ const { confirm } = Modal
 
 const UserManagement = () => {
   const [users, setUsers] = useState([])
+  const [usersList, setUsersList] = useState([])
   const [visibleAdd, setVisibleAdd] = useState(false)
   const [visibleEdit, setVisibleEdit] = useState(false)
   const [userEdit, setUserEdit] = useState(null)
@@ -26,6 +29,7 @@ const UserManagement = () => {
         throw new Error('Có lỗi xảy ra!')
       }
       setUsers(res.data.users)
+      setUsersList(res.data.users)
     })
       .catch(err => new Notify('error', parseError(err)))
   }
@@ -34,23 +38,33 @@ const UserManagement = () => {
     getUsers()
   }, [])
 
+  const setTextValue = event => {
+    let kw = event.target.value
+    kw = kw.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    if (kw !== '') {
+      setUsers(usersList.filter(user => ( 
+          user.username.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(kw) 
+      || (user.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(kw)))))
+    } else setUsers(usersList)
+  }
+
   const columnDefs = [
     {
-      headerName: 'Username', field: 'username', sortable: true
+      headerName: 'Tên tài khoản', field: 'username', sortable: true
     },
     {
-      headerName: 'Full name', field: 'name', sortable: true
+      headerName: 'Tên người dùng', field: 'name', sortable: true
     },
     {
       headerName: 'Email', field: 'email', sortable: true
     },
     {
-      headerName: 'Role', field: 'role.name', sortable: true
+      headerName: 'Phân quyền', field: 'role.name', sortable: true
     },
     {
-      headerName: 'Action',
+      headerName: 'Thao tác',
       minWidth: 50,
-      width: 50,
+      width: 70,
       maxWidth: 100,
       suppressMenu: true,
       cellRendererFramework: row => (
@@ -79,9 +93,9 @@ const UserManagement = () => {
             style={{ cursor: 'pointer', margin: '5px' }}
             onClick={async () => {
               confirm({
-                title: 'Do you Want to delete this user?',
+                title: 'Xác nhận xoá người dùng?',
                 okType: 'danger',
-                content: `- ${row.data.name}(${row.data.username})`,
+                content: `- username: ${row.data.name}, fullname: ${row.data.username}`,
                 onOk: async () => {
                   await client.mutate({
                     mutation: DELETE_USER,
@@ -93,7 +107,7 @@ const UserManagement = () => {
                       throw Error('Có lỗi xẩy ra!')
                     }
                     await getUsers()
-                    return new Notify('success', 'Xóa user thành công!')
+                    return new Notify('success', 'Xóa người dùng thành công!')
                   })
                     .catch(err => new Notify('error', parseError(err)))
                 }
@@ -113,8 +127,23 @@ const UserManagement = () => {
   return (
     <div className='page-usersManagement'>
       <h2 className='title-page'>
-        Users management
+        QUẢN LÝ NGƯỜI DÙNG
       </h2>
+
+      <form className='margin'>
+        <Grid container spacing={1} alignItems='flex-end'>
+          <Grid item>
+            <SearchIcon />
+          </Grid>
+          <Grid item>
+            <TextField
+              id='input-with-icon-grid'
+              label='Tìm kiếm người dùng...'
+              onChange={setTextValue}
+            />
+          </Grid>
+        </Grid>
+      </form>
 
       <Grid
         container
@@ -134,7 +163,7 @@ const UserManagement = () => {
               name='btn-add-user'
               onClick={() => setVisibleAdd(true)}
             >
-              Add User
+              Thêm mới
             </Button>
           </Grid>
 

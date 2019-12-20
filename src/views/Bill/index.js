@@ -66,7 +66,7 @@ const BillManagement = () => {
 
   const columnDefs = [
     {
-      headerName: 'Created At',
+      headerName: 'Ngày tạo',
       filter: 'agTextColumnFilter',
       field: 'createdAt',
       sortable: true,
@@ -74,21 +74,21 @@ const BillManagement = () => {
       cellRendererFramework: row => moment(row.value).format('DD/MM/YYYY HH:mm')
     },
     {
-      headerName: 'Created By',
+      headerName: 'Người tạo',
       field: 'createdBy.username',
       filter: 'agTextColumnFilter',
       resizable: true,
       sortable: true
     },
     {
-      headerName: 'Customer',
+      headerName: 'Khách hàng',
       field: 'customer.name',
       resizable: true,
       sortable: true,
       cellRendererFramework: row => (row.value ? `${row.value}` : '-')
     },
     {
-      headerName: 'State',
+      headerName: 'Trạng thái',
       field: 'state',
       filter: 'agTextColumnFilter',
       resizable: true,
@@ -96,7 +96,7 @@ const BillManagement = () => {
       cellRendererFramework: row => (row.value === 0 ? 'Đã huỷ' : (row.value === 10 ? 'Chưa hoàn thành' : 'Đã hoàn thành'))
     },
     {
-      headerName: 'Total',
+      headerName: 'Tổng tiền',
       field: 'total',
       filter: 'agTextColumnFilter',
       resizable: true,
@@ -104,7 +104,7 @@ const BillManagement = () => {
       cellRendererFramework: row => (row.value ? `${(row.value).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}` : '-')
     },
     {
-      headerName: 'Action',
+      headerName: 'Thao tác',
       minWidth: 50,
       width: 150,
       maxWidth: 100,
@@ -124,7 +124,7 @@ const BillManagement = () => {
                 })
                 .then(res => {
                   if (!res || !res.data || !res.data.bill) {
-                    throw new Error('Something went wrong!')
+                    throw new Error('Có lỗi xảy ra!')
                   }
                   setBillView(res.data.bill)
                 })
@@ -137,9 +137,9 @@ const BillManagement = () => {
             style={{ cursor: 'pointer', margin: '5px' }}
             onClick={async () => {
               confirm({
-                title: 'Do you Want to delete this bill?',
+                title: 'Xác nhận xoá hoá đơn thanh toán?',
                 okType: 'danger',
-                content: `- "${row.data.name}" from ${row.data.startDate} to ${row.data.endDate}`,
+                content: `- ${moment(row.data.createdAt).format('DD/MM/YYYY HH:mm')} tạo bởi ${row.data.createdBy.username} -`,
                 onOk: async () => {
                   await client
                     .mutate({
@@ -150,10 +150,10 @@ const BillManagement = () => {
                     })
                     .then(async res => {
                       if (!res || !res.data || !res.data.deleteBill) {
-                        throw Error('Something went wrong!')
+                        throw Error('Có lỗi xảy ra!')
                       }
                       await getBills()
-                      return new Notify('success', 'Delete bill successfully!')
+                      return new Notify('success', 'Xoá hoá đơn thành công!')
                     })
                     .catch(err => new Notify('error', parseError(err)))
                 }
@@ -173,7 +173,7 @@ const BillManagement = () => {
 
   return (
     <div className='page-billManagement'>
-      <h2 className='title-page'>Bill Management</h2>
+      <h2 className='title-page'>QUẢN LÝ HOÁ ĐƠN THANH TOÁN</h2>
 
       <form className='margin'>
         <Grid container spacing={1} alignItems='flex-end'>
@@ -181,7 +181,7 @@ const BillManagement = () => {
             <SearchIcon />
           </Grid>
           <Grid item>
-            <Select defaultValue='-1' onSelect={(e) => filterState(e)} style={{ width: '200px' }}>
+            <Select defaultValue='-1' onSelect={(e) => filterState(e)} style={{ marginTop: '20px', width: '200px' }}>
               {states.map(state => (
                 <Option value={state.key}>
                   <div>{state.label}</div>
@@ -189,14 +189,6 @@ const BillManagement = () => {
               ))}
             </Select>
           </Grid>
-          {/* <Grid item>
-            <TextField
-              id='input-with-icon-grid'
-              label='Người tạo...'
-              onChange={(e) => setCreatedByFilter(e.target.value.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''))}
-              style={{ marginLeft: '15px', width: '200px' }}
-            />
-          </Grid> */}
         </Grid>
       </form>
 

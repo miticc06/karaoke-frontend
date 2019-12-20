@@ -36,7 +36,7 @@ const ModalEditService = Form.create()(props => {
               // eslint-disable-next-line
               const notify = new Notify(
                 'success',
-                'Service updated successfully!',
+                'Cập nhật thông tin dịch vụ phòng thành công!',
                 2
               )
               await refetch()
@@ -54,7 +54,7 @@ const ModalEditService = Form.create()(props => {
 
   return (
     <Modal
-      title='Update Service Information'
+      title='Cập nhật thông tin dịch vụ phòng'
       headerIcon='edit'
       onCancel={hide}
       visible={visible}
@@ -63,19 +63,19 @@ const ModalEditService = Form.create()(props => {
       width='600px'
     >
       <Form>
-        <Form.Item label='Name:'>
+        <Form.Item label='Tên dịch vụ'>
           {form.getFieldDecorator('name', {
             initialValue: service ? service.name : '',
-            rules: [{ required: true, message: 'Please Enter service Name' }]
+            rules: [{ required: true, message: 'Hãy nhập tên dịch vụ!' }]
           })(<Input type='name' />)}
         </Form.Item>
 
-        <Form.Item label='Type:'>
+        <Form.Item label='Loại hình dịch vụ'>
           {form.getFieldDecorator('type', {
             initialValue: service ? service.type : '',
-            rules: [{ required: true, message: 'Please choose a type' }]
+            rules: [{ required: true, message: 'Hãy chọn loại hình dịch vụ!' }]
           })(
-            <Select placeholder='Press to choose ...'>
+            <Select placeholder='Nhấp để chọn...'>
               {typeService.map(type => (
                 <Select.Option key={type.value} value={type.value}>
                   {`${type.label} `}
@@ -85,10 +85,10 @@ const ModalEditService = Form.create()(props => {
           )}
         </Form.Item>
 
-        <Form.Item label='Price: '>
+        <Form.Item label='Đơn giá '>
           {form.getFieldDecorator('unitPrice', {
             initialValue: service ? service.unitPrice : '',
-            rules: [{ required: true, message: 'Please enter value' }]
+            rules: [{ required: true, message: 'Hãy nhập đơn giá dịch vụ!' }]
           })(<Input type='number' />)}
         </Form.Item>
 
