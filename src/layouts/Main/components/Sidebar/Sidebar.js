@@ -16,6 +16,7 @@ import PersonIcon from '@material-ui/icons/Person'
 import ReceiptIcon from '@material-ui/icons/Receipt'
 import RoomServiceIcon from '@material-ui/icons/RoomService'
 import RoomIcon from '@material-ui/icons/Room'
+import Assignment from '@material-ui/icons/Assignment'
 
 import { Profile, SidebarNav } from './components'
 
@@ -112,6 +113,12 @@ const Sidebar = props => {
       title: 'Bills',
       href: '/bills',
       icon: <RoomIcon />
+    }
+    ,
+    {
+      title: 'Báo cáo',
+      href: '/report',
+      icon: <Assignment />
     }
   ]
 
