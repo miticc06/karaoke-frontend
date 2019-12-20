@@ -5,7 +5,7 @@ import TextField from '@material-ui/core/TextField'
 import { AgGridReact } from 'ag-grid-react'
 import { client } from 'config/client'
 import { Notify } from 'helpers/notify'
-import { parseError } from 'helpers'
+import { parseError, FormatMoney } from 'helpers'
 import { Grid } from '@material-ui/core'
 import { Icon, Button, Modal } from 'antd'
 import { GET_SERVICES, GET_SERVICE, DELETE_SERVICE } from './query'
@@ -52,26 +52,28 @@ const ServiceManagement = () => {
 
   const columnDefs = [
     {
-      headerName: 'Name',
+      headerName: 'Tên dịch vụ',
       field: 'name',
       sortable: true,
       resizable: true
     },
     {
-      headerName: 'Type',
+      headerName: 'Loại hình dịch vụ',
       field: 'type',
       filter: 'agTextColumnFilter',
       resizable: true,
-      sortable: true
+      sortable: true,
+      cellRendererFramework: data => (data.value === 'perHOUR' ? 'Theo giờ' : 'Theo lượt')
     },
     {
-      headerName: 'Unit Price',
+      headerName: 'Đơn giá',
       field: 'unitPrice',
       resizable: true,
-      sortable: true
+      sortable: true,
+      cellRendererFramework: data => `${FormatMoney(`${data.value}`)} VND`
     },
     {
-      headerName: 'Action',
+      headerName: 'Thao tác',
       minWidth: 50,
       width: 150,
       maxWidth: 100,
@@ -91,7 +93,7 @@ const ServiceManagement = () => {
                 })
                 .then(res => {
                   if (!res || !res.data || !res.data.service) {
-                    throw new Error('Something went wrong!')
+                    throw new Error('Có lỗi xảy ra!')
                   }
                   setServiceEdit(res.data.service)
                 })
@@ -103,7 +105,7 @@ const ServiceManagement = () => {
             style={{ cursor: 'pointer', margin: '5px' }}
             onClick={async () => {
               confirm({
-                title: 'Do you Want to delete this service?',
+                title: 'Xác nhận xoá dịch vụ phòng?',
                 okType: 'danger',
                 content: `- ${row.data.name} `,
                 onOk: async () => {
@@ -116,10 +118,10 @@ const ServiceManagement = () => {
                     })
                     .then(async res => {
                       if (!res || !res.data || !res.data.deleteService) {
-                        throw Error('Something went wrong!')
+                        throw Error('Có lỗi xảy ra!')
                       }
                       await getServices()
-                      return new Notify('success', 'Delete Service successfully!')
+                      return new Notify('success', 'Xoá dịch vụ phòng thành công!')
                     })
                     .catch(err => new Notify('error', parseError(err)))
                 }
@@ -139,7 +141,7 @@ const ServiceManagement = () => {
 
   return (
     <div className='page-discountManagement'>
-      <h2 className='title-page'>Service List</h2>
+      <h2 className='title-page'>QUẢN LÝ DỊCH VỤ PHÒNG</h2>
 
       <form className='margin'>
         <Grid container spacing={1} alignItems='flex-end'>
@@ -149,7 +151,7 @@ const ServiceManagement = () => {
           <Grid item>
             <TextField
               id='input-with-icon-grid'
-              label='Search Service'
+              label='Tìm kiếm tên dịch vụ...'
               onChange={setTextValue}
             />
           </Grid>
@@ -162,7 +164,7 @@ const ServiceManagement = () => {
         name='btn-add-discount'
         onClick={() => setVisibleAdd(true)}
       >
-        Add Service
+        Thêm mới
       </Button>
 
       <Grid container direction='row' justify='center' alignItems='center'>
