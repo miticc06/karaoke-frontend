@@ -1,4 +1,4 @@
-
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Modal, Form, Input, Switch, TimePicker } from 'antd'
 import React, { useState, useEffect } from 'react'
 import moment from 'moment'
@@ -12,7 +12,6 @@ const ModalChangeEndTimeService = Form.create()(props => {
     await form.validateFields(async (errors, formData) => {
       if (!errors) {
         const { endTime, minute } = formData
-        console.log(endTime)
         let value = 0
         if (minute) {
           value = service.startTime + minute * 60000

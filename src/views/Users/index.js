@@ -58,10 +58,6 @@ const UserManagement = () => {
           <Icon
             style={{ cursor: 'pointer', margin: '5px' }}
             onClick={async (e) => {
-              console.log(e)
-              console.log(this)
-              console.log(this)
-
               setVisibleEdit(true)
               client.query({
                 query: GET_USER,
