@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react'
 import { inject, observer } from 'mobx-react'
 import jwt from 'jsonwebtoken'
@@ -6,27 +7,32 @@ import { client } from 'config/client'
 import gql from 'graphql-tag'
 import { Notify } from 'helpers/notify'
 import { parseError } from 'helpers'
+import Payment from 'views/Payment'
 import { RouteWithLayout } from './components'
-import { Main as MainLayout, Minimal as MinimalLayout } from './layouts'
+import { Main as MainLayout, Minimal as MinimalLayout, PaymentLayout } from './layouts'
 
 import {
   Dashboard as DashboardView,
   ProductList as ProductListView,
   // UserList as UserListView,
-
   Users as UsersView,
-
   Typography as TypographyView,
   Icons as IconsView,
   Account as AccountView,
   Settings as SettingsView,
-  Login as LoginView
+  Customers as CustomersView,
+  Login as LoginView,
+  PaymentSlips as PaymentSlipView,
+  Tickets as TicketView,
+  Discount as DiscountView,
+  Services as ServiceView,
+  Rooms as RoomView
 } from './views'
 
 const PRIVATE_KEY = 'privateKey@12345678'
 
 const GET_USER = gql`
-  query ($id: ID!) {
+  query($id: ID!) {
     user(id: $id) {
       _id
       username
@@ -43,7 +49,7 @@ const GET_USER = gql`
           name
         }
       }
-    isActive
+      isActive
     }
   }
 `
@@ -54,11 +60,8 @@ const Routes = props => {
   })
 
   const {
-    store: {
-      authentication
-    }
+    store: { authentication }
   } = props
-
 
   const getUser = async () => {
     try {
@@ -69,12 +72,13 @@ const Routes = props => {
         ? jwt.verify(localStorage.getItem('token'), PRIVATE_KEY)
         : { userId: '' }
       let { userId } = token
-      await client.query({
-        query: GET_USER,
-        variables: {
-          id: userId
-        }
-      })
+      await client
+        .query({
+          query: GET_USER,
+          variables: {
+            id: userId
+          }
+        })
         .then(({ data }) => {
           const permissions = new Set()
           if (data && data.user && data.user.role) {
@@ -88,7 +92,7 @@ const Routes = props => {
             permissions
           })
         })
-        .catch((err) => {
+        .catch(err => {
           console.dir(err)
           if (err && err.message && /^Network error:/.test(err.message)) {
             return new Notify('error', parseError(err), null)
@@ -110,11 +114,7 @@ const Routes = props => {
   if (authentication.isLogin) {
     return (
       <Switch>
-        <Redirect
-          exact
-          from='/'
-          to='/dashboard'
-        />
+        <Redirect exact from='/' to='/dashboard' />
         <RouteWithLayout
           component={DashboardView}
           exact
@@ -137,6 +137,57 @@ const Routes = props => {
           exact
           layout={MainLayout}
           path='/users'
+          refetchcurrentuser={getUser}
+          {...state}
+        />
+
+        <RouteWithLayout
+          component={DiscountView}
+          exact
+          layout={MainLayout}
+          path='/discounts'
+          refetchcurrentuser={getUser}
+          {...state}
+        />
+        <RouteWithLayout
+          component={CustomersView}
+          exact
+          layout={MainLayout}
+          path='/customers'
+          refetchcurrentuser={getUser}
+          {...state}
+        />
+        <RouteWithLayout
+          component={ServiceView}
+          exact
+          layout={MainLayout}
+          path='/services'
+          refetchcurrentuser={getUser}
+          {...state}
+        />
+        <RouteWithLayout
+          component={RoomView}
+          exact
+          layout={MainLayout}
+          path='/rooms'
+          refetchcurrentuser={getUser}
+          {...state}
+        />
+
+        <RouteWithLayout
+          component={PaymentSlipView}
+          exact
+          layout={MainLayout}
+          path='/paymentslips'
+          refetchcurrentuser={getUser}
+          {...state}
+        />
+
+        <RouteWithLayout
+          component={TicketView}
+          exact
+          layout={MainLayout}
+          path='/tickets'
           refetchcurrentuser={getUser}
           {...state}
         />
@@ -181,17 +232,21 @@ const Routes = props => {
           refetchcurrentuser={getUser}
           {...state}
         />
+        <RouteWithLayout
+          component={Payment}
+          exact
+          layout={PaymentLayout}
+          path='/payment'
+          refetchcurrentuser={getUser}
+          {...state}
+        />
         <Redirect to='/dashboard' />
       </Switch>
     )
   } else {
     return (
       <Switch>
-        <Redirect
-          exact
-          from='/'
-          to='/login'
-        />
+        <Redirect exact from='/' to='/login' />
         <RouteWithLayout
           component={LoginView}
           exact

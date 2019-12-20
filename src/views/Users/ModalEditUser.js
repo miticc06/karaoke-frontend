@@ -1,4 +1,4 @@
-/* eslint-disable no-useless-escape */
+
 import { Modal, Form, Input, Select } from 'antd'
 import React, { useState, useEffect } from 'react'
 import { client } from 'config/client'

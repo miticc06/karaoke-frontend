@@ -6,12 +6,16 @@ import { makeStyles } from '@material-ui/styles'
 import { Divider, Drawer } from '@material-ui/core'
 import DashboardIcon from '@material-ui/icons/Dashboard'
 import PeopleIcon from '@material-ui/icons/People'
-import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket'
+import Receipt from '@material-ui/icons/Receipt'
 import TextFieldsIcon from '@material-ui/icons/TextFields'
 import ImageIcon from '@material-ui/icons/Image'
 import AccountBoxIcon from '@material-ui/icons/AccountBox'
 import SettingsIcon from '@material-ui/icons/Settings'
 import LockOpenIcon from '@material-ui/icons/LockOpen'
+import PersonIcon from '@material-ui/icons/Person'
+import ReceiptIcon from '@material-ui/icons/Receipt'
+import RoomServiceIcon from '@material-ui/icons/RoomService'
+import RoomIcon from '@material-ui/icons/Room'
 
 import { Profile, SidebarNav } from './components'
 
@@ -55,19 +59,9 @@ const Sidebar = props => {
       icon: <PeopleIcon />
     },
     {
-      title: 'Products',
-      href: '/products',
-      icon: <ShoppingBasketIcon />
-    },
-    {
-      title: 'Authentication',
-      href: '/sign-in',
-      icon: <LockOpenIcon />
-    },
-    {
-      title: 'Typography',
-      href: '/typography',
-      icon: <TextFieldsIcon />
+      title: 'Payment',
+      href: '/payment',
+      icon: <Receipt />
     },
     {
       title: 'Icons',
@@ -83,6 +77,36 @@ const Sidebar = props => {
       title: 'Settings',
       href: '/settings',
       icon: <SettingsIcon />
+    },
+    {
+      title: 'Customers',
+      href: '/customers',
+      icon: <PersonIcon />
+    },
+    {
+      title: 'Payment Slips',
+      href: '/paymentslips',
+      icon: <PersonIcon />
+    },
+    {
+      title: 'Discounts',
+      href: '/discounts',
+      icon: <ReceiptIcon />
+    },
+    {
+      title: 'Tickets',
+      href: '/tickets',
+      icon: <PersonIcon />
+    },
+    {
+      title: 'Services',
+      href: '/services',
+      icon: <RoomServiceIcon />
+    },
+    {
+      title: 'Rooms',
+      href: '/rooms',
+      icon: <RoomIcon />
     }
   ]
 

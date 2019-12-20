@@ -1,4 +1,4 @@
-/* eslint-disable no-useless-escape */
+
 import React, { useState, useEffect } from 'react'
 import clsx from 'clsx'
 import { makeStyles } from '@material-ui/styles'
@@ -34,6 +34,7 @@ const schema = {
       maximum: 100
     },
     format: {
+      // eslint-disable-next-line no-useless-escape
       pattern: '^[a-z][a-z0-9_\.]{5,32}@[a-z0-9]{2,}(\.[a-z0-9]{2,4}){1,2}$',
       flags: 'gm',
       message: 'Vui lòng nhập email hợp lệ.'
