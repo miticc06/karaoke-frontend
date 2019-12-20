@@ -12,6 +12,7 @@ import ModalAddTicket from '../Tickets/ModalAddTicket'
 import ModalChangeEndTimeService from './ModalChangeEndTimeService'
 import ModalChangeRoom from './ModalChangeRoom'
 import ModalPay from './ModalPay'
+import ModalAddCustomer from '../Customers/ModalAddCustomer'
 
 const { confirm } = Modal
 const { TabPane } = Tabs
@@ -28,6 +29,9 @@ const Payment = props => {
   const [visibleChangeRoom, setVisibleChangeRoom] = useState(false)
   const [customers, setCustomers] = useState([])
   const [visibleModalPay, setVisibleModelPay] = useState(false)
+  const [visibleAddCustomer, setVisibleAddCustomer] = useState(false)
+
+
   const getRooms = async () => {
     await client
       .query({
@@ -151,7 +155,7 @@ const Payment = props => {
     }
   }
 
-  const handleUpdateBill = async (billId, input) => {
+  const handleUpdateBill = async (billId, input, doneMessage = null) => {
     delete input._id
     // delete input.state
     // delete input.total
@@ -172,6 +176,10 @@ const Payment = props => {
           // refetch data
           await getRooms()
           await getBillByRoomId(roomSelected._id)
+          if (doneMessage) {
+            // eslint-disable-next-line
+            const notify = new Notify('success', doneMessage, 5)
+          }
         }
       })
       .catch(err => {
@@ -285,6 +293,11 @@ const Payment = props => {
         hide={() => setVisibleModelPay(false)}
       />
 
+      <ModalAddCustomer
+        visible={visibleAddCustomer}
+        hide={() => setVisibleAddCustomer(false)}
+        refetch={() => { }}
+      />
       <Col
         xs={24}
         md={12}
@@ -404,22 +417,24 @@ const Payment = props => {
               </div>
               <div className='right-room-bill'>
                 {bill && (
-                  <Select
-                    showSearch
-                    allowClear
-                    style={{ width: 300 }}
-                    placeholder='Chọn khách hàng'
-                    optionFilterProp='children'
-                    onChange={handleChangeCustomer}
-                    onSearch={handleSearchCustomer}
-                    filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                  >
-                    {customers.map(customer => (
-                      // eslint-disable-next-line max-len
-                      <Option key={customer._id} value={`[${customer._id}]_${customer.name}_${customer.email}_${customer.phone}`}>{`${customer.name} (${customer.phone})`}</Option>
-                    ))}
-                  </Select>
-
+                  <>
+                    <Select
+                      showSearch
+                      allowClear
+                      style={{ width: 300 }}
+                      placeholder='Chọn khách hàng'
+                      optionFilterProp='children'
+                      onChange={handleChangeCustomer}
+                      onSearch={handleSearchCustomer}
+                      filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                    >
+                      {customers.map(customer => (
+                        // eslint-disable-next-line max-len
+                        <Option key={customer._id} value={`[${customer._id}]_${customer.name}_${customer.email}_${customer.phone}`}>{`${customer.name} (${customer.phone})`}</Option>
+                      ))}
+                    </Select>
+                    <Button type='link' icon='user-add' onClick={() => setVisibleAddCustomer(true)} />
+                  </>
                 )}
               </div>
 

@@ -1,5 +1,6 @@
 import React from 'react'
 import moment from 'moment'
+import { FormatMoney } from 'helpers'
 
 export const columnsRoomDetails = (endTime) => [
   {
@@ -36,11 +37,14 @@ export const columnsRoomDetails = (endTime) => [
   {
     title: 'Đơn giá',
     dataIndex: 'room.typeRoom.unitPrice',
-    key: 'room.typeRoom.unitPrice'
+    key: 'room.typeRoom.unitPrice',
+    render: data => FormatMoney(data)
   },
   {
     title: 'Tổng',
-    render: data => data.total ? Math.round(data.total) : Math.round(data.room.typeRoom.unitPrice * (((endTime - data.startTime) / 60000) / 60))
+    render: data => data.total
+      ? FormatMoney(Math.round(data.total))
+      : FormatMoney(Math.round(data.room.typeRoom.unitPrice * (((endTime - data.startTime) / 60000) / 60)))
 
   }
 ]
@@ -77,7 +81,8 @@ export const columnsServiceDetailsPerHOUR = (endTime) => [
   {
     title: 'Đơn giá (h)',
     dataIndex: 'service.unitPrice',
-    key: 'service.unitPrice'
+    key: 'service.unitPrice',
+    render: data => FormatMoney(data)
   },
   {
     title: 'Thành tiền',
@@ -86,9 +91,9 @@ export const columnsServiceDetailsPerHOUR = (endTime) => [
       //   return Math.round(data.quantity * data.service.unitPrice)
       // }
       if (data.service.type === 'perHOUR' && data.endTime) {
-        return Math.round(data.service.unitPrice * (((data.endTime - data.startTime) / 60000) / 60))
+        return FormatMoney(Math.round(data.service.unitPrice * (((data.endTime - data.startTime) / 60000) / 60)))
       }
-      return Math.round(data.service.unitPrice * (((endTime - data.startTime) / 60000) / 60))
+      return FormatMoney(Math.round(data.service.unitPrice * (((endTime - data.startTime) / 60000) / 60)))
     }
   }
 ]
@@ -103,7 +108,8 @@ export const columnsServiceDetailsPerUNIT = [
   {
     title: 'Đơn giá',
     dataIndex: 'service.unitPrice',
-    key: 'service.unitPrice'
+    key: 'service.unitPrice',
+    render: text => FormatMoney(text)
   },
   {
     title: 'Số lượng',
@@ -113,7 +119,7 @@ export const columnsServiceDetailsPerUNIT = [
     title: 'Thành tiền',
     render: data => {
       if (data.service.type === 'perUNIT') {
-        return data.total || (data.quantity * data.service.unitPrice)
+        return data.total ? FormatMoney(data.total) : FormatMoney(data.quantity * data.service.unitPrice)
       }
       return '...'
     }
