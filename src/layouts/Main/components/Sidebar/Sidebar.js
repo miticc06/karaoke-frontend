@@ -16,6 +16,7 @@ import PersonIcon from '@material-ui/icons/Person'
 import ReceiptIcon from '@material-ui/icons/Receipt'
 import RoomServiceIcon from '@material-ui/icons/RoomService'
 import RoomIcon from '@material-ui/icons/Room'
+import Assignment from '@material-ui/icons/Assignment'
 import MeetingRoom from '@material-ui/icons/MeetingRoom'
 import Category from '@material-ui/icons/Category'
 import ShoppingCart from '@material-ui/icons/ShoppingCart'
@@ -113,10 +114,16 @@ const Sidebar = props => {
       href: '/bills',
       icon: <ReceiptIcon />
     },
+    // {
+    //   title: 'Cài đặt',
+    //   href: '/settings',
+    //   icon: <SettingsIcon />
+    // }
+    ,
     {
-      title: 'Cài đặt',
-      href: '/settings',
-      icon: <SettingsIcon />
+      title: 'Báo cáo',
+      href: '/report',
+      icon: <Assignment />
     }
   ]
 
