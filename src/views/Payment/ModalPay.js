@@ -66,14 +66,15 @@ const ModalPay = Form.create()(props => {
               }
             })
         }
-
+        const discountFind = discounts.find(obj => obj._id === newBill.discount)
         confirm({
-          title: 'Tuỳ chọn in hoá đơn?',
-          okType: '',
+          title: 'Thông báo',
+          okType: 'Bạn có muốn in hóa đơn?',
           onOk: async () => {
-            BillExport({ newBill })
+            BillExport(newBill, discountFind)
           }
         })
+
 
         await handleUpdateBill(bill._id, newBill, `Thanh toán thành công hóa đơn ${FormatMoney(total)} VNĐ`)
 
