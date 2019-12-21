@@ -53,13 +53,13 @@ const TotalProfit = props => {
               gutterBottom
               variant='body2'
             >
-              TOTAL PROFIT
+              TỔNG LỢI NHUẬN
             </Typography>
             <Typography
               color='inherit'
               variant='h3'
             >
-              $23,200
+              5,100,423,150 VND
             </Typography>
           </Grid>
           <Grid item>
