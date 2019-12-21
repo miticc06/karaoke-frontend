@@ -84,3 +84,29 @@ export const GETReportRevenueRooms = gql`
 }
 
 `
+
+
+export const GETReportRevenueServices = gql`
+query ($startDate: Float!, $endDate: Float!){
+  ReportRevenueServices(startDate: $startDate, endDate:$endDate ) {
+    serviceId
+    name
+    type
+    unitPrice
+    quantity
+    total
+  }
+}
+
+`
+
+export const GETReportThuChiTongHop = gql`
+query ($startDate: Float!, $endDate: Float!){
+  ReportThuChiTongHop(startDate: $startDate, endDate:$endDate ) {
+    name
+    type
+    total
+  }
+}
+
+`
