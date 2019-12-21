@@ -63,9 +63,9 @@ const TotalUsers = props => {
               gutterBottom
               variant='body2'
             >
-              TOTAL USERS
+              KHÁCH HÀNG
             </Typography>
-            <Typography variant='h3'>1,600</Typography>
+            <Typography variant='h3'>333</Typography>
           </Grid>
           <Grid item>
             <Avatar className={classes.avatar}>
@@ -85,7 +85,7 @@ const TotalUsers = props => {
             className={classes.caption}
             variant='caption'
           >
-            Since last month
+            so với tháng trước
           </Typography>
         </div>
       </CardContent>

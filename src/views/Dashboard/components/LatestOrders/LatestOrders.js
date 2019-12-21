@@ -62,18 +62,6 @@ const LatestOrders = props => {
       {...rest}
       className={clsx(classes.root, className)}
     >
-      <CardHeader
-        action={(
-          <Button
-            color='primary'
-            size='small'
-            variant='outlined'
-          >
-            New entry
-          </Button>
-        )}
-        title='Latest Orders'
-      />
       <Divider />
       <CardContent className={classes.content}>
         <PerfectScrollbar>
@@ -81,8 +69,8 @@ const LatestOrders = props => {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>Order Ref</TableCell>
-                  <TableCell>Customer</TableCell>
+                  <TableCell>Số</TableCell>
+                  <TableCell>Người tạo</TableCell>
                   <TableCell sortDirection='desc'>
                     <Tooltip
                       enterDelay={300}
@@ -92,11 +80,11 @@ const LatestOrders = props => {
                         active
                         direction='desc'
                       >
-                        Date
+                        Ngày tạo
                       </TableSortLabel>
                     </Tooltip>
                   </TableCell>
-                  <TableCell>Status</TableCell>
+                  <TableCell>Trạng thái</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
