@@ -38,3 +38,60 @@ export const columnsdefs = [
     render: data => FormatMoney(data.total)
   }
 ]
+
+
+export const columnsdefsDV = [
+  {
+    title: 'Tên dịch vụ',
+    dataIndex: 'name'
+  },
+  {
+    title: 'Loại dịch vụ',
+    dataIndex: 'type',
+    render: type => type === 'perHOUR' ? 'Theo giờ' : 'Theo lượt'
+  },
+  {
+    title: 'Đơn giá',
+    render: obj => {
+      if (obj.type === 'perHOUR') {
+        return `${FormatMoney(obj.unitPrice)}/giờ`
+      }
+      if (obj.type === 'perUNIT') {
+        return `${FormatMoney(obj.unitPrice)}/lượt`
+      }
+    }
+    // FormatMoney(roomDetails.reduce((total, obj) => total + obj.total, 0))
+  },
+  // {
+  //   title: 'Tiền dịch vụ',
+  //   dataIndex: 'serviceDetails',
+  //   render: serviceDetails => FormatMoney(serviceDetails.reduce((total, obj) => total + obj.total, 0))
+  // },
+  {
+    title: 'Thành tiền',
+    render: data => FormatMoney(data.total)
+  }
+]
+
+
+export const columnsdefsTH = [
+  {
+    title: 'Mô tả',
+    dataIndex: 'name'
+  },
+  {
+    title: 'Loại',
+    dataIndex: 'type',
+    render: type => type === 'THU' ? 'Tiền thu vào' : 'Tiền chi ra'
+  },
+  {
+    title: 'Tổng',
+    render: obj => FormatMoney(obj.total)
+  }
+  // {
+  //   title: 'Tiền dịch vụ',
+  //   dataIndex: 'serviceDetails',
+  //   render: serviceDetails => FormatMoney(serviceDetails.reduce((total, obj) => total + obj.total, 0))
+  // },
+
+]
