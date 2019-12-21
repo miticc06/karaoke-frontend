@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react'
 import { withRouter } from 'react-router-dom'
 import './style.less'
@@ -12,6 +13,7 @@ import ModalAddTicket from '../Tickets/ModalAddTicket'
 import ModalChangeEndTimeService from './ModalChangeEndTimeService'
 import ModalChangeRoom from './ModalChangeRoom'
 import ModalPay from './ModalPay'
+import ModalAddCustomer from '../Customers/ModalAddCustomer'
 
 const { confirm } = Modal
 const { TabPane } = Tabs
@@ -28,6 +30,9 @@ const Payment = props => {
   const [visibleChangeRoom, setVisibleChangeRoom] = useState(false)
   const [customers, setCustomers] = useState([])
   const [visibleModalPay, setVisibleModelPay] = useState(false)
+  const [visibleAddCustomer, setVisibleAddCustomer] = useState(false)
+
+
   const getRooms = async () => {
     await client
       .query({
@@ -59,6 +64,18 @@ const Payment = props => {
       .catch(err => new Notify('error', parseError(err)))
   }
 
+  const handleSearchCustomer = async text => {
+    await client.query({
+      query: SEARCH_CUSTOMERS,
+      variables: {
+        text
+      }
+    }).then(res => {
+      if (res && res.data && res.data.searchCustomers) {
+        setCustomers(res.data.searchCustomers)
+      }
+    })
+  }
 
   const getBillByRoomId = async (roomId) => {
     await client
@@ -68,11 +85,14 @@ const Payment = props => {
           roomId
         }
       })
-      .then(res => {
+      .then(async res => {
         if (!res || !res.data) {
           throw new Error('Có lỗi xảy ra!')
         }
         setBill(res.data.billByRoom)
+        if (res.data.billByRoom && res.data.billByRoom.customer) {
+          await handleSearchCustomer(res.data.billByRoom.customer._id)
+        }
       })
       .catch(err => new Notify('error', parseError(err)))
   }
@@ -135,7 +155,6 @@ const Payment = props => {
           const notify = new Notify('error', parseError(err), 3)
         })
     }
-    console.log(roomSelected)
     if (roomSelected.tickets.length) {
       confirm({
         title: 'Thông báo',
@@ -151,7 +170,7 @@ const Payment = props => {
     }
   }
 
-  const handleUpdateBill = async (billId, input) => {
+  const handleUpdateBill = async (billId, input, doneMessage = null) => {
     delete input._id
     // delete input.state
     // delete input.total
@@ -168,10 +187,13 @@ const Payment = props => {
       })
       .then(async res => {
         if (res && res.data && res.data.updateBill) {
-          // console.log('done', res.data.updateBill)
           // refetch data
           await getRooms()
           await getBillByRoomId(roomSelected._id)
+          if (doneMessage) {
+            // eslint-disable-next-line
+            const notify = new Notify('success', doneMessage, 5)
+          }
         }
       })
       .catch(err => {
@@ -228,22 +250,20 @@ const Payment = props => {
     }
   }
 
-  const handleSearchCustomer = async text => {
-    console.log('text', text)
-    await client.query({
-      query: SEARCH_CUSTOMERS,
-      variables: {
-        text
-      }
-    }).then(res => {
-      if (res && res.data && res.data.searchCustomers) {
-        setCustomers(res.data.searchCustomers)
-      }
-    })
-  }
 
-  const handleChangeCustomer = (e) => {
-    console.log(e)
+  const handleChangeCustomer = async (value) => {
+    let customer = null
+    if (value) {
+      console.log(value)
+      const customerId = value.match(/\[(.*)\]_\[(.*)\]_\[(.*)\]_/)[1]
+      customer = {
+        _id: customerId
+      }
+    }
+    await handleUpdateBill(bill._id, {
+      ...bill,
+      customer
+    }, 'Cập nhật khách hàng thành công!')
   }
 
   const servicesPerHour = bill && bill.serviceDetails ? bill.serviceDetails.filter(obj => obj.service.type === 'perHOUR') : []
@@ -285,6 +305,11 @@ const Payment = props => {
         hide={() => setVisibleModelPay(false)}
       />
 
+      <ModalAddCustomer
+        visible={visibleAddCustomer}
+        hide={() => setVisibleAddCustomer(false)}
+        refetch={() => { }}
+      />
       <Col
         xs={24}
         md={12}
@@ -404,22 +429,26 @@ const Payment = props => {
               </div>
               <div className='right-room-bill'>
                 {bill && (
-                  <Select
-                    showSearch
-                    allowClear
-                    style={{ width: 300 }}
-                    placeholder='Chọn khách hàng'
-                    optionFilterProp='children'
-                    onChange={handleChangeCustomer}
-                    onSearch={handleSearchCustomer}
-                    filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                  >
-                    {customers.map(customer => (
+                  <>
+                    <Select
+                      showSearch
+                      allowClear
                       // eslint-disable-next-line max-len
-                      <Option key={customer._id} value={`[${customer._id}]_${customer.name}_${customer.email}_${customer.phone}`}>{`${customer.name} (${customer.phone})`}</Option>
-                    ))}
-                  </Select>
-
+                      value={bill && bill.customer && `[${bill.customer._id}]_[${bill.customer.email}]_[${bill.customer.name}]_${bill.customer.phone}`}
+                      style={{ width: 300 }}
+                      placeholder='Chọn khách hàng'
+                      optionFilterProp='children'
+                      onChange={handleChangeCustomer}
+                      onSearch={handleSearchCustomer}
+                      filterOption={(input, option) => option.props.value.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                    >
+                      {customers.map(customer => (
+                        // eslint-disable-next-line max-len
+                        <Option key={customer._id} value={`[${customer._id}]_[${customer.email}]_[${customer.name}]_${customer.phone}`}>{`${customer.name} (${customer.phone})`}</Option>
+                      ))}
+                    </Select>
+                    <Button type='link' icon='user-add' onClick={() => setVisibleAddCustomer(true)} />
+                  </>
                 )}
               </div>
 

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 
 import { Modal, Form, Select } from 'antd'
 import React, { useEffect } from 'react'
@@ -20,7 +21,7 @@ const ModalChangeRoom = Form.create()(props => {
         const lastRoom = newBill.roomDetails[newBill.roomDetails.length - 1]
 
         lastRoom.endTime = +moment()
-        lastRoom.total = lastRoom.room.typeRoom.unitPrice * (((lastRoom.endTime - lastRoom.startTime) / 60000) / 60)
+        lastRoom.total = Math.round(lastRoom.room.typeRoom.unitPrice * (((lastRoom.endTime - lastRoom.startTime) / 60000) / 60))
         const findRoom = rooms.find(obj => obj._id === newRoomId)
 
         newBill.roomDetails.push({

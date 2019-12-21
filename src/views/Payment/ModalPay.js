@@ -1,30 +1,31 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 
-import { Modal, Form, Input, Select, Table } from 'antd'
+import { Modal, Form, Select, Table, InputNumber } from 'antd'
 import React, { useState, useEffect } from 'react'
 import moment from 'moment'
 import { client } from 'config/client'
+import { FormatMoney } from 'helpers'
 import { columnsRoomDetails, columnsServiceDetailsPerHOUR, columnsServiceDetailsPerUNIT } from './columnsTableModalPay'
-import { GET_DISCOUNTS } from './query'
+import { GET_DISCOUNTS, UPDATE_CUSTOMER } from './query'
 
 const { Option } = Select
-
 
 const ModalPay = Form.create()(props => {
   const [discounts, setDiscounts] = useState([])
   const [endTime, setEndTime] = useState(moment())
   const { form, hide, visible, bill, handleUpdateBill } = props
-  console.log(props)
+
   const onSubmit = async () => {
     await form.validateFields(async (errors, formData) => {
       if (!errors) {
         const { total, coupon } = formData
         const newBill = {
           ...bill,
-          coupon,
+          discount: coupon,
           total,
           state: 20
         }
-        // console.log('newBill', newBill)
+
         newBill.roomDetails = newBill.roomDetails.map(roomDetail => {
           if (!roomDetail.total) {
             roomDetail.endTime = +endTime
@@ -35,7 +36,7 @@ const ModalPay = Form.create()(props => {
         newBill.serviceDetails = newBill.serviceDetails.map(serviceDetail => {
           if (!serviceDetail.total) {
             if (serviceDetail.service.type === 'perUNIT') {
-              serviceDetail.total = serviceDetail.quantity * serviceDetail.service.unitPrice
+              serviceDetail.total = Math.round(serviceDetail.quantity * serviceDetail.service.unitPrice)
             }
             if (serviceDetail.service.type === 'perHOUR') {
               if (!serviceDetail.endTime) {
@@ -47,8 +48,24 @@ const ModalPay = Form.create()(props => {
           return serviceDetail
         })
 
-        console.log(newBill)
-        await handleUpdateBill(bill._id, newBill)
+        if (newBill.customer) {
+          const newCustomer = {
+            ...newBill.customer,
+            points: newBill.customer.points + Math.round(total / 10000)
+          }
+          delete newCustomer._id
+
+          await client
+            .mutate({
+              mutation: UPDATE_CUSTOMER,
+              variables: {
+                id: newBill.customer._id,
+                input: newCustomer
+              }
+            })
+        }
+
+        await handleUpdateBill(bill._id, newBill, `Thanh toán thành công hóa đơn ${FormatMoney(total)} VNĐ`)
         hide()
       }
     })
@@ -80,7 +97,6 @@ const ModalPay = Form.create()(props => {
       }
       return total + obj.room.typeRoom.unitPrice * (((endTime - obj.startTime) / 60000) / 60)
     }, 0)
-    // console.log('totalRooms:', totalRooms)
 
     const totalServicesPerHour = servicesPerHour.reduce((total, obj) => {
       if (obj.total) {
@@ -91,7 +107,6 @@ const ModalPay = Form.create()(props => {
       }
       return total + (obj.service.unitPrice * (((endTime - obj.startTime) / 60000) / 60))
     }, 0)
-    // console.log('totalServicesPerHour', totalServicesPerHour)
 
 
     const totalServicesPerUnit = servicesPerUnit.reduce((total, obj) => {
@@ -100,8 +115,6 @@ const ModalPay = Form.create()(props => {
       }
       return total + (obj.quantity * obj.service.unitPrice)
     }, 0)
-
-    // console.log('totalServicesPerUnit', totalServicesPerUnit)
 
     if (form.getFieldsValue().coupon) {
       const coupon = discounts.find(discount => discount._id === form.getFieldsValue().coupon)
@@ -115,7 +128,6 @@ const ModalPay = Form.create()(props => {
     return totalRooms + totalServicesPerHour + totalServicesPerUnit
   }
 
-  // console.log(calTotal())
 
   return (
     <Modal
@@ -194,7 +206,17 @@ const ModalPay = Form.create()(props => {
           {form.getFieldDecorator('total', {
             initialValue: bill && Math.round(calTotal())
           })(
-            <Input style={{ width: 300 }} />
+            <InputNumber
+              disabled
+              style={{ width: 300 }}
+              formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+              parser={value => value.replace(/\$\s?|(,*)/g, '')}
+            />
+            // <Input
+            //   disabled
+
+            //   style={{ width: 300 }}
+            // />
           )}
         </Form.Item>
 

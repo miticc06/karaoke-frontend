@@ -1,24 +1,24 @@
 @primary-color: #3f51b5;
 
-.page-paymentSlipsManagement {
-  button[name='btn-add-paymentSlip'] {
-    margin-bottom: 5px;
-  }
-
+.page-billManagement {
   .title-page {
-    margin: 20px 30px;
+    margin: 20px 30px; 
     color: #3f51b5;
     font-weight: 500;
   }
 
-  #aggrid-paymentSlips {
+  #aggrid-bills {
     height: calc(100vh - 250px);
     width: 95%;
-    margin: 0px 50px;
+    margin: 30px 50px;
+   
+    .billGrid{
+      width: 1230px;
+      overflow: auto;
+    }
   }
 
   .margin {
     margin-left: 2%;
   }
-  
 }

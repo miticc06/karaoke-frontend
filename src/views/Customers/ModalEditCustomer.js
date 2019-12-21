@@ -49,7 +49,7 @@ const modalAddCustomer = Form.create()(props => {
 
   return (
     <Modal
-      title='Cập nhật khách hàng'
+      title='Cập nhật thông tin khách hàng'
       headerIcon='edit'
       onCancel={hide}
       visible={visible}
@@ -58,36 +58,36 @@ const modalAddCustomer = Form.create()(props => {
       width='600px'
     >
       <Form>
-        <Form.Item label='name'>
+        <Form.Item label='Họ và tên khách hàng'>
           {form.getFieldDecorator('name', {
             initialValue: customer && customer.name ? customer.name : '',
-            rules: [{ required: true, message: 'Hãy nhập họ tên' }]
+            rules: [{ required: true, message: 'Hãy nhập họ tên!' }]
           })(<Input type='name' />)}
         </Form.Item>
 
-        <Form.Item label='Phone'>
+        <Form.Item label='Số điện thoại'>
           {form.getFieldDecorator('phone', {
             initialValue: customer && customer.phone ? customer.phone : '',
             rules: [
-              { required: true, message: 'Hãy nhập số điện thoại' },
+              { required: true, message: 'Hãy nhập số điện thoại!' },
               {
                 // eslint-disable-next-line max-len
                 pattern: /^((09|03|07|08|05)+([0-9]{8})\b)$/g,
-                message: 'Số điện thoại không hợp lệ'
+                message: 'Số điện thoại không hợp lệ!'
               }
             ]
           })(<Input type='text' />)}
         </Form.Item>
 
-        <Form.Item label='email'>
+        <Form.Item label='Địa chỉ email'>
           {form.getFieldDecorator('email', {
             initialValue: customer && customer.email ? customer.email : '',
             rules: [
-              { required: false, message: 'Hãy nhập email' },
+              { required: false, message: 'Hãy nhập email!' },
               {
                 // eslint-disable-next-line max-len
                 pattern: /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/gim,
-                message: 'Địa chỉ email không hợp lệ'
+                message: 'Địa chỉ email không hợp lệ!'
               }
             ]
           })(<Input type='email' />)}

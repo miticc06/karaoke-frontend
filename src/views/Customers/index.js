@@ -55,21 +55,20 @@ const CustomerManagement = () => {
 
   const columnDefs = [
     {
-      headerName: 'Full name', field: 'name', sortable: true
+      headerName: 'Họ và tên', field: 'name', sortable: true
     },
     {
-      headerName: 'Phone Number', field: 'phone', sortable: true
+      headerName: 'Số điện thoại', field: 'phone', sortable: true
     },
     {
       headerName: 'Email', field: 'email', sortable: true
     },
     {
-      headerName: 'Points', field: 'points', sortable: true
+      headerName: 'Điểm tích luỹ', field: 'points', sortable: true
     },
     {
-      headerName: 'Action',
+      headerName: 'Thao tác',
       minWidth: 50,
-      width: 50,
       maxWidth: 100,
       suppressMenu: true,
       cellRendererFramework: row => (
@@ -98,9 +97,9 @@ const CustomerManagement = () => {
             style={{ cursor: 'pointer', margin: '5px' }}
             onClick={async () => {
               confirm({
-                title: 'Do you Want to delete this customer?',
+                title: 'Xác nhận xoá khách hàng?',
                 okType: 'danger',
-                content: ` Customer:  ${row.data.name} - ${row.data.phone}`,
+                content: `- Họ và tên: ${row.data.name} - Số điện thoại: ${row.data.phone}`,
                 onOk: async () => {
                   await client.mutate({
                     mutation: DELETE_CUSTOMER,
@@ -112,7 +111,7 @@ const CustomerManagement = () => {
                       throw Error('Có lỗi xẩy ra!')
                     }
                     await getCustomers()
-                    return new Notify('success', 'Xóa customer thành công!')
+                    return new Notify('success', 'Xóa khách hàng thành công!')
                   })
                     .catch(err => new Notify('error', parseError(err)))
                 }
@@ -132,7 +131,7 @@ const CustomerManagement = () => {
   return (
     <div className='page-usersManagement'>
       <h2 className='title-page'>
-        Customers List
+        QUẢN LÝ KHÁCH HÀNG
       </h2>
 
       <form className='margin'>
@@ -143,7 +142,7 @@ const CustomerManagement = () => {
           <Grid item>
             <TextField
               id='input-with-icon-grid'
-              label='Search Customer'
+              label='Tìm kiếm tên khách hàng...'
               onChange={setTextValue}
             />
           </Grid>
@@ -169,7 +168,7 @@ const CustomerManagement = () => {
               name='btn-add-user'
               onClick={() => setVisibleAdd(true)}
             >
-              Add Customer
+              Thêm mới
             </Button>
           </Grid>
 

@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-one-expression-per-line */
 /* eslint-disable react/require-default-props */
 /* eslint-disable react/forbid-prop-types */
 /* eslint-disable no-shadow */
@@ -57,25 +58,27 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundImage: 'url(/images/auth.jpg)',
+    backgroundImage: 'url(/images/microphone.jpg)',
     backgroundSize: 'cover',
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'center'
   },
   quoteInner: {
-    textAlign: 'center',
+    textAlign: 'right',
     flexBasis: '600px'
   },
   quoteText: {
     color: theme.palette.white,
-    fontWeight: 300
+    fontWeight: 400
   },
   name: {
-    marginTop: theme.spacing(3),
-    color: theme.palette.white
+    marginTop: theme.spacing(1),
+    color: theme.palette.white,
+    fontSize: 16
   },
   bio: {
-    color: theme.palette.white
+    color: theme.palette.white,
+    fontStyle: 'italic'
   },
   contentContainer: {},
   content: {
@@ -114,7 +117,8 @@ const useStyles = makeStyles(theme => ({
     marginRight: theme.spacing(1)
   },
   sugestion: {
-    marginTop: theme.spacing(2)
+    marginTop: theme.spacing(2),
+    textAlign: 'left'
   },
   textField: {
     marginTop: theme.spacing(2)
@@ -198,23 +202,52 @@ const Login = props => {
                 className={classes.quoteText}
                 variant='h1'
               >
-                Hella narwhal Cosby sweater McSweeney's, salvia kitsch before
-                they sold out High Life.
+                WEBSITE QUẢN LÝ QUÁN KARAOKE THOUSAND-STARS
               </Typography>
+
               <div className={classes.person}>
                 <Typography
                   className={classes.name}
                   variant='body1'
                 >
-                  Takamaru Ayako
+                  Đặng Minh Tiến - 16521215
                 </Typography>
                 <Typography
                   className={classes.bio}
-                  variant='body2'
+                  variant='body1'
                 >
-                  Manager at inVision
+                  {'<Quản lý tổng />'}
                 </Typography>
               </div>
+              <div className={classes.person}>
+                <Typography
+                  className={classes.name}
+                  variant='body1'
+                >
+                  Nguyễn Bá Tùng - 16521395
+                </Typography>
+                <Typography
+                  className={classes.bio}
+                  variant='body1'
+                >
+                  {'<Quản lý nhân viên />'}
+                </Typography>
+              </div>
+              <div className={classes.person}>
+                <Typography
+                  className={classes.name}
+                  variant='body1'
+                >
+                  Nguyễn Thành Luân - 16520703
+                </Typography>
+                <Typography
+                  className={classes.bio}
+                  variant='body1'
+                >
+                  {'<Quản lý tài chính />'}
+                </Typography>
+              </div>
+
             </div>
           </div>
         </Grid>
@@ -234,13 +267,14 @@ const Login = props => {
                   className={classes.title}
                   variant='h2'
                 >
-                  Sign in
+                  Đăng nhập
                 </Typography>
                 <Typography
                   color='textSecondary'
                   gutterBottom
+                  style={{ paddingTop: 10, marginBottom: -15, marginTop: 15 }}
                 >
-                  Sign in with social media
+                  Đăng nhập với mạng xã hội
                 </Typography>
                 <Grid
                   className={classes.socialButtons}
@@ -255,7 +289,7 @@ const Login = props => {
                       variant='contained'
                     >
                       <FacebookIcon className={classes.socialIcon} />
-                      Login with Facebook
+                      Facebook
                     </Button>
                   </Grid>
                   <Grid item>
@@ -265,7 +299,7 @@ const Login = props => {
                       variant='contained'
                     >
                       <GoogleIcon className={classes.socialIcon} />
-                      Login with Google
+                      Google
                     </Button>
                   </Grid>
                 </Grid>
@@ -275,7 +309,7 @@ const Login = props => {
                   color='textSecondary'
                   variant='body1'
                 >
-                  or login with account
+                  hoặc bằng tài khoản người dùng
                 </Typography>
                 <TextField
                   className={classes.textField}
@@ -284,7 +318,7 @@ const Login = props => {
                   helperText={
                     hasError('username') ? formState.errors.username[0] : null
                   }
-                  label='username'
+                  label='Tên tài khoản'
                   name='username'
                   onChange={handleChange}
                   type='text'
@@ -298,7 +332,7 @@ const Login = props => {
                   helperText={
                     hasError('password') ? formState.errors.password[0] : null
                   }
-                  label='Password'
+                  label='Mật khẩu'
                   name='password'
                   onChange={handleChange}
                   type='password'
@@ -314,7 +348,7 @@ const Login = props => {
                   type='submit'
                   variant='contained'
                 >
-                  Sign in now
+                  ĐĂNG NHẬP
                 </Button>
               </form>
             </div>

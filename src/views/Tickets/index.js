@@ -1,6 +1,8 @@
 /* eslint-disable func-names */
 import React, { useState, useEffect } from 'react'
 import { AgGridReact } from 'ag-grid-react'
+import SearchIcon from '@material-ui/icons/Search'
+import TextField from '@material-ui/core/TextField'
 import { client } from 'config/client'
 import { Notify } from 'helpers/notify'
 import { parseError } from 'helpers'
@@ -17,6 +19,7 @@ const { confirm } = Modal
 const TicketManagement = () => {
   const [rooms, setRooms] = useState([])
   const [tickets, setTickets] = useState([])
+  const [ticketsList, setTicketsList] = useState([])
   const [visibleAdd, setVisibleAdd] = useState(false)
   const [visibleEdit, setVisibleEdit] = useState(false)
   const [ticketEdit, setTicketEdit] = useState(null)
@@ -29,6 +32,7 @@ const TicketManagement = () => {
         throw new Error('Có lỗi xảy ra!')
       }
       setTickets(res.data.tickets)
+      setTicketsList(res.data.tickets)
     })
       .catch(err => new Notify('error', parseError(err)))
   }
@@ -50,6 +54,14 @@ const TicketManagement = () => {
     getRooms()
   }, [])
 
+  const setTextValue = event => {
+    let kw = event.target.value
+    kw = kw.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    if (kw !== '') {
+      setTickets(ticketsList.filter(ticket => ticket.subject.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(kw))) 
+    } else setTickets(ticketsList)
+  }
+
   const statusOptions = [
     { label: 'Mới', value: 'OPEN' },
     { label: 'Đang xử lý', value: 'IN_PROGRESS' },
@@ -59,7 +71,7 @@ const TicketManagement = () => {
 
   const columnDefs = [
     {
-      headerName: 'Status',
+      headerName: 'Trạng thái',
       field: 'status',
       sortable: true,
       minWidth: 50,
@@ -76,22 +88,22 @@ const TicketManagement = () => {
       }
     },
     {
-      headerName: 'Subject', field: 'subject', sortable: true
+      headerName: 'Tiêu đề', field: 'subject', sortable: true
     },
     {
-      headerName: 'Room', field: 'room.name', sortable: true
+      headerName: 'Phòng', field: 'room.name', sortable: true
     },
     {
-      headerName: 'Created By', field: 'createdBy.name', sortable: true
+      headerName: 'Người tạo', field: 'createdBy.name', sortable: true
     },
     {
-      headerName: 'Created At',
+      headerName: 'Ngày tạo',
       field: 'createdAt',
       sortable: true,
-      cellRenderer: (data) => data.value ? moment(data.value).format('HH:mm:ss - DD/MM/YYYY') : ''
+      cellRenderer: (data) => data.value ? moment(data.value).format('DD/MM/YYYY HH:mm') : ''
     },
     {
-      headerName: 'Action',
+      headerName: 'Thao tác',
       minWidth: 50,
       width: 100,
       maxWidth: 100,
@@ -122,7 +134,7 @@ const TicketManagement = () => {
             style={{ cursor: 'pointer', margin: '5px' }}
             onClick={async () => {
               confirm({
-                title: 'Bạn có muốn xoá ticket?',
+                title: 'Xác nhận xoá yêu cầu hỗ trợ?',
                 okType: 'danger',
                 content: `- ${row.data.subject}`,
                 onOk: async () => {
@@ -136,7 +148,7 @@ const TicketManagement = () => {
                       throw Error('Có lỗi xảy ra!')
                     }
                     await getTickets()
-                    return new Notify('success', 'Xóa ticket thành công!')
+                    return new Notify('success', 'Xóa yêu cầu hỗ trợ thành công!')
                   })
                     .catch(err => new Notify('error', parseError(err)))
                 }
@@ -156,8 +168,23 @@ const TicketManagement = () => {
   return (
     <div className='page-ticketManagement'>
       <h2 className='title-page'>
-        Tickets Management
+        QUẢN LÝ YÊU CẦU
       </h2>
+
+      <form className='margin'>
+        <Grid container spacing={1} alignItems='flex-end'>
+          <Grid item>
+            <SearchIcon />
+          </Grid>
+          <Grid item>
+            <TextField
+              id='input-with-icon-grid'
+              label='Tìm kiếm tên yêu cầu...'
+              onChange={setTextValue}
+            />
+          </Grid>
+        </Grid>
+      </form>
 
       <Grid
         container
@@ -177,7 +204,7 @@ const TicketManagement = () => {
               name='btn-add-ticket'
               onClick={() => setVisibleAdd(true)}
             >
-              Add Ticket
+              Thêm mới
             </Button>
           </Grid>
 
