@@ -74,14 +74,13 @@ const DiscountManagement = () => {
       resizable: true,
       sortable: true
     },
-
     {
       headerName: 'Ngày bắt đầu',
       field: 'startDate',
       filter: 'agTextColumnFilter',
       resizable: true,
       sortable: true,
-      cellRendererFramework: row => moment(row.value).format('DD/MM/YYYY')
+      cellRendererFramework: row => moment(row.value).format('DD/MM/YYYY HH:mm')
     },
     {
       headerName: 'Ngày kết thúc',
@@ -89,7 +88,7 @@ const DiscountManagement = () => {
       filter: 'agTextColumnFilter',
       resizable: true,
       sortable: true,
-      cellRendererFramework: row => moment(row.value).format('DD/MM/YYYY')
+      cellRendererFramework: row => moment(row.value).format('DD/MM/YYYY HH:mm')
     },
     {
       headerName: 'Người tạo',

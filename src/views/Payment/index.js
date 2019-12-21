@@ -202,6 +202,23 @@ const Payment = props => {
       })
   }
 
+  const handleCancelBill = async (e) => {
+    const newBill = {
+      ...bill,
+      state: 0
+    }
+
+    confirm({
+      title: 'Xác nhận huỷ hoá đơn?',
+      okType: 'danger',
+      // eslint-disable-next-line max-len
+      content: `- ${roomSelected && roomSelected.name}`,
+      onOk: async () => {
+        await handleUpdateBill(bill._id, newBill, 'Huỷ hoá đơn thành công!')
+      }
+    })
+  }
+
   const handleUpdateQuantityItem = async (serviceId, startTime, newQuantity) => {
     const newBill = {
       ...bill
@@ -518,6 +535,12 @@ const Payment = props => {
                     onClick={() => setVisibleChangeRoom(true)}
                   >
                     ĐỔI PHÒNG
+                  </Button>
+                  <Button
+                    type='danger'
+                    onClick={(e) => handleCancelBill(e)}
+                  >
+                    HUỶ HOÁ ĐƠN
                   </Button>
                 </>
               )}
