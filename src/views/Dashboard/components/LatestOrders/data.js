@@ -9,7 +9,7 @@ export default [
       name: 'Ekaterina Tankova'
     },
     createdAt: 1555016400000,
-    status: 'pending'
+    status: 'Đang chờ'
   },
   {
     id: uuid(),
@@ -19,7 +19,7 @@ export default [
       name: 'Cao Yu'
     },
     createdAt: 1555016400000,
-    status: 'delivered'
+    status: 'Đã giải quyết'
   },
   {
     id: uuid(),
@@ -29,7 +29,7 @@ export default [
       name: 'Alexa Richardson'
     },
     createdAt: 1554930000000,
-    status: 'refunded'
+    status: 'Đã đóng'
   },
   {
     id: uuid(),
@@ -39,7 +39,7 @@ export default [
       name: 'Anje Keizer'
     },
     createdAt: 1554757200000,
-    status: 'pending'
+    status: 'Đang chờ'
   },
   {
     id: uuid(),
@@ -49,7 +49,7 @@ export default [
       name: 'Clarke Gillebert'
     },
     createdAt: 1554670800000,
-    status: 'delivered'
+    status: 'Đã giải quyết'
   },
   {
     id: uuid(),
@@ -59,6 +59,6 @@ export default [
       name: 'Adam Denisov'
     },
     createdAt: 1554670800000,
-    status: 'delivered'
+    status: 'Đã giải quyết'
   }
 ]

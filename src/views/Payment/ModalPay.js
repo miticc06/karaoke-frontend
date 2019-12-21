@@ -1,14 +1,16 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 
-import { Modal, Form, Select, Table, InputNumber } from 'antd'
+import { Modal, Form, Select, Table, InputNumber, Button } from 'antd'
 import React, { useState, useEffect } from 'react'
 import moment from 'moment'
 import { client } from 'config/client'
 import { FormatMoney } from 'helpers'
 import { columnsRoomDetails, columnsServiceDetailsPerHOUR, columnsServiceDetailsPerUNIT } from './columnsTableModalPay'
 import { GET_DISCOUNTS, UPDATE_CUSTOMER } from './query'
+import { BillExport } from './billExport'
 
 const { Option } = Select
+const { confirm } = Modal
 
 const ModalPay = Form.create()(props => {
   const [discounts, setDiscounts] = useState([])
@@ -64,8 +66,18 @@ const ModalPay = Form.create()(props => {
               }
             })
         }
+        const discountFind = discounts.find(obj => obj._id === newBill.discount)
+        confirm({
+          title: 'Thông báo',
+          okType: 'Bạn có muốn in hóa đơn?',
+          onOk: async () => {
+            BillExport(newBill, discountFind)
+          }
+        })
+
 
         await handleUpdateBill(bill._id, newBill, `Thanh toán thành công hóa đơn ${FormatMoney(total)} VNĐ`)
+
         hide()
       }
     })
@@ -75,7 +87,8 @@ const ModalPay = Form.create()(props => {
     await client.query({
       query: GET_DISCOUNTS
     }).then(res => {
-      setDiscounts(res.data.discounts)
+      const now = moment()
+      setDiscounts(res.data.discounts.filter(discount => (discount.isActive && discount.startDate <= now && now <= discount.endDate)))
     })
   }
 
@@ -138,6 +151,14 @@ const ModalPay = Form.create()(props => {
       fieldsError={form.getFieldsError()}
       onOk={onSubmit}
       width={700}
+      footer={[
+        <Button type='default' onClick={hide}>
+          Huỷ bỏ
+        </Button>,
+        <Button type='primary' onClick={onSubmit}>
+          Thanh toán
+        </Button>
+      ]}
     >
 
       <div className='top-bill'>

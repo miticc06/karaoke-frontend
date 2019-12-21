@@ -174,7 +174,7 @@ const ModalViewDiscount = Form.create()(props => {
             <div style={styles.item}>
               <div style={styles.label}>Tổng tiền: </div>
               <div style={styles.total}>
-                {bill.state === 10 ? '-' : `${FormatMoney(bill.total)} VND`}
+                {bill.state === 20 ? `${FormatMoney(bill.total)} VND` : '-'}
               </div>
             </div>
           </div>

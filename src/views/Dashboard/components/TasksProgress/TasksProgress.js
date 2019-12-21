@@ -61,7 +61,7 @@ const TasksProgress = props => {
               gutterBottom
               variant='body2'
             >
-              TASKS PROGRESS
+              BÁO CÁO THỐNG KÊ
             </Typography>
             <Typography variant='h3'>75.5%</Typography>
           </Grid>

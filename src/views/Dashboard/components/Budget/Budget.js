@@ -63,9 +63,9 @@ const Budget = props => {
               gutterBottom
               variant='body2'
             >
-              BUDGET
+              TÔNG THU
             </Typography>
-            <Typography variant='h3'>$24,000</Typography>
+            <Typography variant='h3'>240,000,000 VND</Typography>
           </Grid>
           <Grid item>
             <Avatar className={classes.avatar}>
@@ -85,7 +85,7 @@ const Budget = props => {
             className={classes.caption}
             variant='caption'
           >
-            Since last month
+            so với tháng tước
           </Typography>
         </div>
       </CardContent>
