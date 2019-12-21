@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import React, { useState, useEffect } from 'react'
 import { client } from 'config/client'
 import { Notify } from 'helpers/notify'
@@ -94,7 +95,7 @@ const UserManagement = () => {
       await getReportRevenueServices(+startDate, +endDate)
     }
 
-    if (tab === 'tonghop') {
+    if (value === 'tonghop') {
       await getReportThuChiTongHop(+startDate, +endDate)
     }
   }
@@ -108,7 +109,7 @@ const UserManagement = () => {
       await getReportRevenueRooms(+date1, +date2)
     }
 
-    if (value === 'dichvu') {
+    if (tab === 'dichvu') {
       await getReportRevenueServices(+date1, +date2)
     }
 
@@ -205,7 +206,7 @@ const UserManagement = () => {
       )}
 
 
-      {tab === 'dichvu' && (
+      {tab === 'tonghop' && (
         <>
           <Table
             className='list-report'
@@ -213,23 +214,23 @@ const UserManagement = () => {
             dataSource={listReportThuChiTongHop}
             pagination={false}
           />
-          {/* <div className='summary'>
+          <div className='summary'>
             <div>
-              Tổng tiền dịch vụ theo giờ:
+              Tổng thu:
               {' '}
-              {FormatMoney(listReportRevenueServices.reduce((sum, obj) => sum + (obj.type === 'perHOUR' ? obj.total : 0), 0))}
+              {FormatMoney(listReportThuChiTongHop.reduce((sum, obj) => sum + (obj.type === 'THU' ? obj.total : 0), 0))}
             </div>
             <div>
-              Tổng tiền dịch vụ theo lượt:
+              Tổng chi:
               {' '}
-              {FormatMoney(listReportRevenueServices.reduce((sum, obj) => sum + (obj.type === 'perUNIT' ? obj.total : 0), 0))}
+              {FormatMoney(listReportThuChiTongHop.reduce((sum, obj) => sum + (obj.type === 'CHI' ? obj.total : 0), 0))}
             </div>
             <div>
-              Tổng tiền:
+              Tổng lơi nhuận:
               {' '}
-              {FormatMoney(listReportRevenueServices.reduce((sum, obj) => sum + obj.total, 0))}
+              {FormatMoney(listReportThuChiTongHop.reduce((sum, obj) => sum + (obj.type === 'THU' ? obj.total : 0) - (obj.type === 'CHI' ? obj.total : 0), 0))}
             </div>
-          </div> */}
+          </div>
         </>
       )}
 
