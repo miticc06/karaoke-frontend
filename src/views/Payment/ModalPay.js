@@ -1,14 +1,16 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 
-import { Modal, Form, Select, Table, InputNumber } from 'antd'
+import { Modal, Form, Select, Table, InputNumber, Button } from 'antd'
 import React, { useState, useEffect } from 'react'
 import moment from 'moment'
 import { client } from 'config/client'
 import { FormatMoney } from 'helpers'
 import { columnsRoomDetails, columnsServiceDetailsPerHOUR, columnsServiceDetailsPerUNIT } from './columnsTableModalPay'
 import { GET_DISCOUNTS, UPDATE_CUSTOMER } from './query'
+import { BillExport } from './billExport'
 
 const { Option } = Select
+const { confirm } = Modal
 
 const ModalPay = Form.create()(props => {
   const [discounts, setDiscounts] = useState([])
@@ -65,7 +67,16 @@ const ModalPay = Form.create()(props => {
             })
         }
 
+        confirm({
+          title: 'Tuỳ chọn in hoá đơn?',
+          okType: '',
+          onOk: async () => {
+            BillExport({ newBill })
+          }
+        })
+
         await handleUpdateBill(bill._id, newBill, `Thanh toán thành công hóa đơn ${FormatMoney(total)} VNĐ`)
+
         hide()
       }
     })
@@ -139,6 +150,14 @@ const ModalPay = Form.create()(props => {
       fieldsError={form.getFieldsError()}
       onOk={onSubmit}
       width={700}
+      footer={[
+        <Button type='default' onClick={hide}>
+          Huỷ bỏ
+        </Button>,
+        <Button type='primary' onClick={onSubmit}>
+          Thanh toán
+        </Button>
+      ]}
     >
 
       <div className='top-bill'>
