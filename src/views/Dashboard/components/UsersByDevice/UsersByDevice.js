@@ -86,19 +86,19 @@ const UsersByDevice = props => {
 
   const devices = [
     {
-      title: 'Desktop',
+      title: 'Máy tính',
       value: '63',
       icon: <LaptopMacIcon />,
       color: theme.palette.primary.main
     },
     {
-      title: 'Tablet',
+      title: 'Máy tính bảng',
       value: '15',
       icon: <TabletMacIcon />,
       color: theme.palette.error.main
     },
     {
-      title: 'Mobile',
+      title: 'Di động',
       value: '23',
       icon: <PhoneIphoneIcon />,
       color: theme.palette.warning.main
@@ -116,7 +116,7 @@ const UsersByDevice = props => {
             <RefreshIcon />
           </IconButton>
         )}
-        title='Users By Device'
+        title='Thiết bị truy cập'
       />
       <Divider />
       <CardContent>

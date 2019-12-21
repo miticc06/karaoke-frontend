@@ -49,7 +49,7 @@ const LatestSales = props => {
             <ArrowDropDownIcon />
           </Button>
         )}
-        title='Latest Sales'
+        title='Doanh số gần nhất'
       />
       <Divider />
       <CardContent>
@@ -67,7 +67,7 @@ const LatestSales = props => {
           size='small'
           variant='text'
         >
-          Overview 
+          TỔNG QUAN 
           {' '}
           <ArrowRightIcon />
         </Button>
