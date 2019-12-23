@@ -1,0 +1,18 @@
+{
+  "viewportWidth": 1600,
+  "viewportHeight": 900,
+  "usernameAdmin": "admin",
+  "passwordAdmin": "1",
+  "wait": 1000,
+  "clearApp": true,
+  "clearInternals": true,
+  "clearCookies": false,
+  "clearLocalStorage": false,
+  "clearSessionStorage": false,
+  "env": {
+    "resetting": false,
+    "FRONTEND": "http://karaoketest.kienthuc24h.com",
+    "BACKEND": "http://karaoketest.kienthuc24h.com/graphql"
+  },
+  "chromeWebSecurity": false
+}
