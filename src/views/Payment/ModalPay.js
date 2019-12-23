@@ -72,13 +72,14 @@ const ModalPay = Form.create()(props => {
           okType: 'Bạn có muốn in hóa đơn?',
           onOk: async () => {
             BillExport(newBill, discountFind)
+            await handleUpdateBill(bill._id, newBill, `Thanh toán thành công hóa đơn ${FormatMoney(total)} VNĐ`)
+            hide()
+          },
+          onCancel: async () => {
+            await handleUpdateBill(bill._id, newBill, `Thanh toán thành công hóa đơn ${FormatMoney(total)} VNĐ`)
+            hide()
           }
         })
-
-
-        await handleUpdateBill(bill._id, newBill, `Thanh toán thành công hóa đơn ${FormatMoney(total)} VNĐ`)
-
-        hide()
       }
     })
   }
