@@ -20,6 +20,9 @@ stages:
   - name: DeployKaraokeTest
     if: branch = cicd AND type=push OR branch=Tien_webpack
 
+  - name: AutomationTest
+    if: branch = master
+
   - name: DeployKaraoke
     if: branch = master AND type=push
 
@@ -34,6 +37,10 @@ jobs:
     - stage: DeployKaraokeTest
       script:
         - ssh -q -p 22 ${USER}@${HOST} "cp -R --remove-destination /home/${USER}/build/karaoke-frontend/build/* /var/www/karaoketest.kienthuc24h.com"
+
+    - stage: AutomationTest
+      script:
+        - cypress run -s "cypress/integration/**/*.spec.js"
 
     - stage: DeployKaraoke
       script:
