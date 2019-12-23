@@ -14,5 +14,6 @@
     "FRONTEND": "http://karaoketest.kienthuc24h.com",
     "BACKEND": "http://karaoketest.kienthuc24h.com/graphql"
   },
-  "chromeWebSecurity": false
+  "chromeWebSecurity": false,
+  "video": false
 }
