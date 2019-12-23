@@ -124,11 +124,9 @@ const ModalViewDiscount = Form.create()(props => {
   ]
 
   const { roomDetails } = bill
-  const { servicePerHourDetails } = bill && bill.serviceDetails ? bill.serviceDetails.filter(obj => obj.service.type === 'perHOUR') : []
-  const { servicePerUnitDetails } = bill && bill.serviceDetails ? bill.serviceDetails.filter(obj => obj.service.type === 'perUNIT') : []
-
+  const servicePerHourDetails = bill && bill.serviceDetails ? bill.serviceDetails.filter(obj => obj.service.type === 'perHOUR') : []
+  const servicePerUnitDetails = bill && bill.serviceDetails ? bill.serviceDetails.filter(obj => obj.service.type === 'perUNIT') : []
   return (
-
 
     <Modal
       title='Chi tiết hoá đơn thanh toán'
@@ -172,6 +170,15 @@ const ModalViewDiscount = Form.create()(props => {
             </div>
 
             <div style={styles.item}>
+              <div style={styles.label}>Khuyến mãi áp dụng: </div>
+              <div style={styles.value}>
+                {bill.discount 
+                  ? `${bill.discount.name} (-${FormatMoney(`${bill.discount.value}`)}${bill.discount.type === 'DEDUCT' ? 'VND' : '%'})` 
+                  : '(Không)'}
+              </div>
+            </div>
+
+            <div style={styles.item}>
               <div style={styles.label}>Tổng tiền: </div>
               <div style={styles.total}>
                 {bill.state === 20 ? `${FormatMoney(bill.total)} VND` : '-'}
@@ -186,14 +193,14 @@ const ModalViewDiscount = Form.create()(props => {
             </div>
           ) : ''}
 
-          {servicePerHourDetails ? (
+          {servicePerHourDetails.length > 0 ? (
             <div style={{ marginTop: '10px' }}>
               <div style={styles.label}>Dịch vụ theo giờ: </div>
               <Table columns={columnServicePerHourDefs} dataSource={servicePerHourDetails} pagination={false} />
             </div>
           ) : ''}
 
-          {servicePerUnitDetails ? (
+          {servicePerUnitDetails.length > 0 ? (
             <div style={{ marginTop: '10px' }}>
               <div style={styles.label}>Dịch vụ theo lượt: </div>
               <Table columns={columnServicePerUnitDefs} dataSource={servicePerUnitDetails} pagination={false} />

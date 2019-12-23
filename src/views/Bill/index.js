@@ -101,7 +101,11 @@ const BillManagement = () => {
       filter: 'agTextColumnFilter',
       resizable: true,
       sortable: true,
-      cellRendererFramework: row => (row && row.value ? `${(row.value).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}` : '-')
+      cellRendererFramework: row => (
+        row && row.value >= 0 
+          ? `${row.value > 0 ? (row.value).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : '0'}` 
+          : '-'
+      )
     },
     {
       headerName: 'Thao tác',

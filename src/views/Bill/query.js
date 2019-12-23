@@ -9,6 +9,11 @@ export const GET_BILLS = gql`
         _id
         name
       }
+      discount {
+        name 
+        type
+        value
+      }
       state
       total
       roomDetails {
@@ -59,6 +64,11 @@ export const GET_BILL = gql`
         _id
         name
       }
+      discount {
+        name 
+        type
+        value
+      }
       state
       total
       roomDetails {
@@ -108,6 +118,11 @@ export const UPDATE_BILL = gql`
       customer {
         _id
         name
+      }
+      discount {
+        name 
+        type
+        value
       }
       state
       total
