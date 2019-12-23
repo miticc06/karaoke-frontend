@@ -5,6 +5,8 @@ import { Button } from 'antd'
 import moment from 'moment'
 import jsPDF from 'jspdf'
 import 'jspdf-autotable'
+import { element } from 'prop-types'
+import { FormatMoney } from 'helpers'
 
 const changeAlias = (alias) => {
   let str = alias.normalize('NFD')
@@ -19,6 +21,19 @@ const getDiffMoment = (startTime, endTime) => {
   let d = moment.duration(ms)
   let s = Math.floor(d.asHours()) + moment.utc(ms).format(':mm')
   return s
+}
+
+const getSumOfServicesTotal = (bill) => {
+  let total = 0
+  if (bill) {
+    bill.roomDetails.forEach(e => {
+      total += e.total
+    })
+    bill.serviceDetails.forEach(e => {
+      total += e.total
+    })
+  }
+  return total
 }
 
 export const BillExport = (bill, discount) => {
@@ -91,8 +106,8 @@ export const BillExport = (bill, discount) => {
       moment(item.endTime).format('HH:mm'),
       changeAlias(item.room.name),
       getDiffMoment(item.startTime, item.endTime),
-      item.room.typeRoom.unitPrice,
-      item.total
+      FormatMoney(`${item.room.typeRoom.unitPrice}`),
+      FormatMoney(`${item.total}`)
     ]),
     startY: startRowBody + 33,
     styles: { fontSize: 10 },
@@ -115,8 +130,8 @@ export const BillExport = (bill, discount) => {
         moment(item.endTime).format('HH:mm'),
         changeAlias(item.service.name),
         getDiffMoment(item.startTime, item.endTime),
-        item.service.unitPrice,
-        item.total
+        FormatMoney(`${item.service.unitPrice}`),
+        FormatMoney(`${item.total}`)
       ]),
       startY: startRowBody + 33 + (roomDetails.length + 2) * 8,
       styles: { fontSize: 10 },
@@ -139,8 +154,8 @@ export const BillExport = (bill, discount) => {
       body: servicePerUnitDetails.map(item => [
         changeAlias(item.service.name),
         item.quantity,
-        item.service.unitPrice,
-        item.total
+        FormatMoney(`${item.service.unitPrice}`),
+        FormatMoney(`${item.total}`)
       ]),
       startY: startRowBody + 33 + (roomDetails.length + 2) * 8
         + (servicePerHourDetails.length > 0 ? (servicePerHourDetails.length + 2) * 8 : 0),
@@ -152,26 +167,47 @@ export const BillExport = (bill, discount) => {
     })
   }
 
+  // sum
   doc.setFontSize(10)
   doc.setFontStyle('normal')
-  doc.text(changeAlias(`Khuyến mãi: ${discount ? discount.name : '-'}`), 30, startRowFooter - 10)
-  doc.text(changeAlias(`${discount ? `${discount.value} ${discount.type}` : '-'}`), 90, startRowFooter - 5)
-  // doc.text(changeAlias(`${bill.discount ? `${bill.discount.value} ${bill.discount.type}` : '-'}`, 90, startRowBody + 10))
+  doc.text(changeAlias('Tổng: '), 30, startRowFooter - 10)
+  doc.setFontStyle('bold')
+  doc.text(changeAlias(`${FormatMoney(`${getSumOfServicesTotal(bill)}`)} VND`), width - 30, startRowFooter - 10, 'right')
+
+  if (discount) {
+    // discount
+    doc.setFontSize(10)
+    doc.setFontStyle('normal')
+    doc.text(changeAlias(`Khuyến mãi: ${discount.name}`), 30, startRowFooter - 5)
+
+    if (discount.type === 'DEDUCT') {
+      doc.setFontStyle('bold')
+      doc.text(changeAlias(`-${FormatMoney(`${discount.value}`)} VND`), width - 30, startRowFooter - 5, 'right') 
+    } else {
+      doc.setFontStyle('bold')
+      doc.text(changeAlias(`-${discount.value} %`), width - 30, startRowFooter - 5, 'right') 
+    }
+  } else {
+    doc.setFontSize(10)
+    doc.setFontStyle('normal')
+    doc.text(changeAlias('Khuyến mãi:'), 30, startRowFooter - 5)
+    doc.text(changeAlias('-'), width - 30, startRowFooter - 5, 'right')
+  }
 
   // footer
   doc.setFontSize(10)
   doc.setFontStyle('italic')
   // eslint-disable-next-line max-len
-  doc.text('------------------------------------------------------------------------------------------------------------', width / 2, startRowFooter, 'center')
+  doc.text('---------------------------------------------------------------------------------------', width / 2, startRowFooter, 'center')
 
   doc.setFontSize(16)
   doc.setFontStyle('bold')
-  doc.text(changeAlias('Tổng: '), 15, startRowFooter + 5, 'left')
-  doc.text(changeAlias(`${bill.total}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')), width - 15, startRowFooter + 5, 'right')
+  doc.text(changeAlias('Thành tiền: '), 30, startRowFooter + 5, 'left')
+  doc.text(changeAlias(`${FormatMoney(`${bill.total}`)} VND`), width - 30, startRowFooter + 5, 'right')
 
   doc.setFontSize(10)
   doc.setFontStyle('italic')
-  doc.text(changeAlias('Cảm ơn Quý khách. Hẹn gặp lại!'), width / 2, startRowFooter + 12, 'center')
+  doc.text(changeAlias('Cảm ơn Quý khách. Hẹn gặp lại!'), width / 2, startRowFooter + 15, 'center')
 
 
   // output
