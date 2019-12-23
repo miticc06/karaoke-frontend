@@ -40,6 +40,7 @@ jobs:
 
     - stage: AutomationTest
       script:
+        - cypress install
         - cypress run -s "cypress/integration/**/*.spec.js"
 
     - stage: DeployKaraoke
