@@ -21,7 +21,7 @@ stages:
     if: branch = cicd AND type=push OR branch=Tien_webpack
 
   - name: AutomationTest
-    if: (branch = master) OR (branch = cicd AND type=push)
+    if: (branch = master AND type=pull_request) OR (branch = cicd AND type=push)
 
   - name: DeployKaraoke
     if: branch = master AND type=push
