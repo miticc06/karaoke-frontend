@@ -134,7 +134,7 @@ const ModalPay = Form.create()(props => {
     if (form.getFieldsValue().coupon) {
       const coupon = discounts.find(discount => discount._id === form.getFieldsValue().coupon)
       if (coupon.type === 'PERCENT') {
-        return (totalRooms + totalServicesPerHour + totalServicesPerUnit) * (coupon.value / 100)
+        return (totalRooms + totalServicesPerHour + totalServicesPerUnit) * (1 - coupon.value / 100)
       }
       if (coupon.type === 'DEDUCT') {
         return Math.max(0, (totalRooms + totalServicesPerHour + totalServicesPerUnit) - coupon.value)
