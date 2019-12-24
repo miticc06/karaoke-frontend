@@ -69,16 +69,18 @@ const ModalPay = Form.create()(props => {
         const discountFind = discounts.find(obj => obj._id === newBill.discount)
         confirm({
           title: 'Thông báo',
-          okType: 'Bạn có muốn in hóa đơn?',
+          content: 'Bạn có muốn in hóa đơn?',
+          okType: 'primary',
           onOk: async () => {
             BillExport(newBill, discountFind)
+            await handleUpdateBill(bill._id, newBill, `Thanh toán thành công hóa đơn ${FormatMoney(total)} VNĐ`)
+            hide()
+          },
+          onCancel: async () => {
+            await handleUpdateBill(bill._id, newBill, `Thanh toán thành công hóa đơn ${FormatMoney(total)} VNĐ`)
+            hide()
           }
         })
-
-
-        await handleUpdateBill(bill._id, newBill, `Thanh toán thành công hóa đơn ${FormatMoney(total)} VNĐ`)
-
-        hide()
       }
     })
   }
@@ -132,7 +134,7 @@ const ModalPay = Form.create()(props => {
     if (form.getFieldsValue().coupon) {
       const coupon = discounts.find(discount => discount._id === form.getFieldsValue().coupon)
       if (coupon.type === 'PERCENT') {
-        return (totalRooms + totalServicesPerHour + totalServicesPerUnit) * (coupon.value / 100)
+        return (totalRooms + totalServicesPerHour + totalServicesPerUnit) * (1 - coupon.value / 100)
       }
       if (coupon.type === 'DEDUCT') {
         return Math.max(0, (totalRooms + totalServicesPerHour + totalServicesPerUnit) - coupon.value)

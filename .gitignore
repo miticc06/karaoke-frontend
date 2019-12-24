@@ -26,3 +26,6 @@ yarn-error.log*
 # yarn.lock
 package-lock.json
 /cypress/videos
+
+deploy_rsa
+deploy_rsa.pub
