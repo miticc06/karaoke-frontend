@@ -8,9 +8,7 @@ import {
   TasksProgress,
   TotalProfit,
   LatestSales,
-  UsersByDevice,
-  LatestProducts,
-  LatestOrders
+  UsersByDevice
 } from './components'
 
 const useStyles = makeStyles(theme => ({

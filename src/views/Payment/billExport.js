@@ -52,7 +52,7 @@ export const BillExport = (bill, discount) => {
   })
 
   let width = doc.internal.pageSize.getWidth()
-  let height = doc.internal.pageSize.getHeight()
+  // let height = doc.internal.pageSize.getHeight()
   doc.setFont('helvetica')
 
   const startRowHeader = 20
