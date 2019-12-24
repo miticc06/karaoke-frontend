@@ -42,9 +42,9 @@ const UserManagement = () => {
     let kw = event.target.value
     kw = kw.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
     if (kw !== '') {
-      setUsers(usersList.filter(user => ( 
-          user.username.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(kw) 
-      || (user.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(kw)))))
+      setUsers(usersList.filter(user => (
+        user.username.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(kw)
+        || (user.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(kw)))))
     } else setUsers(usersList)
   }
 
@@ -70,6 +70,7 @@ const UserManagement = () => {
       cellRendererFramework: row => (
         <>
           <Icon
+            name='edit-user'
             style={{ cursor: 'pointer', margin: '5px' }}
             onClick={async (e) => {
               setVisibleEdit(true)
