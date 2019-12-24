@@ -1,4 +1,4 @@
-import { Modal, Form, Input, Select, DatePicker } from 'antd'
+import { Modal, Form, Input, Select } from 'antd'
 import React, { useState } from 'react'
 import moment from 'moment'
 import { client } from 'config/client'
@@ -7,7 +7,6 @@ import { Notify } from 'helpers/notify'
 import { ADD_DISCOUNT } from './query'
 import { TimePicker } from './TimePicker'
 
-const { RangePicker } = DatePicker
 
 const typeCoupon = [
   { value: 'DEDUCT', label: 'Khấu trừ' },
@@ -22,7 +21,7 @@ const ModalAddDiscount = Form.create()(props => {
   const onSubmit = async () => {
     await form.validateFields(async (errors, formData) => {
       if (!errors) {
-        const { name, type, rangeDate, value } = formData
+        const { name, type, value } = formData
         const d = {
           name,
           type,

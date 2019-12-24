@@ -7,7 +7,6 @@ import { makeStyles } from '@material-ui/styles'
 import {
   Card,
   CardActions,
-  CardHeader,
   CardContent,
   Button,
   Divider,
@@ -122,7 +121,7 @@ const LatestOrders = props => {
           size='small'
           variant='text'
         >
-          View all 
+          View all
           {' '}
           <ArrowRightIcon />
         </Button>

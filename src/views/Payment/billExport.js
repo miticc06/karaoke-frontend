@@ -1,11 +1,8 @@
 /* eslint-disable no-array-constructor */
 /* eslint-disable prefer-spread */
-import React, { PureComponent } from 'react'
-import { Button } from 'antd'
 import moment from 'moment'
 import jsPDF from 'jspdf'
 import 'jspdf-autotable'
-import { element } from 'prop-types'
 import { FormatMoney } from 'helpers'
 
 const changeAlias = (alias) => {
@@ -55,7 +52,7 @@ export const BillExport = (bill, discount) => {
   })
 
   let width = doc.internal.pageSize.getWidth()
-  let height = doc.internal.pageSize.getHeight()
+  // let height = doc.internal.pageSize.getHeight()
   doc.setFont('helvetica')
 
   const startRowHeader = 20
@@ -182,10 +179,10 @@ export const BillExport = (bill, discount) => {
 
     if (discount.type === 'DEDUCT') {
       doc.setFontStyle('bold')
-      doc.text(changeAlias(`-${FormatMoney(`${discount.value}`)} VND`), width - 30, startRowFooter - 5, 'right') 
+      doc.text(changeAlias(`-${FormatMoney(`${discount.value}`)} VND`), width - 30, startRowFooter - 5, 'right')
     } else {
       doc.setFontStyle('bold')
-      doc.text(changeAlias(`-${discount.value} %`), width - 30, startRowFooter - 5, 'right') 
+      doc.text(changeAlias(`-${discount.value} %`), width - 30, startRowFooter - 5, 'right')
     }
   } else {
     doc.setFontSize(10)
