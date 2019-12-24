@@ -96,6 +96,7 @@ describe('viewport', () => {
       restoreDB('DB4')
       cy.wait(wait * 0.5)
       cy.login('admin')
+      cy.wait(wait)
       cy.visit(link + '/users')
       cy.wait(setting.wait)
       cy.get('[name="btn-add-user"]')
