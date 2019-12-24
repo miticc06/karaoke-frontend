@@ -5,7 +5,7 @@ node_js:
   - 12.13.1
 
 before_script:
-  - openssl aes-256-cbc -K $encrypted_624b4ed64e85_key -iv $encrypted_624b4ed64e85_iv -in deploy_rsa.enc -out deploy_rsa -d
+  - openssl aes-256-cbc -K $encrypted_ed29d3a4553c_key -iv $encrypted_ed29d3a4553c_iv -in deploy_rsa.enc -out deploy_rsa -d
   - eval "$(ssh-agent -s)"
   - chmod 600 deploy_rsa
   - ssh-add deploy_rsa
@@ -31,12 +31,12 @@ jobs:
     - stage: Build
       script:
         - CI=false SKIP_PREFLIGHT_CHECK=true yarn build
-        - ssh -q -p 22 ${USER}@${HOST} "/bin/mkdir -p /home/${USER}/build/karaoke-frontend"
-        - rsync -a -e "ssh -p 22" ./ ${USER}@${HOST}:/home/${USER}/build/karaoke-frontend/ --delete --exclude="node_modules"
+        - ssh -q -p ${PORT_SSH} ${USER}@${HOST} "/bin/mkdir -p /home/${USER}/build/karaoke-frontend"
+        - rsync -a -e "ssh -p ${PORT_SSH}" ./ ${USER}@${HOST}:/home/${USER}/build/karaoke-frontend/ --delete --exclude="node_modules"
 
     - stage: DeployKaraokeTest
       script:
-        - ssh -q -p 22 ${USER}@${HOST} "cp -R --remove-destination /home/${USER}/build/karaoke-frontend/build/* /var/www/karaoketest.kienthuc24h.com"
+        - ssh -q -p ${PORT_SSH} ${USER}@${HOST} "cp -R --remove-destination /home/${USER}/build/karaoke-frontend/build/* /var/www/karaoketest.kienthuc24h.com"
 
     - stage: AutomationTest
       script:
@@ -45,4 +45,4 @@ jobs:
 
     - stage: DeployKaraoke
       script:
-        - ssh -q -p 22 ${USER}@${HOST} "cp -R --remove-destination /home/${USER}/build/karaoke-frontend/build/* /var/www/karaoke.kienthuc24h.com"
+        - ssh -q -p ${PORT_SSH} ${USER}@${HOST} "cp -R --remove-destination /home/${USER}/build/karaoke-frontend/build/* /var/www/karaoke.kienthuc24h.com"
