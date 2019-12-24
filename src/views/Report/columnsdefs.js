@@ -1,7 +1,5 @@
-import React from 'react'
 import moment from 'moment'
 import { FormatMoney } from 'helpers'
-import { has } from 'mobx'
 
 export const columnsdefs = [
   {

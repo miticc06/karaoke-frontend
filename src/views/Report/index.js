@@ -4,12 +4,12 @@ import { client } from 'config/client'
 import { Notify } from 'helpers/notify'
 import moment from 'moment'
 import { parseError, FormatMoney } from 'helpers'
-import { Modal, Radio, Table, DatePicker } from 'antd'
+import { Radio, Table, DatePicker } from 'antd'
 import { GETReportRevenueRooms, GETReportRevenueServices, GETReportThuChiTongHop } from './query'
 import './style.less'
 import { columnsdefs, columnsdefsDV, columnsdefsTH } from './columnsdefs'
 
-const { confirm } = Modal
+// const { confirm } = Modal
 const { RangePicker } = DatePicker
 
 const UserManagement = () => {

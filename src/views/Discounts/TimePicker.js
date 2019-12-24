@@ -1,6 +1,5 @@
 import { DatePicker } from 'antd'
 import React from 'react'
-import moment from 'moment'
 
 export class TimePicker extends React.Component {
   state = {
