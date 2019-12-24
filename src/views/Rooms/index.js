@@ -101,6 +101,7 @@ const RoomManagement = () => {
       cellRendererFramework: row => (
         <>
           <Icon
+            name='edit-room'
             style={{ cursor: 'pointer', margin: '5px' }}
             onClick={async e => {
               setVisibleEdit(true)
@@ -122,6 +123,7 @@ const RoomManagement = () => {
             type='edit'
           />
           <Icon
+            name='delete-room'
             style={{ cursor: 'pointer', margin: '5px' }}
             onClick={async () => {
               confirm({
@@ -181,6 +183,7 @@ const RoomManagement = () => {
       <Button
         type='primary'
         icon='plus'
+        id='btn-add-room'
         name='btn-add-discount'
         onClick={() => setVisibleAdd(true)}
       >
